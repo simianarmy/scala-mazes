@@ -70,7 +70,7 @@ class Grid {
   }
 
   override def toString() : String = {
-    var res = "+" + ("---+" * this.columns) + "\n";
+    var res = this.rows + " x " + this.columns + "\n+" + ("---+" * this.columns) + "\n";
 
     this.eachRow(row => {
       var top = "|";
