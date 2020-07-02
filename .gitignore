@@ -1,2 +1,5 @@
 source
 *.class
+tags
+target
+**/target

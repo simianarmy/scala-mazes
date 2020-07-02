@@ -1,9 +1,9 @@
 /**
  * The core class for all mazes
  */
-package mazes
+//package mazes
 
-import mazes.Cell
+//import Cell
 
 class Grid {
   var rows : Int = 0;

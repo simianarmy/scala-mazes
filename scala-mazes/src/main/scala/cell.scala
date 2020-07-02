@@ -1,7 +1,8 @@
 /**
  * The mighty Cell class
  */
-package mazes
+//package mazes
+import scala.collection.mutable.ArrayBuffer
 
 class Cell(var row: Int, var column: Int) {
   var north : Cell = null;
@@ -36,13 +37,13 @@ class Cell(var row: Int, var column: Int) {
     return this.links.contains(cell);
   }
 
-  def neighbors() : Array[Cell] = {
-    var list : Array[Cell] = new Array(4);
+  def neighbors() : ArrayBuffer[Cell] = {
+    var list : ArrayBuffer[Cell] = new ArrayBuffer();
 
-    if (this.north != null) list( 0 ) = this.north;
-    if (this.south != null) list( 1 ) = this.south;
-    if (this.east != null) list( 2 ) = this.east;
-    if (this.west != null) list( 3 ) = this.west;
+    if (this.north != null) list += this.north;
+    if (this.south != null) list += this.south;
+    if (this.east != null) list += this.east;
+    if (this.west != null) list += this.west;
 
     return list;
   }

@@ -1,8 +1,8 @@
-package algorithms
+//package algorithms
 
 import scala.collection.mutable.ArrayBuffer
-import mazes.Grid
-import mazes.Cell
+//import Grid
+//import Cell
 
 object Sidewinder {
   def on(grid : Grid) : Grid = {
