@@ -5,11 +5,11 @@ import scala.collection.mutable.ArrayBuffer
 //import Cell
 
 object BinaryTree {
-  def on(grid : Grid) : Grid = {
+  def on(grid: Grid): Grid = {
     val r = scala.util.Random;
     var neighbors = ArrayBuffer[Cell]();
 
-    grid.eachCell((cell : Cell) => {
+    grid.eachCell((cell: Cell) => {
       neighbors.clear();
 
       if (cell.north != null) {

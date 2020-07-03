@@ -4,4 +4,7 @@ tags
 target
 **/target
 generated/
-.metals
+.metals/
+.bloop/
+.ammonite/
+project/metals.sbt

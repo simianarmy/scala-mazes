@@ -1,4 +1,3 @@
-
 object Main extends App {
   val rows = if (args.length > 1) args(0).toInt else 4;
   val cols = if (args.length > 1) args(1).toInt else 4;
@@ -8,11 +7,14 @@ object Main extends App {
   g = alg match {
     case "bt" => BinaryTree.on(g)
     case "sw" => Sidewinder.on(g)
-    case _ => BinaryTree.on(g)
+    case _    => BinaryTree.on(g)
   }
   //println(g);
   // draw image to a file
   val filename = "maze-" + alg + "-" + rows + "x" + cols + ".png"
-  javax.imageio.ImageIO.write(g.toPng(), "png", new java.io.File("generated/" + filename))
+  javax.imageio.ImageIO.write(
+    g.toPng(),
+    "png",
+    new java.io.File("generated/" + filename)
+  )
 }
-

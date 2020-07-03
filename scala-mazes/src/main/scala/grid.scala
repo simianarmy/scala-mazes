@@ -1,16 +1,16 @@
 /**
- * The core class for all mazes
- */
+  * The core class for all mazes
+  */
 import java.awt.image.BufferedImage
-import java.awt.{Graphics2D,Color,Font,BasicStroke}
+import java.awt.{Graphics2D, Color, Font, BasicStroke}
 import java.awt.geom._
 
 class Grid {
-  var rows : Int = 0;
-  var columns : Int = 0;
-  private var _grid : Array[Array[Cell]] = null;
+  var rows: Int = 0;
+  var columns: Int = 0;
+  private var _grid: Array[Array[Cell]] = null;
 
-  def this(rows : Int, columns : Int) = {
+  def this(rows: Int, columns: Int) = {
     this();
     this.rows = rows;
     this.columns = columns;
@@ -19,10 +19,10 @@ class Grid {
     this.configureCells;
   }
 
-  def prepareGrid() : Array[Array[Cell]] = {
+  def prepareGrid(): Array[Array[Cell]] = {
     var grid = Array.ofDim[Cell](this.rows, this.columns);
 
-    for (i <- 0 until this.rows;  j<- 0 until this.columns) {
+    for (i <- 0 until this.rows; j <- 0 until this.columns) {
       grid(i)(j) = new Cell(i, j);
     }
 
@@ -42,14 +42,14 @@ class Grid {
     }
   }
 
-  def getCell(row : Int, column : Int) : Cell = {
+  def getCell(row: Int, column: Int): Cell = {
     if (row < 0 || row >= this.rows) return null;
     if (column < 0 || column >= this.columns) return null;
 
     return this._grid(row)(column);
   }
 
-  def randomCell() : Cell = {
+  def randomCell(): Cell = {
     val r = scala.util.Random;
 
     val row = r.nextInt(this.rows);
@@ -58,20 +58,21 @@ class Grid {
     return this.getCell(row, column);
   }
 
-  def eachRow(fn : (Array[Cell] => Any)) = {
+  def eachRow(fn: (Array[Cell] => Any)) = {
     for (i <- 0 until this.rows) {
       fn(this._grid(i));
     }
   }
 
-  def eachCell(fn : (Cell => Any)) = {
+  def eachCell(fn: (Cell => Any)) = {
     for (i <- 0 until this.rows; j <- 0 until this.columns) {
       fn(this.getCell(i, j));
     }
   }
 
-  override def toString() : String = {
-    var res = this.rows + " x " + this.columns + "\n+" + ("---+" * this.columns) + "\n";
+  override def toString(): String = {
+    var res =
+      this.rows + " x " + this.columns + "\n+" + ("---+" * this.columns) + "\n";
 
     this.eachRow(row => {
       var top = "|";
@@ -93,13 +94,14 @@ class Grid {
     return res;
   }
 
-  def toPng(cellSize: Int = 10) : BufferedImage = {
+  def toPng(cellSize: Int = 10): BufferedImage = {
     val size = (cellSize * this.columns, cellSize * this.rows);
 
     val background = Color.WHITE;
     val wall = Color.BLACK;
 
-    val canvas= new BufferedImage(size._1 + 1, size._2 + 1, BufferedImage.TYPE_INT_RGB);
+    val canvas =
+      new BufferedImage(size._1 + 1, size._2 + 1, BufferedImage.TYPE_INT_RGB);
     // get Graphics2D for the image
     val g = canvas.createGraphics();
     // clear background
@@ -107,9 +109,12 @@ class Grid {
     g.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
 
     // enable anti-aliased rendering prettier lines and circles)(
-    g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+    g.setRenderingHint(
+      java.awt.RenderingHints.KEY_ANTIALIASING,
+      java.awt.RenderingHints.VALUE_ANTIALIAS_ON
+    )
 
-    g.setStroke(new BasicStroke())  // reset to default
+    g.setStroke(new BasicStroke()) // reset to default
     g.setColor(wall)
 
     this.eachCell(cell => {
