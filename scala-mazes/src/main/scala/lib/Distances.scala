@@ -30,6 +30,9 @@ class Distances {
 
   def cells: Iterable[Cell] = _cells.keys
 
+  /**
+    * Calculate shortest path from _root to goal
+    */
   def pathTo(goal: Cell): Distances = {
     var current = goal
     var breadcrumbs = new Distances(_root)
@@ -51,5 +54,20 @@ class Distances {
     }
 
     breadcrumbs
+  }
+
+  /**
+    * Calculates furthest cell from _root
+    * @return (furthest cell, distance)
+    */
+  def max(): (Cell, Int) = {
+    var max = (_root, 0)
+
+    for ((cell, distance) <- _cells) {
+      if (distance > max._2) {
+        max = (cell, distance)
+      }
+    }
+    max
   }
 }
