@@ -60,14 +60,13 @@ class Cell(var row: Int, var column: Int) {
 
       for (i <- 0 until frontier.length) {
         val cell = frontier(i)
-        cell
-          .getLinks()
-          .foreach(linked => {
-            if (distances.get(linked) == Distances.NotFound) {
-              distances.set(linked, distances.get(cell) + 1)
-              newFrontier += linked
-            }
-          })
+
+        for (linked <- cell.getLinks()) {
+          if (distances.get(linked) == Distances.NotFound) {
+            distances.set(linked, distances.get(cell) + 1)
+            newFrontier += linked
+          }
+        }
       }
 
       frontier = newFrontier.clone()

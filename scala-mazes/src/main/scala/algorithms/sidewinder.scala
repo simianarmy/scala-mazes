@@ -3,6 +3,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object Sidewinder {
   def on[T <: Grid](grid: T): T = {
+    println("Sidewinder")
     val r = scala.util.Random;
     var run = ArrayBuffer[Cell]();
 

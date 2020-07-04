@@ -6,10 +6,10 @@ import scala.collection.mutable.ArrayBuffer
 
 object BinaryTree {
   def on[T <: Grid](grid: T): T = {
+    println("BinaryTree")
     val r = scala.util.Random;
     var neighbors = ArrayBuffer[Cell]();
 
-    println("rows" + grid.rows)
     grid.eachCell((cell: Cell) => {
       neighbors.clear();
 

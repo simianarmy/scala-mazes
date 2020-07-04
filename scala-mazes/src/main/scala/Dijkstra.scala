@@ -10,7 +10,13 @@ object Dijkstra extends App {
     case _    => BinaryTree.on(g)
   }
   val start = g.getCell(0, 0)
-  g.distances = start.distances
+  var distances = start.distances
+  g.distances = distances
 
   println(g);
+
+  println("path from nw corner to sw corner: ")
+  g.distances = distances.pathTo(g.getCell(g.rows - 1, 0))
+
+  println(g)
 }
