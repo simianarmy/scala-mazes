@@ -6,40 +6,42 @@ import java.awt.{Graphics2D, Color, Font, BasicStroke}
 import java.awt.geom._
 
 class Grid {
-  var rows: Int = 0;
-  var columns: Int = 0;
-  private var _grid: Array[Array[Cell]] = null;
+  var size = (0, 0)
+  private var _grid: Array[Array[Cell]] = null
+
+  def rows: Int = size._1
+  def columns: Int = size._2
 
   def this(rows: Int, columns: Int) = {
-    this();
-    this.rows = rows;
-    this.columns = columns;
-    this._grid = this.prepareGrid();
+    this()
 
-    this.configureCells;
-  }
+    def prepareGrid(): Array[Array[Cell]] = {
+      var grid = Array.ofDim[Cell](rows, columns);
 
-  def prepareGrid(): Array[Array[Cell]] = {
-    var grid = Array.ofDim[Cell](this.rows, this.columns);
+      for (i <- 0 until rows; j <- 0 until columns) {
+        grid(i)(j) = new Cell(i, j);
+      }
 
-    for (i <- 0 until this.rows; j <- 0 until this.columns) {
-      grid(i)(j) = new Cell(i, j);
+      grid
     }
 
-    return grid;
-  }
+    def configureCells(): Unit = {
+      for (i <- 0 until rows; j <- 0 until columns) {
+        var cell = this.getCell(i, j)
+        val row = cell.row;
+        val column = cell.column;
 
-  def configureCells {
-    for (i <- 0 until this.rows; j <- 0 until this.columns) {
-      var cell = this.getCell(i, j)
-      val row = cell.row;
-      val column = cell.column;
-
-      cell.north = this.getCell(row - 1, column);
-      cell.south = this.getCell(row + 1, column);
-      cell.west = this.getCell(row, column - 1);
-      cell.east = this.getCell(row, column + 1);
+        cell.north = this.getCell(row - 1, column);
+        cell.south = this.getCell(row + 1, column);
+        cell.west = this.getCell(row, column - 1);
+        cell.east = this.getCell(row, column + 1);
+      }
     }
+
+    this.size = (rows, columns)
+    this._grid = prepareGrid()
+
+    configureCells()
   }
 
   def getCell(row: Int, column: Int): Cell = {
@@ -58,16 +60,22 @@ class Grid {
     return this.getCell(row, column);
   }
 
-  def eachRow(fn: (Array[Cell] => Any)) = {
+  def eachRow(fn: (Array[Cell] => Unit)) = {
     for (i <- 0 until this.rows) {
       fn(this._grid(i));
     }
   }
 
-  def eachCell(fn: (Cell => Any)) = {
-    for (i <- 0 until this.rows; j <- 0 until this.columns) {
-      fn(this.getCell(i, j));
-    }
+  def eachCell(fn: (Cell => Unit)) = {
+    this.eachRow(row => {
+      for (i <- 0 until this.columns) {
+        fn(row(i))
+      }
+    })
+  }
+
+  def contentsOf(cell: Cell): String = {
+    " "
   }
 
   override def toString(): String = {
@@ -78,9 +86,9 @@ class Grid {
       var top = "|";
       var bottom = "+";
 
-      for (i <- 0 until row.length) {
+      for (i <- 0 until this.columns) {
         var c = if (row(i) == null) new Cell(-1, -1) else row(i);
-        var body = "   "; // 3 spaces
+        var body = " " + this.contentsOf(c) + " "
         var eastBoundary = if (c.isLinked(c.east)) " " else "|";
         top += (body + eastBoundary);
         var southBoundary = if (c.isLinked(c.south)) "   " else "---";

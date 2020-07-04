@@ -1,11 +1,8 @@
 //package algorithms
-
 import scala.collection.mutable.ArrayBuffer
-//import Grid
-//import Cell
 
 object Sidewinder {
-  def on(grid: Grid): Grid = {
+  def on[T <: Grid](grid: T): T = {
     val r = scala.util.Random;
     var run = ArrayBuffer[Cell]();
 
@@ -14,11 +11,11 @@ object Sidewinder {
 
       for (i <- 0 until row.length) {
         val cell: Cell = row(i);
-
         run += cell;
-        val atEasternBoundary: Boolean = (cell.east == null);
-        val atNorthernBoundary: Boolean = (cell.north == null);
-        val shouldCloseOut: Boolean =
+
+        val atEasternBoundary = (cell.east == null);
+        val atNorthernBoundary = (cell.north == null);
+        val shouldCloseOut =
           atEasternBoundary || (!atNorthernBoundary && r.nextInt(2) == 0);
 
         if (shouldCloseOut) {
@@ -34,6 +31,6 @@ object Sidewinder {
       }
     });
 
-    return grid;
+    grid
   }
 }
