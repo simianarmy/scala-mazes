@@ -1,9 +1,11 @@
+import java.awt.Color
+
 object Coloring extends App {
   val rows = if (args.length > 1) args(0).toInt else 4;
   val cols = if (args.length > 1) args(1).toInt else 4;
   val alg = if (args.length > 2) args(2) else "bt";
 
-  var g = new ColoredGrid(rows, cols);
+  var g = new ColoredGrid(rows, cols, Color.BLUE);
 
   g = alg match {
     case "sw" => Sidewinder.on(g)
