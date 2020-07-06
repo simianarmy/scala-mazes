@@ -82,6 +82,8 @@ class Grid extends TextRenderer with ImageRenderer {
     })
   }
 
+  def cellIndex(cell: Cell): Int = cell.row * columns + cell.column
+
   override def toString(): String = {
     var res =
       rows + " x " + columns + "\n+" + ("---+" * columns) + "\n";
