@@ -1,6 +1,8 @@
 /**
   * Utility to generate grid images and write them to png files
   */
+package lib
+
 object PngWriter {
   def saveGrid(grid: Grid, filename: String): Unit = {
     javax.imageio.ImageIO.write(

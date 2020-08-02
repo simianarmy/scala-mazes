@@ -1,7 +1,8 @@
 /**
   * The mighty Cell class
   */
-//package mazes
+package lib
+
 import scala.collection.mutable.{ArrayBuffer, Map}
 
 class Cell(var row: Int, var column: Int) {

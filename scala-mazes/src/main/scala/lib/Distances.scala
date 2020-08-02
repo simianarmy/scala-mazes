@@ -2,6 +2,7 @@
   * @class Distances class
   * Used for Dijkstra's algorithm
   */
+package lib
 
 import scala.util.control.Breaks._
 

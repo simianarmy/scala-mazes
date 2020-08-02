@@ -1,8 +1,8 @@
-//package algorithms
+package algorithms
 
 import scala.collection.mutable.ArrayBuffer
-//import Grid
-//import Cell
+import lib.Grid
+import lib.Cell
 
 object BinaryTree {
   def on[T <: Grid](grid: T): T = {

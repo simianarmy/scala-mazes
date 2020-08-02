@@ -1,3 +1,5 @@
+package lib
+
 class DistanceGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
   protected var _distances: Distances = null
 

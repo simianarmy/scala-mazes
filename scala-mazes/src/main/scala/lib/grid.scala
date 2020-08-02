@@ -1,6 +1,8 @@
 /**
   * The core class for all mazes
   */
+package lib
+
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke}
 import java.awt.geom._
@@ -51,6 +53,8 @@ class Grid extends TextRenderer with ImageRenderer {
 
     configureCells()
   }
+
+  def numCells: Int = rows * columns
 
   def getCell(row: Int, column: Int): Cell = {
     if (row < 0 || row >= rows) return null;

@@ -3,6 +3,8 @@
   * https://www.instructables.com/id/How-to-Make-Proper-Rainbow-and-Random-Colors-With-/ section
   * Step 5: Color Shifting
   */
+package lib
+
 class SineWaveColors {
   var color = Array(0, 0, 0)
   var nextColor = Array(0, 0, 0)

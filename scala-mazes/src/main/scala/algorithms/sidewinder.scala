@@ -1,5 +1,8 @@
-//package algorithms
+package algorithms
+
 import scala.collection.mutable.ArrayBuffer
+import lib.Grid
+import lib.Cell
 
 object Sidewinder {
   def on[T <: Grid](grid: T): T = {
