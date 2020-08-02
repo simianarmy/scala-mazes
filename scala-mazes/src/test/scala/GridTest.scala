@@ -1,5 +1,6 @@
 import org.scalatest.FunSuite
 
+import lib.Grid
 
 class GridTest extends FunSuite {
   test("Grid constructor") {

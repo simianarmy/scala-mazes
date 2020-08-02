@@ -1,5 +1,7 @@
 import org.scalatest.FunSuite
 
+import lib.{Cell, Distances}
+
 class DistancesTest extends FunSuite {
   test("Distances constructor") {
     var c = new Cell(1, 1)

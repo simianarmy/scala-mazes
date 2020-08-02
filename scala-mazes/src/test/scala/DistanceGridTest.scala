@@ -1,5 +1,7 @@
 import org.scalatest.FunSuite
 
+import lib.DistanceGrid
+
 class DistanceGridTest extends FunSuite {
   test("DistanceGrid constructor") {
     var grid = new DistanceGrid(2, 3);

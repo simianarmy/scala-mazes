@@ -1,5 +1,6 @@
 import org.scalatest.FunSuite
 
+import lib.Cell
 
 class CellTest extends FunSuite {
   test("Cell constructor") {
