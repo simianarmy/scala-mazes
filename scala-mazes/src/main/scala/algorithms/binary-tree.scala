@@ -6,7 +6,6 @@ import lib.Cell
 
 object BinaryTree {
   def on[T <: Grid](grid: T): T = {
-    println("BinaryTree")
     val r = scala.util.Random;
     var neighbors = ArrayBuffer[Cell]();
 

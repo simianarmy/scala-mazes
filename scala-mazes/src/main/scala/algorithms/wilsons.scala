@@ -7,7 +7,6 @@ import scala.collection.mutable.ArrayBuffer
 
 object Wilsons {
   def on[T <: Grid](grid: T): T = {
-    println("Wilsons")
     var unvisited = ArrayBuffer[Cell]()
     val r = new scala.util.Random(System.currentTimeMillis)
 

@@ -13,6 +13,8 @@ class MazeApp extends App {
       case "sw" => Sidewinder.on(g)
       case "ab" => AldousBroder.on(g)
       case "wi" => Wilsons.on(g)
+      case "hk" => HuntKill.on(g)
+      case "rb" => RecursiveBacktracker.on(g)
       case _    => BinaryTree.on(g)
     }
   }

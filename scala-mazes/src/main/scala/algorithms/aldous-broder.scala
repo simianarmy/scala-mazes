@@ -6,9 +6,7 @@ import lib.Cell
 
 object AldousBroder {
   def on[T <: Grid](grid: T): T = {
-    println("Aldous-Broder")
     val r = scala.util.Random;
-    //var neighbors = ArrayBuffer[Cell]();
     var cell = grid.randomCell()
     var unvisited = grid.numCells - 1
 

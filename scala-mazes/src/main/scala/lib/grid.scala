@@ -3,6 +3,7 @@
   */
 package lib
 
+import scala.collection.mutable.ArrayBuffer
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke}
 import java.awt.geom._
@@ -181,5 +182,17 @@ class Grid extends TextRenderer with ImageRenderer {
     g.dispose()
 
     return canvas
+  }
+
+  def deadends(): ArrayBuffer[Cell] = {
+    var list = new ArrayBuffer[Cell]()
+
+    eachCell(cell => {
+      if (cell.getLinks().size == 1) {
+        list += cell
+      }
+    })
+
+    list
   }
 }
