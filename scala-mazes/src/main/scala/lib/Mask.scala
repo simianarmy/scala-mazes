@@ -1,23 +1,32 @@
 package lib
 
-class Mask {
-  var bits: Array[Array[Boolean]] = null
-  var rows = 0
-  var columns = 0
-  val rand = new scala.util.Random(System.currentTimeMillis)
+import scala.io.Source
 
-  def this(rows: Int, columns: Int) = {
-    this()
+object Mask {
+  def fromTxt(file: String) = {
+    val bufferedSource = Source.fromFile(file)
 
-    this.rows = rows
-    this.columns = columns
-
-    // initialize mask indicating which cells are on
-    bits = Array.ofDim[Boolean](rows, columns)
+    val lines = bufferedSource.getLines.filter(_.length() > 0).toArray
+    val rows = lines.length
+    val columns = lines(0).length
+    var mask = new Mask(rows, columns)
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      bits(i)(j) = true
+      mask(i)(j) = lines(i)(j) != 'X'
     }
+
+    bufferedSource.close
+
+    mask
+  }
+}
+
+class Mask(val rows: Int, val columns: Int) {
+  var bits = Array.ofDim[Boolean](rows, columns)
+  val rand = new scala.util.Random(System.currentTimeMillis)
+
+  for (i <- 0 until rows; j <- 0 until columns) {
+    bits(i)(j) = true
   }
 
   def apply(i: Int): Array[Boolean] = {
@@ -48,3 +57,4 @@ class Mask {
     res
   }
 }
+

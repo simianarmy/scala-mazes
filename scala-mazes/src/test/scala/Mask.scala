@@ -51,4 +51,12 @@ class MaskTest extends FunSuite {
     assert(randLoc._1 >= 0)
     assert(randLoc._2 >= 0)
   }
+
+  test("fromTxt") {
+    val mask = Mask.fromTxt("src/main/scala/masks/simple.txt")
+
+    assert(mask.count() > 10)
+    assert(!mask(0)(0))
+    assert(mask(0)(1))
+  }
 }

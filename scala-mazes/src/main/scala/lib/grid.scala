@@ -16,29 +16,24 @@ trait ImageRenderer {
   def backgroundColorFor(cell: Cell): Color = null
 }
 
-class Grid extends TextRenderer with ImageRenderer {
-  var size = (0, 0)
-  private var _grid: Array[Array[Cell]] = null
+class Grid(val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer {
+  val size = (rows, columns)
+  protected var _grid = Array.ofDim[Cell](rows, columns);
 
-  def rows: Int = size._1
-  def columns: Int = size._2
+  prepareGrid()
+  configureCells()
 
-  def this(rows: Int, columns: Int) = {
-    this()
-
-    def prepareGrid(): Array[Array[Cell]] = {
-      var grid = Array.ofDim[Cell](rows, columns);
-
-      for (i <- 0 until rows; j <- 0 until columns) {
-        grid(i)(j) = new Cell(i, j);
-      }
-
-      grid
+  def prepareGrid(): Unit = {
+    for (i <- 0 until rows; j <- 0 until columns) {
+      _grid(i)(j) = new Cell(i, j);
     }
+  }
 
-    def configureCells(): Unit = {
-      for (i <- 0 until rows; j <- 0 until columns) {
-        var cell = getCell(i, j)
+  private def configureCells(): Unit = {
+    for (i <- 0 until rows; j <- 0 until columns) {
+      var cell = getCell(i, j)
+
+      if (cell != null) {
         val row = cell.row;
         val column = cell.column;
 
@@ -48,11 +43,6 @@ class Grid extends TextRenderer with ImageRenderer {
         cell.east = getCell(row, column + 1);
       }
     }
-
-    size = (rows, columns)
-    _grid = prepareGrid()
-
-    configureCells()
   }
 
   def numCells: Int = rows * columns
