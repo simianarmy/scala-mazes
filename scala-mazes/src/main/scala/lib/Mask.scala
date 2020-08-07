@@ -1,6 +1,9 @@
 package lib
 
+import java.io.File
 import scala.io.Source
+import javax.imageio.ImageIO
+import java.awt.Color
 
 object Mask {
   def fromTxt(file: String) = {
@@ -16,6 +19,20 @@ object Mask {
     }
 
     bufferedSource.close
+
+    mask
+  }
+
+  def fromPng(file: String) = {
+    val image = ImageIO.read(new File(file))
+    val w = image.getWidth
+    val h = image.getHeight
+    var mask = new Mask(w, h)
+
+    for (x <- 0 until w; y <- 0 until h) {
+      val color = new Color(image.getRGB(x, y))
+      mask(x)(y) = (color != Color.black)
+    }
 
     mask
   }

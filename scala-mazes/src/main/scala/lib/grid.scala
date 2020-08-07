@@ -71,9 +71,7 @@ class Grid(val rows: Int, val columns: Int) extends TextRenderer with ImageRende
 
   def eachCell(fn: (Cell => Unit)) = {
     eachRow(row => {
-      for (i <- 0 until columns) {
-        fn(row(i))
-      }
+      row.filter(_ != null).foreach(fn)
     })
   }
 
@@ -170,8 +168,7 @@ class Grid(val rows: Int, val columns: Int) extends TextRenderer with ImageRende
     }
 
     g.dispose()
-
-    return canvas
+    canvas
   }
 
   def deadends(): ArrayBuffer[Cell] = {
