@@ -1,6 +1,7 @@
 /**
   * Calculates avg # deadeads per algorithm
   */
+import lib.OrthogonalGrid
 import lib.Grid
 import algorithms._
 
@@ -11,7 +12,7 @@ object DeadendCounts extends MazeApp {
   val size = 20
 
   var averages = collection.mutable.Map[String, Float]()
-  val algorithms = Map[String, (Grid) => Grid]("Sidewinder" -> Sidewinder.on,
+  val algorithms = Map[String, (OrthogonalGrid) => OrthogonalGrid]("Sidewinder" -> Sidewinder.on,
     "Aldous-Broder" -> AldousBroder.on,
     "Wilsons" -> Wilsons.on,
     "Hunt-and-kill" -> HuntKill.on,
@@ -25,7 +26,7 @@ object DeadendCounts extends MazeApp {
     deadendCounts.clear()
 
     for (i <- 0 until tries) {
-      var grid = new Grid(size, size)
+      var grid = new OrthogonalGrid(size, size)
       grid = alg._2(grid)
       deadendCounts += grid.deadends().length
     }

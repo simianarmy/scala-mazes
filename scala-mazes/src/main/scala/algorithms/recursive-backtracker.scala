@@ -1,6 +1,5 @@
 package algorithms
 
-import scala.collection.mutable.Stack
 import lib.Grid
 import lib.Cell
 import lib.RandomUtil

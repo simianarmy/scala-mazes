@@ -16,6 +16,8 @@ class ColoredGrid(rows: Int, columns: Int, startColor: Color = Color.WHITE)
   val MaxLightsIdx = 120
   val FadeColors = false
 
+  def cellIndex(cell: Cell): Int = cell.row * columns + cell.column
+
   override def distances_=(d: Distances): Unit = {
     _distances = d
     maximum = distances.max._2

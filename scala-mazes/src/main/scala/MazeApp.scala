@@ -15,7 +15,8 @@ class MazeApp extends App {
       case "wi" => Wilsons.on(g)
       case "hk" => HuntKill.on(g)
       case "rb" => RecursiveBacktracker.on(g)
-      case _    => BinaryTree.on(g)
+      case "bt"  => BinaryTree.on(g)
+      case _ => g
     }
   }
 

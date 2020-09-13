@@ -9,10 +9,10 @@
   * ex: run 10 10 sw
   * ex: run 10 10 bt txt
   */
- import lib.Grid
+ import lib.OrthogonalGrid
 
 object Main extends MazeApp {
-  var g = new Grid(rows, cols);
+  var g = new OrthogonalGrid(rows, cols);
 
   g = generateMaze(g)
 

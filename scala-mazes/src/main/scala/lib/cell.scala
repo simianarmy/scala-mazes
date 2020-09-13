@@ -6,6 +6,7 @@ package lib
 import scala.collection.mutable.{ArrayBuffer, Map}
 
 class Cell(var row: Int, var column: Int) {
+
   var north: Cell = null;
   var south: Cell = null;
   var east: Cell = null;
@@ -38,8 +39,8 @@ class Cell(var row: Int, var column: Int) {
     return this.links.contains(cell);
   }
 
-  def neighbors(): ArrayBuffer[Cell] = {
-    var list = new ArrayBuffer[Cell]();
+  def neighbors(): Cells = {
+    var list = new Cells();
 
     if (this.north != null) list += this.north;
     if (this.south != null) list += this.south;
@@ -51,8 +52,8 @@ class Cell(var row: Int, var column: Int) {
 
   def distances(): Distances = {
     var distances = new Distances(this)
-    var frontier = new ArrayBuffer[Cell](10)
-    var newFrontier = new ArrayBuffer[Cell](10)
+    var frontier = new Cells(10)
+    var newFrontier = new Cells(10)
 
     frontier += this
 

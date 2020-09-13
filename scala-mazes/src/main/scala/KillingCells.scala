@@ -1,8 +1,8 @@
 import algorithms.RecursiveBacktracker
-import lib.Grid
+import lib.OrthogonalGrid
 
 object KillingCells extends MazeApp {
-  var g = new Grid(5, 5);
+  var g = new OrthogonalGrid(5, 5);
 
   g.getCell(0, 0).east.west = null
   g.getCell(0, 0).south.north = null

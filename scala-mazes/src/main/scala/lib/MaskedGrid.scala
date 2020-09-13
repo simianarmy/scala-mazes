@@ -1,12 +1,12 @@
 package lib
 
-import lib.Grid
+import lib.OrthogonalGrid
 import lib.Cell
 import lib.Mask
 
-class MaskedGrid(val mask: Mask) extends Grid (mask.rows, mask.columns) {
+class MaskedGrid(val mask: Mask) extends OrthogonalGrid(mask.rows, mask.columns) {
 
-  override def prepareGrid(): Unit = {
+  def prepareGrid(): Unit = {
     for (i <- 0 until rows; j <- 0 until columns) {
       if (mask(i)(j)) {
         _grid(i)(j) = new Cell(i, j);

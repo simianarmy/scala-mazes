@@ -1,13 +1,13 @@
 package algorithms
 
-import scala.collection.mutable.ArrayBuffer
 import lib.Grid
+import lib.Cells
 import lib.Cell
 
 object BinaryTree {
   def on[T <: Grid](grid: T): T = {
     val r = scala.util.Random;
-    var neighbors = ArrayBuffer[Cell]();
+    var neighbors = new Cells()
 
     grid.eachCell((cell: Cell) => {
       neighbors.clear();

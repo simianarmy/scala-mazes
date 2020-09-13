@@ -4,9 +4,10 @@ import java.io.File
 import scala.io.Source
 import javax.imageio.ImageIO
 import java.awt.Color
+import scala.util.{Try,Success,Failure}
 
 object Mask {
-  def fromTxt(file: String) = {
+  def fromTxt(file: String): Try[Mask] = Try {
     val bufferedSource = Source.fromFile(file)
 
     val lines = bufferedSource.getLines.filter(_.length() > 0).toArray

@@ -1,6 +1,6 @@
 package lib
 
-class DistanceGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
+class DistanceGrid(rows: Int, columns: Int) extends OrthogonalGrid(rows, columns) {
   protected var _distances: Distances = null
 
   def distances: Distances = _distances

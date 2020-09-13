@@ -1,16 +1,15 @@
 package algorithms
 
 import lib.Grid
+import lib.Cells
 import lib.Cell
-
-import scala.collection.mutable.ArrayBuffer
 
 object Wilsons {
   def on[T <: Grid](grid: T): T = {
-    var unvisited = ArrayBuffer[Cell]()
+    var unvisited = new Cells()
     val r = new scala.util.Random(System.currentTimeMillis)
 
-    def sampleCell(cells: ArrayBuffer[Cell]): Cell =
+    def sampleCell(cells: Cells) =
       cells(r.nextInt(cells.length))
 
     grid.eachCell(unvisited.append)
@@ -20,7 +19,8 @@ object Wilsons {
 
     while (!unvisited.isEmpty) {
       var cell = sampleCell(unvisited)
-      var path = ArrayBuffer[Cell](cell)
+      var path: Cells = new Cells()
+      path += cell
 
       while (unvisited.contains(cell)) {
         cell = sampleCell(cell.neighbors())
