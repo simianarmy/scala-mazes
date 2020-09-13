@@ -1,6 +1,7 @@
 /**
   * @class Distances class
-  * Used for Dijkstra's algorithm
+  *
+  * Uses Dijkstra's algorithm to calculate distances between maze cells
   */
 package lib
 
@@ -10,37 +11,29 @@ object Distances {
   val NotFound = -1
 }
 
-class Distances {
-  private var _root: Cell = null;
-  private var _cells = scala.collection.mutable.Map[Cell, Int]();
+class Distances[C <: MazeCell](root: C) {
+  var _cells = scala.collection.mutable.Map[C, Int](root -> 0)
 
-  def this(root: Cell) = {
-    this();
-
-    _root = root
-    _cells += (root -> 0);
-  }
-
-  def get(cell: Cell): Int = {
+  def get(cell: C): Int = {
     _cells.getOrElse(cell, Distances.NotFound)
   }
 
-  def set(cell: Cell, distance: Int) = {
+  def set(cell: C, distance: Int) = {
     _cells += (cell -> distance)
   }
 
-  def cells: Iterable[Cell] = _cells.keys
+  def cells: Iterable[C] = _cells.keys
 
   /**
     * Calculate shortest path from _root to goal
     */
-  def pathTo(goal: Cell): Distances = {
+  def pathTo(goal: C): Distances[C] = {
     var current = goal
-    var breadcrumbs = new Distances(_root)
+    var breadcrumbs = new Distances[C](root)
 
     breadcrumbs.set(current, this.get(current))
 
-    while (current != _root) {
+    while (current != root) {
       var links = current.getLinks()
 
       breakable {
@@ -61,8 +54,8 @@ class Distances {
     * Calculates furthest cell from _root
     * @return (furthest cell, distance)
     */
-  def max(): (Cell, Int) = {
-    var max = (_root, 0)
+  def max(): (C, Int) = {
+    var max = (root, 0)
 
     for ((cell, distance) <- _cells) {
       if (distance > max._2) {

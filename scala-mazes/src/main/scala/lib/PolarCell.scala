@@ -2,7 +2,7 @@ package lib
 
 import scala.collection.mutable.ArrayBuffer
 
-class PolarCell(var row: Int, var column: Int) extends LinkableCell {
+class PolarCell(var row: Int, var column: Int) extends MazeCell {
   type CT = PolarCell
 
   var cw: PolarCell = null
@@ -11,6 +11,24 @@ class PolarCell(var row: Int, var column: Int) extends LinkableCell {
   private var _outward = new ArrayBuffer[PolarCell]()
 
   def outward = _outward
+
+  def link(cell: CT, bidi: Boolean = true): CT = {
+    links += (cell -> true);
+
+    if (bidi) {
+      cell.link(this, false);
+    }
+    cell
+  }
+
+  def unlink(cell: CT, bidi: Boolean = true): CT = {
+    links -= (cell);
+
+    if (bidi) {
+      cell.unlink(this, false);
+    }
+    cell
+  }
 
   def neighbors(): ArrayBuffer[PolarCell] = {
     var list = new ArrayBuffer[PolarCell]()
