@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
+class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRenderer[GridCell] with ImageRenderer[GridCell] {
   type CellType = GridCell
 
   var size = (rows, columns)

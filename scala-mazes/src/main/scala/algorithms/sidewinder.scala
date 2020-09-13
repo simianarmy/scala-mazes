@@ -1,19 +1,19 @@
 package algorithms
 
+import scala.collection.mutable.ArrayBuffer
 import lib.Grid
-import lib.Cells
-import lib.Cell
+import lib.GridCell
 
 object Sidewinder {
   def on[T <: Grid](grid: T): T = {
     val r = scala.util.Random
-    var run = new Cells()
+    var run = new ArrayBuffer[GridCell]()
 
-    grid.eachRow((it: Iterator[Cell]) => {
+    grid.eachRow(it => {
       run.clear();
 
       while (it.hasNext) {
-        val cell: Cell = it.next()
+        val cell: GridCell = it.next()
         run += cell;
 
         val atEasternBoundary = (cell.east == null);
@@ -22,7 +22,7 @@ object Sidewinder {
           atEasternBoundary || (!atNorthernBoundary && r.nextInt(2) == 0);
 
         if (shouldCloseOut) {
-          var member: Cell = run(r.nextInt(run.length));
+          var member = run(r.nextInt(run.length));
 
           if (member.north != null) {
             member.link(member.north);

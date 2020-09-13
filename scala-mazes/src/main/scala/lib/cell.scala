@@ -5,7 +5,14 @@ package lib
 
 import scala.collection.mutable.{ArrayBuffer, Map}
 
-trait MazeCell {
+trait Cell {
+  var row: Int
+  var column: Int
+  def toString: String =
+    s"[Cell: " + row + ", " + column + "]"
+}
+
+trait MazeCell extends Cell {
   var links = Map[MazeCell, Boolean]()
 
   def getLinks(): Iterable[MazeCell] = links.keys

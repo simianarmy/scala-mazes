@@ -11,7 +11,7 @@ object Distances {
   val NotFound = -1
 }
 
-class Distances[C <: MazeCell](root: C) {
+class Distances[C](root: C) {
   var _cells = scala.collection.mutable.Map[C, Int](root -> 0)
 
   def get(cell: C): Int = {
@@ -28,13 +28,13 @@ class Distances[C <: MazeCell](root: C) {
     * Calculate shortest path from _root to goal
     */
   def pathTo(goal: C): Distances[C] = {
-    var current = goal
+    var current: C = goal
     var breadcrumbs = new Distances[C](root)
 
     breadcrumbs.set(current, this.get(current))
 
     while (current != root) {
-      var links = current.getLinks()
+      var links = current.asInstanceOf[MazeCell].getLinks()
 
       breakable {
         for (neighbor <- links) {

@@ -2,9 +2,9 @@ import org.scalatest.FunSuite
 
 import lib.Cell
 
-class CellTest extends FunSuite {
-  test("Cell constructor") {
-    var cell = new Cell(2, 3);
+class MazeCellTest extends FunSuite {
+  test("MazeCell constructor") {
+    var cell = new MazeCell(2, 3);
     assert(cell.row === 2);
     assert(cell.column === 3);
     assert(cell.getLinks().isEmpty)
@@ -12,8 +12,8 @@ class CellTest extends FunSuite {
   }
 
   test("Cell linking (bidirectional)") {
-    var cella = new Cell(0, 0);
-    var cellb = new Cell(1, 1);
+    var cella = new MazeCell(0, 0);
+    var cellb = new MazeCell(1, 1);
 
     cella.link(cellb);
     assert(cella.isLinked(cellb));
@@ -23,8 +23,8 @@ class CellTest extends FunSuite {
   }
 
   test("Cell linking (unidirectional)") {
-    var cella = new Cell(0, 0);
-    var cellb = new Cell(1, 1);
+    var cella = new MazeCell(0, 0);
+    var cellb = new MazeCell(1, 1);
 
     cella.link(cellb, bidi = false);
     assert(cella.isLinked(cellb));
@@ -33,9 +33,9 @@ class CellTest extends FunSuite {
     assert(cellb.getLinks().isEmpty);
   }
 
-  test("Cell neighbors") {
-    var cella = new Cell(0, 0);
-    var cellb = new Cell(1, 1);
+  test("MazeCell neighbors") {
+    var cella = new MazeCell(0, 0);
+    var cellb = new MazeCell(1, 1);
 
     cella.east = cellb;
     assert(cella.neighbors().length === 1);

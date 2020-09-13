@@ -6,7 +6,7 @@ object GridCell {
   def nullCell = new GridCell(-1, -1)
 }
 
-class GridCell(var row: Int, var column: Int) extends MazeCell {
+case class GridCell(var row: Int, var column: Int) extends MazeCell {
   var north: GridCell = null;
   var south: GridCell = null;
   var east: GridCell = null;
