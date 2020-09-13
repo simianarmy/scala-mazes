@@ -1,6 +1,7 @@
 package algorithms
 
 import lib.Grid
+import lib.Cell
 import lib.RandomUtil
 
 object HuntKill {
@@ -12,9 +13,9 @@ object HuntKill {
       val unvisitedNeighbors = current.neighbors().filter(n => n.getLinks().isEmpty)
 
       if (unvisitedNeighbors.length > 0) {
-        val neighbor = RandomUtil.sample(unvisitedNeighbors)
+        val neighbor: Cell = RandomUtil.sample(unvisitedNeighbors)
         current.link(neighbor)
-        current = neighbor
+        current = neighbor.asInstanceOf[grid.CellType]
       } else {
         looping = false
 

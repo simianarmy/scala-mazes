@@ -1,6 +1,9 @@
 package object lib {
   import scala.collection.mutable.ArrayBuffer
 
-  type Cells = ArrayBuffer[Cell]
+  trait Cells {
+    type C
+    var list: ArrayBuffer[C]
+  }
 }
 

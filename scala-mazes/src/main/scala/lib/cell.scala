@@ -5,57 +5,18 @@ package lib
 
 import scala.collection.mutable.{ArrayBuffer, Map}
 
-class Cell(var row: Int, var column: Int) {
+/**
+  * TODO: Move to own file
+  */
+trait CellDistances {
+  type CT
 
-  var north: Cell = null;
-  var south: Cell = null;
-  var east: Cell = null;
-  var west: Cell = null;
-  var links = Map[Cell, Boolean]();
+  def distances(root: CT): Distances = {
+    var distances = new Distances(root)
+    var frontier = new ArrayBuffer[CT](10)
+    var newFrontier = new ArrayBuffer[CT](10)
 
-  def link(cell: Cell, bidi: Boolean = true): Cell = {
-    this.links += (cell -> true);
-
-    if (bidi) {
-      cell.link(this, false);
-    }
-    return this;
-  }
-
-  def unlink(cell: Cell, bidi: Boolean = true): Cell = {
-    this.links -= (cell);
-
-    if (bidi) {
-      cell.unlink(this, false);
-    }
-    return this;
-  }
-
-  def getLinks(): Iterable[Cell] = {
-    return this.links.keys;
-  }
-
-  def isLinked(cell: Cell): Boolean = {
-    return this.links.contains(cell);
-  }
-
-  def neighbors(): Cells = {
-    var list = new Cells();
-
-    if (this.north != null) list += this.north;
-    if (this.south != null) list += this.south;
-    if (this.east != null) list += this.east;
-    if (this.west != null) list += this.west;
-
-    return list;
-  }
-
-  def distances(): Distances = {
-    var distances = new Distances(this)
-    var frontier = new Cells(10)
-    var newFrontier = new Cells(10)
-
-    frontier += this
+    frontier += root
 
     while (!frontier.isEmpty) {
       newFrontier.clear()
@@ -66,7 +27,7 @@ class Cell(var row: Int, var column: Int) {
         for (linked <- cell.getLinks()) {
           if (distances.get(linked) == Distances.NotFound) {
             distances.set(linked, distances.get(cell) + 1)
-            newFrontier += linked
+            newFrontier += linked.asInstanceOf[CT]
           }
         }
       }
@@ -75,7 +36,36 @@ class Cell(var row: Int, var column: Int) {
     }
     distances
   }
-
-  override def toString: String =
-    s"[Cell: " + row + ", " + column + "]";
 }
+
+trait MazeCell extends CellDistances {
+  type CT
+
+  var links = Map[CT, Boolean]()
+  def getLinks(): Iterable[CT] = links.keys
+  def isLinked(cell: CT): Boolean = links.contains(cell)
+  def neighbors(): ArrayBuffer[CT]
+}
+
+abstract class LinkableCell extends MazeCell {
+  type CT
+
+  def link(cell: LinkableCell, bidi: Boolean = true): LinkableCell = {
+    links += (cell -> true);
+
+    if (bidi) {
+      cell.link(this, false);
+    }
+    cell
+  }
+
+  def unlink(cell: LinkableCell, bidi: Boolean = true): LinkableCell = {
+    links -= (cell);
+
+    if (bidi) {
+      cell.unlink(this, false);
+    }
+    cell
+  }
+}
+

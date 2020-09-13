@@ -11,14 +11,15 @@ import java.awt.geom.Arc2D
 class PolarGrid(rows: Int) extends Grid {
   type CellType = PolarCell
 
-  var grid: ArrayBuffer[ArrayBuffer[PolarCell]] = prepareGrid()
+  var grid: ArrayBuffer[ArrayBuffer[CellType]] = prepareGrid()
   var size = (rows, 1)
+  val r = scala.util.Random;
 
-  def prepareGrid(): ArrayBuffer[ArrayBuffer[PolarCell]] = {
-    var cells = new ArrayBuffer[ArrayBuffer[PolarCell]](rows)
+  def prepareGrid(): ArrayBuffer[ArrayBuffer[CellType]] = {
+    var cells = new ArrayBuffer[ArrayBuffer[CellType]](rows)
     val rowHeight = 1.0 / rows
 
-    cells += ArrayBuffer(new PolarCell(0, 0))
+    cells += ArrayBuffer(new CellType(0, 0))
 
     for (i <- 1 until rows) {
       val radius: Float = i.toFloat / rows
@@ -28,10 +29,10 @@ class PolarGrid(rows: Int) extends Grid {
       val ratio = Math.round(estimatedCellWidth / rowHeight)
       val numCells = previousCount * ratio
 
-      cells += new ArrayBuffer[PolarCell](numCells.toInt)
+      cells += new ArrayBuffer[CellType](numCells.toInt)
 
       for (j <- 0 until numCells.toInt) {
-        cells(i) += new PolarCell(i, j)
+        cells(i) += new CellType(i, j)
       }
     }
 
@@ -39,7 +40,7 @@ class PolarGrid(rows: Int) extends Grid {
   }
 
   def configureCells(): Unit = {
-    eachCell((cell: PolarCell) => {
+    eachCell((cell: CellType) => {
       if (cell.row > 0) {
         cell.cw = getCell(cell.row, cell.column + 1)
         cell.ccw = getCell(cell.row, cell.column - 1)
@@ -58,24 +59,25 @@ class PolarGrid(rows: Int) extends Grid {
     rows
   }
 
-  def getCell(row: Int, column: Int): PolarCell = {
-    // TODO
+  def getCell(row: Int, column: Int): CellType = {
     grid(row)(column)
   }
 
-  def randomCell(): PolarCell = {
-    // TODO
-    getCell(0, 0)
+  def randomCell(): CellType = {
+    val row = r.nextInt(rows);
+    val column = r.nextInt(grid(row).length);
+
+    getCell(row, column)
   }
 
-  def eachRow(fn: (Iterator[PolarCell] => Unit)) = {
+  def eachRow(fn: (Iterator[CellType] => Unit)) = {
     for (i <- 0 until grid.length) {
       fn(grid(i).iterator);
     }
   }
 
-  def eachCell(fn: (PolarCell => Unit)) = {
-    eachRow((row: Iterator[PolarCell]) => {
+  def eachCell(fn: (CellType => Unit)) = {
+    eachRow((row: Iterator[CellType]) => {
       row.foreach(fn)
     })
   }
@@ -113,42 +115,41 @@ class PolarGrid(rows: Int) extends Grid {
     }
 
     eachCell((cell: PolarCell) => {
-      println("drawing for cell " + cell)
-      println("row length: " + grid(cell.row).length)
-      val theta = 2 * Math.PI / grid(cell.row).length
-      val innerRadius = cell.row * cellSize
-      val outerRadius = (cell.row + 1) * cellSize
-      val thetaCcw = cell.column * theta
-      val thetaCw = (cell.column + 1) * theta
-      val ax = center + (innerRadius * Math.cos(thetaCcw)).toInt
-      val ay = center + (innerRadius * Math.sin(thetaCcw)).toInt
-      //val bx = center + (outerRadius * Math.cos(thetaCcw)).toInt
-      //val by = center + (outerRadius * Math.sin(thetaCcw)).toInt
-      val cx = center + (innerRadius * Math.cos(thetaCw)).toInt
-      val cy = center + (innerRadius * Math.sin(thetaCw)).toInt
-      val dx = center + (outerRadius * Math.cos(thetaCw)).toInt
-      val dy = center + (outerRadius * Math.sin(thetaCw)).toInt
-      //val aa: Float = angle0(ax, ay)
-      //val ab: Float = angle0(bx, by)
-      //val ac: Float = angle0(cx, cy)
+      if (cell.row != 0) {
+        val theta = 2 * Math.PI / grid(cell.row).length
+        val innerRadius = cell.row * cellSize
+        val outerRadius = (cell.row + 1) * cellSize
+        val thetaCcw = cell.column * theta
+        val thetaCw = (cell.column + 1) * theta
+        val ax = center + (innerRadius * Math.cos(thetaCcw)).toInt
+        val ay = center + (innerRadius * Math.sin(thetaCcw)).toInt
+        //val bx = center + (outerRadius * Math.cos(thetaCcw)).toInt
+        //val by = center + (outerRadius * Math.sin(thetaCcw)).toInt
+        val cx = center + (innerRadius * Math.cos(thetaCw)).toInt
+        val cy = center + (innerRadius * Math.sin(thetaCw)).toInt
+        val dx = center + (outerRadius * Math.cos(thetaCw)).toInt
+        val dy = center + (outerRadius * Math.sin(thetaCw)).toInt
+        //val aa: Float = angle0(ax, ay)
+        //val ab: Float = angle0(bx, by)
+        //val ac: Float = angle0(cx, cy)
 
-      println(List(ax, ay, cx, cy, dx, dy))
-      //println("thetaCw: " + thetaCw)
-      //println("thetaCcw: " + thetaCcw)
-      //println("angleA: " + aa)
-      //println("angleC: " + ac)
-      //println("angleDiff " + angleDiff(aa, ac))
+        //println(List(ax, ay, cx, cy, dx, dy))
+        //println("thetaCw: " + thetaCw)
+        //println("thetaCcw: " + thetaCcw)
+        //println("angleA: " + aa)
+        //println("angleC: " + ac)
+        //println("angleDiff " + angleDiff(aa, ac))
 
-      if (!cell.isLinked(cell.north)) {
-        println("drawing north")
-        g.drawLine(ax, ay, cx, cy)
-        //g.draw(new Arc2D.Float(ax, ay, innerRadius, innerRadius, aa, angleDiff(aa, ac), Arc2D.OPEN))
-      }
+        println("cell " + cell)
+        if (!cell.isLinked(cell.inward)) {
+          g.drawLine(ax, ay, cx, cy)
+          //g.draw(new Arc2D.Float(ax, ay, innerRadius, innerRadius, aa, angleDiff(aa, ac), Arc2D.OPEN))
+        }
 
-      if (!cell.isLinked(cell.east)) {
-        println("drawing east")
-        g.drawLine(cx, cy, dx, dy)
-        //g.draw(new Arc2D.Double(bx, by, innerRadius, innerRadius, ab, angleDiff(ab, angle0(dx, dy)), Arc2D.OPEN))
+        if (!cell.isLinked(cell.cw)) {
+          g.drawLine(cx, cy, dx, dy)
+          //g.draw(new Arc2D.Double(bx, by, innerRadius, innerRadius, ab, angleDiff(ab, angle0(dx, dy)), Arc2D.OPEN))
+        }
       }
     })
 

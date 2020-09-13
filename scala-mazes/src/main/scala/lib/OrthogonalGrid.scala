@@ -9,18 +9,19 @@ import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
 class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
-  type CellType = Cell
+  type CellType = GridCell
 
   var size = (rows, columns)
-  var _grid: Array[Array[Cell]] = prepareGrid()
+  var _grid: Array[Array[CellType]] = prepareGrid()
+  val r = scala.util.Random;
 
   configureCells()
 
-  private def prepareGrid(): Array[Array[Cell]] = {
-    var grid = Array.ofDim[Cell](rows, columns);
+  private def prepareGrid(): Array[Array[CellType]] = {
+    var grid = Array.ofDim[CellType](rows, columns);
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      grid(i)(j) = new Cell(i, j);
+      grid(i)(j) = new GridCell(i, j);
     }
 
     grid
@@ -44,29 +45,27 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
 
   def numCells: Int = rows * columns
 
-  def getCell(row: Int, column: Int): Cell = {
+  def getCell(row: Int, column: Int): CellType = {
     if (row < 0 || row >= rows) return null;
     if (column < 0 || column >= columns) return null;
 
     _grid(row)(column)
   }
 
-  def randomCell(): Cell = {
-    val r = scala.util.Random;
-
+  def randomCell(): CellType = {
     val row = r.nextInt(rows);
     val column = r.nextInt(_grid(row).length);
 
     getCell(row, column)
   }
 
-  def eachRow(fn: (Iterator[Cell] => Unit)) = {
+  def eachRow(fn: (Iterator[CellType] => Unit)) = {
     for (i <- 0 until rows) {
       fn(_grid(i).iterator);
     }
   }
 
-  def eachCell(fn: (Cell => Unit)) = {
+  def eachCell(fn: (CellType => Unit)) = {
     eachRow(row => {
       row.filter(_ != null).foreach(fn)
     })
@@ -82,7 +81,7 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
 
       while (it.hasNext) {
         val rowCell = it.next()
-        var c = if (rowCell == null) new Cell(-1, -1) else rowCell;
+        var c = if (rowCell == null) new CellType(-1, -1) else rowCell;
         var body = " " + contentsOf(c) + " "
         var eastBoundary = if (c.isLinked(c.east)) " " else "|";
         top += (body + eastBoundary);
@@ -168,8 +167,8 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
     canvas
   }
 
-  def deadends(): Cells = {
-    var list = new Cells()
+  def deadends(): ArrayBuffer[CellType] = {
+    var list = new ArrayBuffer[CellType]()
 
     eachCell(cell => {
       if (cell.getLinks().size == 1) {

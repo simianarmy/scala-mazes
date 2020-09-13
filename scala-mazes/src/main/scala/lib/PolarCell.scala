@@ -1,17 +1,21 @@
 package lib
 
-class PolarCell(row: Int, column: Int) extends Cell(row, column) {
-  var cw: Cell = null
-  var ccw: Cell = null
-  var inward: Cell = null
-  private var _outward = new Cells()
+import scala.collection.mutable.ArrayBuffer
+
+class PolarCell(var row: Int, var column: Int) extends LinkableCell {
+  type CT = PolarCell
+
+  var cw: PolarCell = null
+  var ccw: PolarCell = null
+  var inward: PolarCell = null
+  private var _outward = new ArrayBuffer[PolarCell]()
 
   def outward = _outward
 
-  override def neighbors(): Cells = {
-    var list = new Cells()
+  def neighbors(): ArrayBuffer[PolarCell] = {
+    var list = new ArrayBuffer[PolarCell]()
 
-    def addIfNotNull(cell: Cell): Unit = {
+    def addIfNotNull(cell: PolarCell): Unit = {
       if (cell != null) {
         list += cell
       }
@@ -24,4 +28,7 @@ class PolarCell(row: Int, column: Int) extends Cell(row, column) {
     list ++= outward
     list
   }
+
+  override def toString: String =
+    s"[PolarCell: " + row + ", " + column + "]";
 }
