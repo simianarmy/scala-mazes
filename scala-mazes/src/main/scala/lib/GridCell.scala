@@ -7,6 +7,8 @@ object GridCell {
 }
 
 case class GridCell(var row: Int, var column: Int) extends MazeCell {
+  type T = GridCell
+
   var north: GridCell = null;
   var south: GridCell = null;
   var east: GridCell = null;

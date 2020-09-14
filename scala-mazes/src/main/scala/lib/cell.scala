@@ -11,15 +11,18 @@ trait Cell {
 }
 
 trait MazeCell extends Cell {
-  var links = Map[MazeCell, Boolean]()
+  type T
+  var links = Map[T, Boolean]()
 
-  def getLinks(): Iterable[MazeCell] = links.keys
-  def isLinked(cell: MazeCell): Boolean = links.contains(cell)
-  //def neighbors(): ArrayBuffer[MazeCell]
+  def getLinks(): Iterable[T] = links.keys
+  def isLinked(cell: T): Boolean = links.contains(cell)
+  def neighbors(): ArrayBuffer[T]
+
+  // howowowowowowowowowow????????
   //def link(cell: MazeCell, bidi: Boolean = true): MazeCell
   //def unlink(cell: MazeCell, bidi: Boolean = true): MazeCell
   // TODO: link and unlink should be in the MazeCell trait
-  def link(cell: MazeCell, bidi: Boolean = true): MazeCell = {
+  def link(cell: T, bidi: Boolean = true): T = {
     links += (cell -> true);
 
     if (bidi) {
@@ -28,7 +31,7 @@ trait MazeCell extends Cell {
     cell
   }
 
-  def unlink(cell: MazeCell, bidi: Boolean = true): MazeCell = {
+  def unlink(cell: T, bidi: Boolean = true): T = {
     links -= (cell);
 
     if (bidi) {

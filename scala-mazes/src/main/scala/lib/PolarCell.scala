@@ -3,6 +3,8 @@ package lib
 import scala.collection.mutable.ArrayBuffer
 
 case class PolarCell(var row: Int, var column: Int) extends MazeCell {
+  type T = PolarCell
+
   var cw: PolarCell = null
   var ccw: PolarCell = null
   var inward: PolarCell = null

@@ -1,7 +1,6 @@
 package algorithms
 
 import lib.Grid
-import lib.Cell
 
 object AldousBroder {
   def on[T <: Grid](grid: T): T = {
