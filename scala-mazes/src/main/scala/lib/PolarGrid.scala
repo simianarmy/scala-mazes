@@ -8,18 +8,20 @@ import java.awt.geom.Arc2D
 /**
   * TODO: Support drawing arcs
   */
-class PolarGrid(rows: Int) extends Grid {
+class PolarGrid(rows: Int) extends Grid with TextRenderer[PolarCell] with ImageRenderer[PolarCell] {
   type CellType = PolarCell
 
-  var grid: ArrayBuffer[ArrayBuffer[CellType]] = prepareGrid()
   var size = (rows, 1)
+  var grid: ArrayBuffer[ArrayBuffer[CellType]] = prepareGrid()
   val r = scala.util.Random;
 
-  def prepareGrid(): ArrayBuffer[ArrayBuffer[CellType]] = {
+  configureCells()
+
+  private def prepareGrid(): ArrayBuffer[ArrayBuffer[CellType]] = {
     var cells = new ArrayBuffer[ArrayBuffer[CellType]](rows)
     val rowHeight = 1.0 / rows
 
-    cells += ArrayBuffer(new CellType(0, 0))
+    cells += ArrayBuffer(PolarCell(0, 0))
 
     for (i <- 1 until rows) {
       val radius: Float = i.toFloat / rows
@@ -32,14 +34,14 @@ class PolarGrid(rows: Int) extends Grid {
       cells += new ArrayBuffer[CellType](numCells.toInt)
 
       for (j <- 0 until numCells.toInt) {
-        cells(i) += new CellType(i, j)
+        cells(i) += PolarCell(i, j)
       }
     }
 
     cells
   }
 
-  def configureCells(): Unit = {
+  private def configureCells(): Unit = {
     eachCell((cell: CellType) => {
       if (cell.row > 0) {
         cell.cw = getCell(cell.row, cell.column + 1)

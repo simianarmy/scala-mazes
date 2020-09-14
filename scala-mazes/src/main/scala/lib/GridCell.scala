@@ -3,7 +3,7 @@ package lib
 import scala.collection.mutable.ArrayBuffer
 
 object GridCell {
-  def nullCell = new GridCell(-1, -1)
+  def nullCell = GridCell(-1, -1)
 }
 
 case class GridCell(var row: Int, var column: Int) extends MazeCell {
@@ -11,25 +11,6 @@ case class GridCell(var row: Int, var column: Int) extends MazeCell {
   var south: GridCell = null;
   var east: GridCell = null;
   var west: GridCell = null;
-
-  // TODO: link and unlink should be in the MazeCell trait
-  def link(cell: GridCell, bidi: Boolean = true): GridCell = {
-    links += (cell -> true);
-
-    if (bidi) {
-      cell.link(this, false);
-    }
-    cell
-  }
-
-  def unlink(cell: GridCell, bidi: Boolean = true): GridCell = {
-    links -= (cell);
-
-    if (bidi) {
-      cell.unlink(this, false);
-    }
-    cell
-  }
 
   def neighbors(): ArrayBuffer[GridCell] = {
     var list = new ArrayBuffer[GridCell]();

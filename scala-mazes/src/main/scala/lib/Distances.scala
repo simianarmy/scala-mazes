@@ -38,9 +38,12 @@ class Distances[C](root: C) {
 
       breakable {
         for (neighbor <- links) {
-          if (this.get(neighbor) < this.get(current)) {
-            breadcrumbs.set(neighbor, this.get(neighbor))
-            current = neighbor
+          // cast neighbor to C I guess
+          val cneighbor = neighbor.asInstanceOf[C]
+
+          if (this.get(cneighbor) < this.get(current)) {
+            breadcrumbs.set(cneighbor, this.get(cneighbor))
+            current = cneighbor
             break
           }
         }

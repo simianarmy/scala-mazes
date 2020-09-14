@@ -18,13 +18,13 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRend
   configureCells()
 
   private def prepareGrid(): Array[Array[CellType]] = {
-    var grid = Array.ofDim[CellType](rows, columns);
+    var cells = Array.ofDim[CellType](rows, columns);
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      grid(i)(j) = new GridCell(i, j);
+      cells(i)(j) = GridCell(i, j);
     }
 
-    grid
+    cells
   }
 
   private def configureCells(): Unit = {
