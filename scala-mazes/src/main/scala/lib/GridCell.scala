@@ -3,10 +3,10 @@ package lib
 import scala.collection.mutable.ArrayBuffer
 
 object GridCell {
-  def nullCell = GridCell(-1, -1)
+  def nullCell = new GridCell(-1, -1)
 }
 
-case class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
+class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
   var north: GridCell = null;
   var south: GridCell = null;
   var east: GridCell = null;
@@ -25,32 +25,4 @@ case class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
 
   override def toString: String =
     s"[GridCell: " + row + ", " + column + "]";
-
-  // TODO: Extract to trait or utility
-  def distances: Distances[GridCell] = {
-    var distances = new Distances[GridCell](this)
-    var frontier = new ArrayBuffer[GridCell](10)
-    var newFrontier = new ArrayBuffer[GridCell](10)
-
-    frontier += this
-
-    while (!frontier.isEmpty) {
-      newFrontier.clear()
-
-      for (i <- 0 until frontier.length) {
-        val cell = frontier(i)
-
-        for (linked <- cell.getLinks()) {
-          val gcLinked = linked.asInstanceOf[GridCell]
-          if (distances.get(gcLinked) == Distances.NotFound) {
-            distances.set(gcLinked, distances.get(cell) + 1)
-            newFrontier += gcLinked
-          }
-        }
-      }
-
-      frontier = newFrontier.clone()
-    }
-    distances
-  }
 }

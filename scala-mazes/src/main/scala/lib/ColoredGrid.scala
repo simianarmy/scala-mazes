@@ -16,14 +16,14 @@ class ColoredGrid(rows: Int, columns: Int, startColor: Color = Color.WHITE)
   val MaxLightsIdx = 120
   val FadeColors = false
 
-  def cellIndex(cell: GridCell): Int = cell.row * columns + cell.column
+  def cellIndex(cell: MazeCell): Int = cell.row * columns + cell.column
 
-  override def distances_=(d: Distances[GridCell]): Unit = {
+  override def distances_=(d: Distances[MazeCell]): Unit = {
     _distances = d
     maximum = distances.max._2
   }
 
-  override def backgroundColorFor(cell: GridCell): Color = {
+  override def backgroundColorFor(cell: MazeCell): Color = {
     val distance = distances.get(cell)
 
     if (distance == Distances.NotFound) return null

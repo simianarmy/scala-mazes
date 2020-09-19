@@ -17,7 +17,7 @@ case class PolarGrid(rows: Int) extends Grid(rows, 1) {
     var cells = new ArrayBuffer[ArrayBuffer[PolarCell]](rows)
     val rowHeight = 1.0 / rows
 
-    cells += ArrayBuffer(PolarCell(0, 0))
+    cells += ArrayBuffer(new PolarCell(0, 0))
 
     for (i <- 1 until rows) {
       val radius: Float = i.toFloat / rows
@@ -30,7 +30,7 @@ case class PolarGrid(rows: Int) extends Grid(rows, 1) {
       cells += new ArrayBuffer[PolarCell](numCells.toInt)
 
       for (j <- 0 until numCells.toInt) {
-        cells(i) += PolarCell(i, j)
+        cells(i) += new PolarCell(i, j)
       }
     }
 
@@ -66,6 +66,12 @@ case class PolarGrid(rows: Int) extends Grid(rows, 1) {
     val column = r.nextInt(grid(row).length);
 
     getCell(row, column)
+  }
+
+  def eachCell(fn: (PolarCell => Unit)) = {
+    eachRow((row: Iterator[PolarCell]) => {
+      row.foreach(fn)
+    })
   }
 
   def eachRow(fn: (Iterator[PolarCell] => Unit)) = {

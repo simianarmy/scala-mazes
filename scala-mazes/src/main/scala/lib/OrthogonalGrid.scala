@@ -17,7 +17,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     var cells = Array.ofDim[GridCell](rows, columns);
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      cells(i)(j) = GridCell(i, j);
+      cells(i)(j) = new GridCell(i, j);
     }
 
     cells
@@ -53,7 +53,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     getCell(row, column)
   }
 
-  override def eachRow(fn: (Iterator[GridCell] => Unit)) = {
+  override def eachRow(fn: (Iterator[MazeCell] => Unit)) = {
     for (i <- 0 until rows) {
       fn(_grid(i).iterator);
     }
@@ -64,7 +64,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     var res =
       rows + " x " + columns + "\n+" + ("---+" * columns) + "\n";
 
-    eachRow((it: Iterator[GridCell]) => {
+    eachRow((it: Iterator[MazeCell]) => {
       var top = "|";
       var bottom = "+";
 
@@ -110,7 +110,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     g.setStroke(new BasicStroke()) // reset to default
 
     for (mode <- List("backgrounds", "walls")) {
-      eachCell((cell: GridCell) => {
+      eachCell((cell: MazeCell) => {
         val x1 = cell.column * cellSize;
         val y1 = cell.row * cellSize;
         val x2 = (cell.column + 1) * cellSize;
@@ -157,10 +157,10 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     canvas
   }
 
-  def deadends(): ArrayBuffer[GridCell] = {
-    var list = new ArrayBuffer[GridCell]()
+  def deadends(): ArrayBuffer[MazeCell] = {
+    var list = new ArrayBuffer[MazeCell]()
 
-    eachCell((cell: GridCell) => {
+    eachCell((cell: MazeCell) => {
       if (cell.getLinks().size == 1) {
         list += cell
       }

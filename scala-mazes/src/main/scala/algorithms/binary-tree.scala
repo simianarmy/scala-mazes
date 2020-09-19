@@ -9,8 +9,7 @@ object BinaryTree {
     def run() = {
       grid.eachCell((cell: MazeCell) => {
         // TODO: case cell to a GridCell??
-        val gc = cell.asInstanceOf[GridCell]
-        val neighbors = List[GridCell](gc.north, gc.east).filter(_ != null)
+        val neighbors = List[MazeCell](cell.north, cell.east).filter(_ != null)
 
         if (!neighbors.isEmpty) {
           cell.link(RandomUtil.sample(neighbors))

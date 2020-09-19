@@ -16,15 +16,15 @@ trait ImageRenderer {
   */
 abstract class Grid(rows: Int, columns: Int) extends TextRenderer with ImageRenderer {
   val size = (rows, columns)
-  val r = scala.util.Random;
+  val r = scala.util.Random
   def numCells: Int
   def getCell(row: Int, column: Int): MazeCell
   def randomCell(): MazeCell
-  def eachRow[T <: MazeCell](fn: (Iterator[T] => Unit))
+  def eachRow(fn: (Iterator[MazeCell] => Unit))
 
   // TODO: Use iterator pattern
-  def eachCell[T <: MazeCell](fn: (T => Unit)) = {
-    eachRow((row: Iterator[T]) => {
+  def eachCell(fn: (MazeCell => Unit)) = {
+    eachRow((row: Iterator[MazeCell]) => {
       row.foreach(fn)
     })
   }
