@@ -8,17 +8,13 @@ import java.awt.geom.Arc2D
 /**
   * TODO: Support drawing arcs
   */
-case class PolarGrid(rows: Int) extends Grid {
-  type CellType = PolarCell
-
-  var size = (rows, 1)
-  var grid: ArrayBuffer[ArrayBuffer[CellType]] = prepareGrid()
-  val r = scala.util.Random;
+case class PolarGrid(rows: Int) extends Grid(rows, 1) {
+  var grid: ArrayBuffer[ArrayBuffer[PolarCell]] = prepareGrid()
 
   configureCells()
 
-  private def prepareGrid(): ArrayBuffer[ArrayBuffer[CellType]] = {
-    var cells = new ArrayBuffer[ArrayBuffer[CellType]](rows)
+  private def prepareGrid(): ArrayBuffer[ArrayBuffer[PolarCell]] = {
+    var cells = new ArrayBuffer[ArrayBuffer[PolarCell]](rows)
     val rowHeight = 1.0 / rows
 
     cells += ArrayBuffer(PolarCell(0, 0))
@@ -31,7 +27,7 @@ case class PolarGrid(rows: Int) extends Grid {
       val ratio = Math.round(estimatedCellWidth / rowHeight)
       val numCells = previousCount * ratio
 
-      cells += new ArrayBuffer[CellType](numCells.toInt)
+      cells += new ArrayBuffer[PolarCell](numCells.toInt)
 
       for (j <- 0 until numCells.toInt) {
         cells(i) += PolarCell(i, j)
@@ -42,7 +38,7 @@ case class PolarGrid(rows: Int) extends Grid {
   }
 
   private def configureCells(): Unit = {
-    eachCell((cell: CellType) => {
+    eachCell((cell: PolarCell) => {
       if (cell.row > 0) {
         cell.cw = getCell(cell.row, cell.column + 1)
         cell.ccw = getCell(cell.row, cell.column - 1)
@@ -61,27 +57,21 @@ case class PolarGrid(rows: Int) extends Grid {
     rows
   }
 
-  def getCell(row: Int, column: Int): CellType = {
+  def getCell(row: Int, column: Int): PolarCell = {
     grid(row)(column)
   }
 
-  def randomCell(): CellType = {
+  def randomCell(): PolarCell = {
     val row = r.nextInt(rows);
     val column = r.nextInt(grid(row).length);
 
     getCell(row, column)
   }
 
-  def eachRow(fn: (Iterator[CellType] => Unit)) = {
+  def eachRow(fn: (Iterator[PolarCell] => Unit)) = {
     for (i <- 0 until grid.length) {
       fn(grid(i).iterator);
     }
-  }
-
-  def eachCell(fn: (CellType => Unit)) = {
-    eachRow((row: Iterator[CellType]) => {
-      row.foreach(fn)
-    })
   }
 
   def toPng(cellSize: Int = 10): BufferedImage = {

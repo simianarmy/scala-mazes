@@ -8,10 +8,8 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-case class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
-  val size = (rows, columns)
+case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
   val _grid: Array[Array[GridCell]] = prepareGrid()
-  val r = scala.util.Random;
 
   configureCells()
 
@@ -55,16 +53,10 @@ case class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
     getCell(row, column)
   }
 
-  def eachRow(fn: (Iterator[GridCell] => Unit)) = {
+  override def eachRow(fn: (Iterator[GridCell] => Unit)) = {
     for (i <- 0 until rows) {
       fn(_grid(i).iterator);
     }
-  }
-
-  def eachCell(fn: (GridCell => Unit)) = {
-    eachRow((row: Iterator[GridCell]) => {
-      row.filter(_ != null).foreach(fn)
-    })
   }
 
   override def toString(): String = {

@@ -19,7 +19,7 @@ object HuntKill {
       } else {
         looping = false
 
-        grid.eachCell(cell => {
+        grid.eachCell((cell: MazeCell) => {
           if (!looping) {
             val visitedNeighbors = cell.neighbors().filter(n => !n.getLinks().isEmpty)
 

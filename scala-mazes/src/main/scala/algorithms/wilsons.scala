@@ -8,7 +8,7 @@ object Wilsons {
   def on[T <: Grid](grid: T): T = {
     var unvisited = ArrayBuffer[MazeCell]()
 
-    grid.eachCell(c => {
+    grid.eachCell((c: MazeCell) => {
       unvisited.append(c)
     })
 
