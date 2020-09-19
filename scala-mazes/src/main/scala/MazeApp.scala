@@ -20,7 +20,7 @@ class MazeApp extends App {
     }
   }
 
-  def printMaze(g: Grid): Unit = {
+  def printMaze[T <: Grid](g: T): Unit = {
     if (ascii) {
       println(g);
     } else {

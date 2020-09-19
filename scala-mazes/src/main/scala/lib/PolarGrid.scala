@@ -8,16 +8,16 @@ import java.awt.geom.Arc2D
 /**
   * TODO: Support drawing arcs
   */
-case class PolarGrid(rows: Int) extends Grid(rows, 1) {
-  var grid: ArrayBuffer[ArrayBuffer[PolarCell]] = prepareGrid()
+case class PolarGrid(rows: Int) extends Grid[PolarCell, ArrayBuffer[PolarCell]](rows, 1) {
+  val grid = prepareGrid()
 
   configureCells()
 
-  private def prepareGrid(): ArrayBuffer[ArrayBuffer[PolarCell]] = {
-    var cells = new ArrayBuffer[ArrayBuffer[PolarCell]](rows)
+  private def prepareGrid(): Array[ArrayBuffer[PolarCell]] = {
+    var cells = new Array[ArrayBuffer[PolarCell]](rows)
     val rowHeight = 1.0 / rows
 
-    cells += ArrayBuffer(new PolarCell(0, 0))
+    cells(0)(0) = new PolarCell(0, 0)
 
     for (i <- 1 until rows) {
       val radius: Float = i.toFloat / rows
@@ -27,7 +27,7 @@ case class PolarGrid(rows: Int) extends Grid(rows, 1) {
       val ratio = Math.round(estimatedCellWidth / rowHeight)
       val numCells = previousCount * ratio
 
-      cells += new ArrayBuffer[PolarCell](numCells.toInt)
+      cells(i) = new ArrayBuffer[PolarCell](numCells.toInt)
 
       for (j <- 0 until numCells.toInt) {
         cells(i) += new PolarCell(i, j)
@@ -66,18 +66,6 @@ case class PolarGrid(rows: Int) extends Grid(rows, 1) {
     val column = r.nextInt(grid(row).length);
 
     getCell(row, column)
-  }
-
-  def eachCell(fn: (PolarCell => Unit)) = {
-    eachRow((row: Iterator[PolarCell]) => {
-      row.foreach(fn)
-    })
-  }
-
-  def eachRow(fn: (Iterator[PolarCell] => Unit)) = {
-    for (i <- 0 until grid.length) {
-      fn(grid(i).iterator);
-    }
   }
 
   def toPng(cellSize: Int = 10): BufferedImage = {

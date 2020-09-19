@@ -5,13 +5,13 @@ import lib.RandomUtil
 import lib.MazeCell
 
 object AldousBroder {
-  def on[T <: Grid](grid: T): T = {
+  def on[A,B](grid: Grid[A,B]): Grid[A,B] = {
     val r = scala.util.Random;
     var cell = grid.randomCell()
     var unvisited = grid.numCells - 1
 
     while (unvisited > 0) {
-      val neighbor: MazeCell = RandomUtil.sample(cell.neighbors())
+      val neighbor: MazeCell = RandomUtil.sample(cell.neighbors)
 
       if (neighbor.getLinks().isEmpty) {
         cell.link(neighbor)

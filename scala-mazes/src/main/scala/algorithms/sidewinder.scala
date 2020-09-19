@@ -5,19 +5,18 @@ import scala.collection.mutable.ArrayBuffer
 import lib.{Grid, OrthogonalGrid, GridCell, MazeCell}
 
 object Sidewinder {
-  def on[T <: Grid](grid: T): T = {
+  def on[A <: GridCell,B](grid: Grid[A,B]): Grid[A,B] = {
     val r = scala.util.Random
     var run = new ArrayBuffer[MazeCell]()
 
-    grid.eachRow((it: Iterator[MazeCell]) => {
+    for (row <- grid) {
       run.clear();
 
-      while (it.hasNext) {
-        val cell = it.next()
+      for (cell <- row) {
         run += cell;
 
         grid match {
-          case OrthogonalGrid => {
+          case OrthogonalGrid(_,_) => {
             val gc = cell.asInstanceOf[GridCell]
             val atEasternBoundary = (gc.east == null);
             val atNorthernBoundary = (gc.north == null);
@@ -39,7 +38,7 @@ object Sidewinder {
           case _ => ()
         }
       }
-    });
+    }
 
     grid
   }

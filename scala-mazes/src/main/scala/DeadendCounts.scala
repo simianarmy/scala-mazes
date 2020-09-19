@@ -12,7 +12,8 @@ object DeadendCounts extends MazeApp {
   val size = 20
 
   var averages = collection.mutable.Map[String, Float]()
-  val algorithms = Map[String, (OrthogonalGrid) => OrthogonalGrid]("Sidewinder" -> Sidewinder.on,
+  val algorithms = Map[String, (Grid[Any,Any]) => Grid[Any,Any]](
+    "Sidewinder" -> Sidewinder.on,
     "Aldous-Broder" -> AldousBroder.on,
     "Wilsons" -> Wilsons.on,
     "Hunt-and-kill" -> HuntKill.on,

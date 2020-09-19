@@ -18,7 +18,7 @@ object AsciiMask extends App {
   }
 
   var g = new MaskedGrid(mask)
-  g = RecursiveBacktracker.on(g)
+  g = RecursiveBacktracker.on(g, null)
 
   val filename = "generated/maze-rb-" + g.rows + "x" + g.columns + ".png"
   javax.imageio.ImageIO.write(

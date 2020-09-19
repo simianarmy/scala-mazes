@@ -5,12 +5,12 @@ import lib.MazeCell
 import lib.RandomUtil
 
 object HuntKill {
-  def on[T <: Grid](grid: T): T = {
+  def on[A,B](grid: Grid[A,B]): Grid[A,B] = {
     var current = grid.randomCell()
     var looping = true
 
     while (looping) {
-      val unvisitedNeighbors = current.neighbors().filter(n => n.getLinks().isEmpty)
+      val unvisitedNeighbors = current.neighbors[MazeCell].filter(n => n.getLinks().isEmpty)
 
       if (unvisitedNeighbors.length > 0) {
         val neighbor = RandomUtil.sample(unvisitedNeighbors)
@@ -19,9 +19,9 @@ object HuntKill {
       } else {
         looping = false
 
-        grid.eachCell((cell: MazeCell) => {
+        grid.eachCell(cell => {
           if (!looping) {
-            val visitedNeighbors = cell.neighbors().filter(n => !n.getLinks().isEmpty)
+            val visitedNeighbors = cell.neighbors[MazeCell].filter(n => !n.getLinks().isEmpty)
 
             if (cell.getLinks().isEmpty && !visitedNeighbors.isEmpty) {
               current = cell

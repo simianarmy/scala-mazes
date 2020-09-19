@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
-  val _grid: Array[Array[GridCell]] = prepareGrid()
+case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[GridCell]](rows, columns) {
+  val grid = prepareGrid()
 
   configureCells()
 
@@ -43,20 +43,18 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
 
   def getCell(row: Int, column: Int): GridCell = {
     if (row < 0 || row >= rows || column < 0 || column >= columns) null
-    else _grid(row)(column)
+    else grid(row)(column)
+  }
+
+  def getRows(): Array[Array[GridCell]] = {
+    grid
   }
 
   def randomCell(): GridCell = {
     val row = r.nextInt(rows);
-    val column = r.nextInt(_grid(row).length);
+    val column = r.nextInt(grid(row).length);
 
     getCell(row, column)
-  }
-
-  override def eachRow(fn: (Iterator[MazeCell] => Unit)) = {
-    for (i <- 0 until rows) {
-      fn(_grid(i).iterator);
-    }
   }
 
   override def toString(): String = {
@@ -64,12 +62,11 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     var res =
       rows + " x " + columns + "\n+" + ("---+" * columns) + "\n";
 
-    eachRow((it: Iterator[MazeCell]) => {
+    for (row <- getRows()) {
       var top = "|";
       var bottom = "+";
 
-      while (it.hasNext) {
-        val rowCell = it.next()
+      row.foreach(rowCell => {
         var c = if (rowCell == null) new GridCell(-1, -1) else rowCell;
         var body = " " + contentsOf(c) + " "
         var eastBoundary = if (c.isLinked(c.east)) " " else "|";
@@ -77,11 +74,11 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
         var southBoundary = if (c.isLinked(c.south)) "   " else "---";
         var corner = "+";
         bottom += (southBoundary + corner);
-      };
+      });
 
       res += top + "\n";
       res += bottom + "\n";
-    })
+    }
 
     res
   }
@@ -110,7 +107,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid(rows, columns) {
     g.setStroke(new BasicStroke()) // reset to default
 
     for (mode <- List("backgrounds", "walls")) {
-      eachCell((cell: MazeCell) => {
+      eachCell(cell => {
         val x1 = cell.column * cellSize;
         val y1 = cell.row * cellSize;
         val x2 = (cell.column + 1) * cellSize;

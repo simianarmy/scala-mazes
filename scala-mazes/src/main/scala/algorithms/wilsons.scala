@@ -5,10 +5,10 @@ import lib.{Grid, MazeCell}
 import lib.RandomUtil
 
 object Wilsons {
-  def on[T <: Grid](grid: T): T = {
+  def on[A <: MazeCell,B](grid: Grid[A,B]): Grid[A,B] = {
     var unvisited = ArrayBuffer[MazeCell]()
 
-    grid.eachCell((c: MazeCell) => {
+    grid.eachCell((c: A) => {
       unvisited.append(c)
     })
 
@@ -21,7 +21,7 @@ object Wilsons {
       path += cell
 
       while (unvisited.contains(cell)) {
-        cell = RandomUtil.sample(cell.neighbors())
+        cell = RandomUtil.sample(cell.neighbors)
         val position = path.indexOf(cell)
 
         if (position > 0) {

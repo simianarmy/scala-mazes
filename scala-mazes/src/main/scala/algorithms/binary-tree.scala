@@ -5,11 +5,11 @@ import lib.RandomUtil
 import lib.{MazeCell, GridCell}
 
 object BinaryTree {
-  def on[T <: Grid](grid: T): T = {
+  def on[A <: GridCell,B](grid: Grid[A,B]): Grid[A,B] = {
     def run() = {
-      grid.eachCell((cell: MazeCell) => {
+      grid.eachCell(cell => {
         // TODO: case cell to a GridCell??
-        val neighbors = List[MazeCell](cell.north, cell.east).filter(_ != null)
+        val neighbors = List[GridCell](cell.north, cell.east).filter(_ != null)
 
         if (!neighbors.isEmpty) {
           cell.link(RandomUtil.sample(neighbors))
@@ -19,7 +19,7 @@ object BinaryTree {
     }
 
     grid match {
-      case OrthogonalGrid => run()
+      case OrthogonalGrid(_,_) => run()
       case _ => grid
     }
   }

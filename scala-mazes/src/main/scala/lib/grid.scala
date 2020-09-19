@@ -14,20 +14,20 @@ trait ImageRenderer {
 /**
   * Defines grid contract
   */
-abstract class Grid(rows: Int, columns: Int) extends TextRenderer with ImageRenderer {
-  val size = (rows, columns)
+abstract class Grid[B, A <: Iterable[B]](rows: Int, columns: Int) extends Iterable[A] with TextRenderer with ImageRenderer {
+  val dimensions = (rows, columns)
   val r = scala.util.Random
+  val grid: Array[A] // this ok?
   def numCells: Int
   def getCell(row: Int, column: Int): MazeCell
+  def getRows(): Iterable[A]
   def randomCell(): MazeCell
-  def eachRow(fn: (Iterator[MazeCell] => Unit))
+  def iterable = grid.iterator
 
-  // TODO: Use iterator pattern
-  def eachCell(fn: (MazeCell => Unit)) = {
-    eachRow((row: Iterator[MazeCell]) => {
-      row.foreach(fn)
-    })
+  def eachCell(fn: (B => Unit)): Unit = {
+    for (row <- grid; cell <- row) {
+      fn(cell)
+    }
   }
-
 }
 

@@ -7,7 +7,7 @@ abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) {
 
   def getLinks(): Iterable[MazeCell] = links.keys
   def isLinked(cell: MazeCell): Boolean = links.contains(cell)
-  def neighbors(): ArrayBuffer[MazeCell]
+  def neighbors[T]: ArrayBuffer[T]
 
   // howowowowowowowowowow????????
   //def link(cell: MazeCell, bidi: Boolean = true): MazeCell
