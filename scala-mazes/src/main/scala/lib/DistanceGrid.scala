@@ -1,15 +1,15 @@
 package lib
 
 class DistanceGrid(rows: Int, columns: Int) extends OrthogonalGrid(rows, columns) {
-  var _distances: Distances[CellType] = null
+  var _distances: Distances[GridCell] = null
 
-  def distances: Distances[CellType] = _distances
+  def distances: Distances[GridCell] = _distances
 
-  def distances_=(d: Distances[CellType]): Unit = {
+  def distances_=(d: Distances[GridCell]): Unit = {
     _distances = d
   }
 
-  override def contentsOf(cell: CellType): String = {
+  override def contentsOf(cell: GridCell): String = {
     if (distances != null && distances.get(cell) >= 0) {
       java.lang.Long.toString(distances.get(cell), 36)
     } else {

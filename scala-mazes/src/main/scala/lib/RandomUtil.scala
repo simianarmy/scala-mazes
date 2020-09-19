@@ -8,4 +8,8 @@ object RandomUtil {
   def sample[T](seq: ArrayBuffer[T]): T = {
     seq(r.nextInt(seq.length))
   }
+
+  def sample[T](seq: List[T]): T = {
+    seq(r.nextInt(seq.length))
+  }
 }

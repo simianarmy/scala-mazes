@@ -1,7 +1,7 @@
 package algorithms
 
 import lib.Grid
-import lib.Cell
+import lib.MazeCell
 import lib.RandomUtil
 
 object HuntKill {
@@ -13,9 +13,9 @@ object HuntKill {
       val unvisitedNeighbors = current.neighbors().filter(n => n.getLinks().isEmpty)
 
       if (unvisitedNeighbors.length > 0) {
-        val neighbor: Cell = RandomUtil.sample(unvisitedNeighbors)
+        val neighbor = RandomUtil.sample(unvisitedNeighbors)
         current.link(neighbor)
-        current = neighbor.asInstanceOf[grid.CellType]
+        current = neighbor
       } else {
         looping = false
 

@@ -8,7 +8,7 @@ import java.awt.geom.Arc2D
 /**
   * TODO: Support drawing arcs
   */
-class PolarGrid(rows: Int) extends Grid with TextRenderer[PolarCell] with ImageRenderer[PolarCell] {
+case class PolarGrid(rows: Int) extends Grid {
   type CellType = PolarCell
 
   var size = (rows, 1)

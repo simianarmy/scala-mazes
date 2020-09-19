@@ -1,6 +1,8 @@
 package algorithms
 
 import lib.Grid
+import lib.RandomUtil
+import lib.MazeCell
 
 object AldousBroder {
   def on[T <: Grid](grid: T): T = {
@@ -9,14 +11,14 @@ object AldousBroder {
     var unvisited = grid.numCells - 1
 
     while (unvisited > 0) {
-      val neighbor = cell.neighbors()(r.nextInt(cell.neighbors().length));
+      val neighbor: MazeCell = RandomUtil.sample(cell.neighbors())
 
       if (neighbor.getLinks().isEmpty) {
         cell.link(neighbor)
         unvisited -= 1
       }
 
-      cell = neighbor.asInstanceOf[grid.CellType]
+      cell = neighbor.asInstanceOf[MazeCell]
     }
 
     grid

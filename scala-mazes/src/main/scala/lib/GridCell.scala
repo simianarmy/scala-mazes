@@ -6,9 +6,7 @@ object GridCell {
   def nullCell = GridCell(-1, -1)
 }
 
-case class GridCell(var row: Int, var column: Int) extends MazeCell {
-  type T = GridCell
-
+case class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
   var north: GridCell = null;
   var south: GridCell = null;
   var east: GridCell = null;
@@ -29,12 +27,12 @@ case class GridCell(var row: Int, var column: Int) extends MazeCell {
     s"[GridCell: " + row + ", " + column + "]";
 
   // TODO: Extract to trait or utility
-  def distances(root: GridCell): Distances[GridCell] = {
-    var distances = new Distances[GridCell](root)
+  def distances: Distances[GridCell] = {
+    var distances = new Distances[GridCell](this)
     var frontier = new ArrayBuffer[GridCell](10)
     var newFrontier = new ArrayBuffer[GridCell](10)
 
-    frontier += root
+    frontier += this
 
     while (!frontier.isEmpty) {
       newFrontier.clear()

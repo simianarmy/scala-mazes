@@ -8,17 +8,15 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRenderer[GridCell] with ImageRenderer[GridCell] {
-  type CellType = GridCell
-
-  var size = (rows, columns)
-  var _grid: Array[Array[CellType]] = prepareGrid()
+case class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid {
+  val size = (rows, columns)
+  val _grid: Array[Array[GridCell]] = prepareGrid()
   val r = scala.util.Random;
 
   configureCells()
 
-  private def prepareGrid(): Array[Array[CellType]] = {
-    var cells = Array.ofDim[CellType](rows, columns);
+  private def prepareGrid(): Array[Array[GridCell]] = {
+    var cells = Array.ofDim[GridCell](rows, columns);
 
     for (i <- 0 until rows; j <- 0 until columns) {
       cells(i)(j) = GridCell(i, j);
@@ -45,43 +43,42 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRend
 
   def numCells: Int = rows * columns
 
-  def getCell(row: Int, column: Int): CellType = {
-    if (row < 0 || row >= rows) return null;
-    if (column < 0 || column >= columns) return null;
-
-    _grid(row)(column)
+  def getCell(row: Int, column: Int): GridCell = {
+    if (row < 0 || row >= rows || column < 0 || column >= columns) null
+    else _grid(row)(column)
   }
 
-  def randomCell(): CellType = {
+  def randomCell(): GridCell = {
     val row = r.nextInt(rows);
     val column = r.nextInt(_grid(row).length);
 
     getCell(row, column)
   }
 
-  def eachRow(fn: (Iterator[CellType] => Unit)) = {
+  def eachRow(fn: (Iterator[GridCell] => Unit)) = {
     for (i <- 0 until rows) {
       fn(_grid(i).iterator);
     }
   }
 
-  def eachCell(fn: (CellType => Unit)) = {
-    eachRow(row => {
+  def eachCell(fn: (GridCell => Unit)) = {
+    eachRow((row: Iterator[GridCell]) => {
       row.filter(_ != null).foreach(fn)
     })
   }
 
   override def toString(): String = {
+    // TODO: Imperative -> Functional
     var res =
       rows + " x " + columns + "\n+" + ("---+" * columns) + "\n";
 
-    eachRow(it => {
+    eachRow((it: Iterator[GridCell]) => {
       var top = "|";
       var bottom = "+";
 
       while (it.hasNext) {
         val rowCell = it.next()
-        var c = if (rowCell == null) new CellType(-1, -1) else rowCell;
+        var c = if (rowCell == null) new GridCell(-1, -1) else rowCell;
         var body = " " + contentsOf(c) + " "
         var eastBoundary = if (c.isLinked(c.east)) " " else "|";
         top += (body + eastBoundary);
@@ -92,8 +89,9 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRend
 
       res += top + "\n";
       res += bottom + "\n";
-    });
-    return res;
+    })
+
+    res
   }
 
   def toPng(cellSize: Int = 10): BufferedImage = {
@@ -120,7 +118,7 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRend
     g.setStroke(new BasicStroke()) // reset to default
 
     for (mode <- List("backgrounds", "walls")) {
-      eachCell(cell => {
+      eachCell((cell: GridCell) => {
         val x1 = cell.column * cellSize;
         val y1 = cell.row * cellSize;
         val x2 = (cell.column + 1) * cellSize;
@@ -167,10 +165,10 @@ class OrthogonalGrid(val rows: Int, val columns: Int) extends Grid with TextRend
     canvas
   }
 
-  def deadends(): ArrayBuffer[CellType] = {
-    var list = new ArrayBuffer[CellType]()
+  def deadends(): ArrayBuffer[GridCell] = {
+    var list = new ArrayBuffer[GridCell]()
 
-    eachCell(cell => {
+    eachCell((cell: GridCell) => {
       if (cell.getLinks().size == 1) {
         list += cell
       }

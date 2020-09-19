@@ -1,29 +1,27 @@
 package algorithms
 
-import lib.Grid
-import lib.Cells
-import lib.Cell
+import scala.collection.mutable.ArrayBuffer
+import lib.{Grid, MazeCell}
+import lib.RandomUtil
 
 object Wilsons {
   def on[T <: Grid](grid: T): T = {
-    var unvisited = new Cells()
-    val r = new scala.util.Random(System.currentTimeMillis)
+    var unvisited = ArrayBuffer[MazeCell]()
 
-    def sampleCell(cells: Cells) =
-      cells(r.nextInt(cells.length))
+    grid.eachCell(c => {
+      unvisited.append(c)
+    })
 
-    grid.eachCell(unvisited.append)
-
-    val first = sampleCell(unvisited)
+    val first = RandomUtil.sample(unvisited)
     unvisited -= first
 
     while (!unvisited.isEmpty) {
-      var cell = sampleCell(unvisited)
-      var path: Cells = new Cells()
+      var cell = RandomUtil.sample(unvisited)
+      var path = new ArrayBuffer[MazeCell]()
       path += cell
 
       while (unvisited.contains(cell)) {
-        cell = sampleCell(cell.neighbors())
+        cell = RandomUtil.sample(cell.neighbors())
         val position = path.indexOf(cell)
 
         if (position > 0) {

@@ -1,35 +1,26 @@
 package algorithms
 
-import lib.Grid
-import lib.Cells
-import lib.Cell
+import lib.{Grid, OrthogonalGrid}
+import lib.RandomUtil
+import lib.{MazeCell, GridCell}
 
 object BinaryTree {
   def on[T <: Grid](grid: T): T = {
-    val r = scala.util.Random;
-    var neighbors = new Cells()
+    def run() = {
+      grid.eachCell((cell: MazeCell) => {
+        // TODO: case cell to a GridCell
+        val neighbors = List[GridCell](cell.north, cell.east).filter(_ != null)
 
-    grid.eachCell((cell: Cell) => {
-      neighbors.clear();
-
-      if (cell.north != null) {
-        neighbors += cell.north;
-      }
-
-      if (cell.east != null) {
-        neighbors += cell.east;
-      }
-
-      if (!neighbors.isEmpty) {
-        val index = r.nextInt(neighbors.length);
-        val neighbor = neighbors(index);
-
-        if (neighbor != null) {
-          cell.link(neighbor);
+        if (!neighbors.isEmpty) {
+          cell.link(RandomUtil.sample(neighbors))
         }
-      }
-    });
+      })
+      grid
+    }
 
-    grid
+    grid match {
+      case OrthogonalGrid => run()
+      case _ => grid
+    }
   }
 }

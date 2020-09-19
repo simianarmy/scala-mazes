@@ -1,12 +1,12 @@
 package algorithms
 
 import lib.Grid
-import lib.Cell
 import lib.RandomUtil
+import lib.MazeCell
 
 object RecursiveBacktracker {
-  def on[T <: Grid](grid: T, startAt: Cell = null): T = {
-    def checkNeighbor(current: Cell): Unit = {
+  def on[T <: Grid](grid: T, startAt: MazeCell = null): T = {
+    def checkNeighbor(current: MazeCell): Unit = {
       // get unvisited neighbors
       var neighbors = current.neighbors().filter(n => n.getLinks().isEmpty)
 

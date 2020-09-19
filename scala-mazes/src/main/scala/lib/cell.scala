@@ -5,24 +5,20 @@ package lib
 
 import scala.collection.mutable.{ArrayBuffer, Map}
 
-trait Cell {
-  var row: Int
-  var column: Int
-}
+abstract class Cell(row: Int, column: Int)
 
-trait MazeCell extends Cell {
-  type T
-  var links = Map[T, Boolean]()
+class MazeCell(row: Int, column: Int) extends Cell(row, column) {
+  var links = Map[MazeCell, Boolean]()
 
-  def getLinks(): Iterable[T] = links.keys
-  def isLinked(cell: T): Boolean = links.contains(cell)
-  def neighbors(): ArrayBuffer[T]
+  def getLinks(): Iterable[MazeCell] = links.keys
+  def isLinked(cell: MazeCell): Boolean = links.contains(cell)
+  def neighbors(): ArrayBuffer[MazeCell]
 
   // howowowowowowowowowow????????
   //def link(cell: MazeCell, bidi: Boolean = true): MazeCell
   //def unlink(cell: MazeCell, bidi: Boolean = true): MazeCell
   // TODO: link and unlink should be in the MazeCell trait
-  def link(cell: T, bidi: Boolean = true): T = {
+  def link(cell: MazeCell, bidi: Boolean = true): MazeCell = {
     links += (cell -> true);
 
     if (bidi) {
@@ -31,7 +27,7 @@ trait MazeCell extends Cell {
     cell
   }
 
-  def unlink(cell: T, bidi: Boolean = true): T = {
+  def unlink(cell: MazeCell, bidi: Boolean = true): MazeCell = {
     links -= (cell);
 
     if (bidi) {
