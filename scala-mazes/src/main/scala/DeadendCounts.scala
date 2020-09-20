@@ -12,12 +12,12 @@ object DeadendCounts extends MazeApp {
   val size = 20
 
   var averages = collection.mutable.Map[String, Float]()
-  val algorithms = Map[String, (Grid[Any,Any]) => Grid[Any,Any]](
-    "Sidewinder" -> Sidewinder.on,
-    "Aldous-Broder" -> AldousBroder.on,
-    "Wilsons" -> Wilsons.on,
-    "Hunt-and-kill" -> HuntKill.on,
-    "Binary Tree" -> BinaryTree.on
+  val algorithms = Map[String, String](
+    "Sidewinder" -> "sw",
+    "Aldous-Broder" -> "ab",
+    "Wilsons" -> "wi",
+    "Hunt-and-kill" -> "hk",
+    "Binary Tree" -> "bt",
     )
   var deadendCounts = new ArrayBuffer[Int]()
 
@@ -28,8 +28,9 @@ object DeadendCounts extends MazeApp {
 
     for (i <- 0 until tries) {
       var grid = new OrthogonalGrid(size, size)
-      grid = alg._2(grid)
-      deadendCounts += grid.deadends().length
+      val gg = generateMaze(grid, alg._2)
+
+      deadendCounts += gg.deadends().length
     }
 
     val totalDeadends = deadendCounts.sum

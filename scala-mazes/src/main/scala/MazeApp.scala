@@ -1,5 +1,4 @@
-import lib.Grid
-
+import lib._
 import algorithms._
 
 class MazeApp extends App {
@@ -8,16 +7,30 @@ class MazeApp extends App {
   val alg = if (args.length > 2) args(2) else "bt";
   var ascii = args.length > 3 && args(3) == "txt"
 
-  def generateMaze(g: Any) = {
-    alg match {
-      case "sw" => Sidewinder.on[T](g)
-      case "ab" => AldousBroder.on(g)
-      case "wi" => Wilsons.on(g)
-      case "hk" => HuntKill.on(g)
-      case "rb" => RecursiveBacktracker.on(g)
-      case "bt"  => BinaryTree.on(g)
-      case _ => g
+  def generateMaze(cg: ColoredGrid, algorithm: String): ColoredGrid = {
+    cg
+  }
+  def generateMaze(og: OrthogonalGrid, algorithm: String): OrthogonalGrid = {
+    og
+  }
+  def generateMaze(og: OrthogonalGrid, algorithm: String, startCell: MazeCell): OrthogonalGrid = {
+    og
+  }
+  def generateMaze(dg: DistanceGrid, algorithm: String): DistanceGrid = {
+    dg
+  }
+
+  def generateMaze[A <: MazeCell,B](grid: Grid[A,B], algorithm: String = alg): Grid[A,B] = {
+    val gen = alg match {
+      case "sw" => new Sidewinder()
+      case "ab" => new AldousBroder()
+      case "wi" => new Wilsons()
+      case "hk" => new HuntKill()
+      case "rb" => new RecursiveBacktracker()
+      case "bt" => new BinaryTree()
+      case _ => new Wilsons()
     }
+    gen.on(grid)
   }
 
   def printMaze[A,B,T](g: T)(implicit ev: T => Grid[A,B]): Unit = {

@@ -4,12 +4,12 @@ import scala.collection.mutable.ArrayBuffer
 
 import lib.{Grid, OrthogonalGrid, GridCell, MazeCell}
 
-object Sidewinder {
-  def on[A <: GridCell, B <: Seq[A]](grid: Grid[A,B]): Grid[A,B] = {
+class Sidewinder extends GridGenerator {
+  def on[A <: GridCell, B](grid: Grid[A,B]): Grid[A,B] = {
     val r = scala.util.Random
-    var run = new ArrayBuffer[MazeCell]()
+    var run = new ArrayBuffer[GridCell]()
 
-    for (row <- grid.grid) {
+    for (row <- grid) {
       run.clear();
 
       row.foreach(cell => {

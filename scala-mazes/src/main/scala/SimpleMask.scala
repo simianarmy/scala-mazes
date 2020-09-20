@@ -10,7 +10,7 @@ object SimpleMask extends MazeApp {
   m(4)(4) = false
 
   var g = new MaskedGrid(m)
-  g = RecursiveBacktracker.on(g)
+  val gg = generateMaze(g, "rb")
 
-  println(g)
+  println(gg)
 }

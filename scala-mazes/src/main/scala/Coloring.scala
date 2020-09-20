@@ -5,11 +5,11 @@ import lib.ColoredGrid
 object Coloring extends MazeApp {
   var g = new ColoredGrid(rows, cols, Color.BLUE);
 
-  g = generateMaze(g)
+  val gg = generateMaze(g, alg)
 
-  val start = g.getCell(g.rows / 2, g.columns / 2)
-  g.distances = start.distances
+  val start = gg.getCell(g.rows / 2, g.columns / 2)
+  gg.distances = start.distances
 
-  printMaze(g)
+  printMaze(gg)
 }
 

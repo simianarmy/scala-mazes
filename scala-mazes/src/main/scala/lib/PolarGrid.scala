@@ -8,7 +8,7 @@ import java.awt.geom.Arc2D
 /**
   * TODO: Support drawing arcs
   */
-case class PolarGrid(rows: Int) extends Grid[PolarCell, ArrayBuffer[PolarCell]](rows, 1) {
+case class PolarGrid(rows: Int) extends Grid[PolarCell, Array[ArrayBuffer[PolarCell]]](rows, 1) {
   val grid = prepareGrid()
 
   configureCells()

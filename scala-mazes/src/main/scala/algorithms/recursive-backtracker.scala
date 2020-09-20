@@ -4,7 +4,7 @@ import lib.Grid
 import lib.RandomUtil
 import lib.MazeCell
 
-object RecursiveBacktracker {
+class RecursiveBacktracker extends GeneralGenerator {
   def on[A <: MazeCell,B](grid: Grid[A,B], startAt: A = null): Grid[A,B] = {
     def checkNeighbor(current: MazeCell): Unit = {
       // get unvisited neighbors

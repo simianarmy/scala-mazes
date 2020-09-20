@@ -4,7 +4,7 @@ import lib.{Grid, OrthogonalGrid}
 import lib.RandomUtil
 import lib.{MazeCell, GridCell}
 
-object BinaryTree {
+class BinaryTree extends GridGenerator {
   def on[A <: GridCell,B](grid: Grid[A,B]): Grid[A,B] = {
     def run() = {
       grid.eachCell(cell => {

@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[GridCell]](rows, columns) {
+case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[Array[GridCell]]](rows, columns) {
   val grid = prepareGrid()
 
   configureCells()

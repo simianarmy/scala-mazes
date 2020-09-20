@@ -14,7 +14,7 @@
 object Main extends MazeApp {
   var g = new OrthogonalGrid(rows, cols);
 
-  g = generateMaze(g)
+  val gg = generateMaze(g)
 
-  printMaze(g)
+  printMaze(gg)
 }

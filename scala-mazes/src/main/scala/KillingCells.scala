@@ -9,7 +9,7 @@ object KillingCells extends MazeApp {
   g.getCell(4, 4).west.east = null
   g.getCell(4, 4).north.south = null
 
-  g = RecursiveBacktracker.on(g, g.getCell(1, 1))
+  println(generateMaze(g, algorithm = "rb", startCell = g.getCell(1, 1)))
 
   println(g)
 }

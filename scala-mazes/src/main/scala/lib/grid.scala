@@ -14,15 +14,15 @@ trait ImageRenderer {
 /**
   * Defines grid contract
   */
-abstract class Grid[B <: MazeCell, A <: Seq[B]](rows: Int, columns: Int) extends TextRenderer with ImageRenderer {
+abstract class Grid[A <: MazeCell, B](rows: Int, columns: Int) extends TextRenderer with ImageRenderer {
   val dimensions = (rows, columns)
   val r = scala.util.Random
-  val grid: Array[A] // this ok?
+  val grid: B
   def numCells: Int
-  def getCell(row: Int, column: Int): B
-  def randomCell(): B
+  def getCell(row: Int, column: Int): A
+  def randomCell(): A
 
-  def eachCell(fn: (B => Unit)): Unit = {
+  def eachCell(fn: (A => Unit)): Unit = {
     for (row <- grid) {
       row.foreach(fn)
     }

@@ -4,7 +4,7 @@ import lib.Grid
 import lib.RandomUtil
 import lib.MazeCell
 
-object AldousBroder {
+class AldousBroder extends GeneralGenerator {
   def on[A <: MazeCell,B](grid: Grid[A,B]): Grid[A,B] = {
     val r = scala.util.Random;
     var cell: A = grid.randomCell()

@@ -3,15 +3,15 @@ import lib.ColoredGrid
 object Dijkstra extends MazeApp {
   var g = new ColoredGrid(rows, cols);
 
-  g = generateMaze(g)
+  val gg = generateMaze(g, alg)
 
-  val start = g.getCell(0, 0)
+  val start = gg.getCell(0, 0)
   var distances = start.distances
-  g.distances = distances
+  gg.distances = distances
 
   println("Path from nw corner to sw corner")
-  println(g)
+  println(gg)
 
-  g.distances = distances.pathTo(g.getCell(g.rows - 1, 0))
-  printMaze(g)
+  gg.distances = distances.pathTo(gg.getCell(gg.rows - 1, 0))
+  printMaze(gg)
 }
