@@ -18,5 +18,5 @@ class MaskedGrid(val mask: Mask) extends OrthogonalGrid(mask.rows, mask.columns)
     getCell(row, col)
   }
 
-  override def numCells(): Int = mask.count()
+  override def size(): Int = mask.count()
 }

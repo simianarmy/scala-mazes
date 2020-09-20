@@ -39,8 +39,6 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
     }
   }
 
-  def numCells: Int = rows * columns
-
   def getCell(row: Int, column: Int): GridCell = {
     if (row < 0 || row >= rows || column < 0 || column >= columns) null
     else grid(row)(column)

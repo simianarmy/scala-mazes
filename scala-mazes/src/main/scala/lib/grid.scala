@@ -30,7 +30,6 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   val dimensions = (rows, columns)
   def size(): Int = rows * columns
   val r = scala.util.Random
-  def numCells: Int
   def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
   def randomCell(): A

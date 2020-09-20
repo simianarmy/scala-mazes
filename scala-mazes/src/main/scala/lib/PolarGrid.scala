@@ -17,7 +17,7 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
     var cells = new Array[ArrayBuffer[PolarCell]](rows)
     val rowHeight = 1.0 / rows
 
-    cells(0)(0) = new PolarCell(0, 0)
+    cells(0) = ArrayBuffer[PolarCell](new PolarCell(0, 0))
 
     for (i <- 1 until rows) {
       val radius: Float = i.toFloat / rows
@@ -52,21 +52,29 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
     })
   }
 
-  def numCells: Int = {
-    //TODO
-    rows
+  override def size(): Int = {
+    grid.iterator.map(_.size).sum
   }
 
   def getCell(row: Int, column: Int): PolarCell = {
     grid(row)(column)
   }
 
-  // TODO: Implement
   def cellAt(index: Int): PolarCell = {
-    val x = index / columns
-    val y = index % columns
+    var counter = 0
+    var found = false
+    var cell: PolarCell = grid(0)(0)
 
-    getCell(x, y)
+    for (i <- 0 until rows) {
+      for (j <- 0 until grid(i).size) {
+        if (!found && index >= counter) {
+          cell = grid(i)(j)
+          found = true
+        }
+        counter += 1
+      }
+    }
+    cell
   }
 
   def randomCell(): PolarCell = {

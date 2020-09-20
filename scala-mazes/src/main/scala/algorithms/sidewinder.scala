@@ -4,9 +4,8 @@ import scala.collection.mutable.ArrayBuffer
 
 import lib.{Grid, OrthogonalGrid, MazeCell, GridCell}
 
-class Sidewinder extends GeneralGenerator {
+class Sidewinder extends GeneralGenerator with Randomizer {
   def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
-    val r = scala.util.Random
     var run = new ArrayBuffer[MazeCell]()
 
     grid.eachRow(itr => {
