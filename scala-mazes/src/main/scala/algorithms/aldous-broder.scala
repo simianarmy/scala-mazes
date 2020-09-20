@@ -5,20 +5,20 @@ import lib.RandomUtil
 import lib.MazeCell
 
 object AldousBroder {
-  def on[A,B](grid: Grid[A,B]): Grid[A,B] = {
+  def on[A <: MazeCell,B](grid: Grid[A,B]): Grid[A,B] = {
     val r = scala.util.Random;
-    var cell = grid.randomCell()
+    var cell: A = grid.randomCell()
     var unvisited = grid.numCells - 1
 
     while (unvisited > 0) {
-      val neighbor: MazeCell = RandomUtil.sample(cell.neighbors)
+      val neighbor = RandomUtil.sample(cell.neighbors)
 
       if (neighbor.getLinks().isEmpty) {
         cell.link(neighbor)
         unvisited -= 1
       }
 
-      cell = neighbor.asInstanceOf[MazeCell]
+      cell = neighbor.asInstanceOf[A]
     }
 
     grid

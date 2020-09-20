@@ -8,9 +8,9 @@ class MazeApp extends App {
   val alg = if (args.length > 2) args(2) else "bt";
   var ascii = args.length > 3 && args(3) == "txt"
 
-  def generateMaze[T <: Grid](g: T): T = {
+  def generateMaze(g: Any) = {
     alg match {
-      case "sw" => Sidewinder.on(g)
+      case "sw" => Sidewinder.on[T](g)
       case "ab" => AldousBroder.on(g)
       case "wi" => Wilsons.on(g)
       case "hk" => HuntKill.on(g)
@@ -20,7 +20,7 @@ class MazeApp extends App {
     }
   }
 
-  def printMaze[T <: Grid](g: T): Unit = {
+  def printMaze[A,B,T](g: T)(implicit ev: T => Grid[A,B]): Unit = {
     if (ascii) {
       println(g);
     } else {

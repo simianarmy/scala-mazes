@@ -8,7 +8,6 @@ object BinaryTree {
   def on[A <: GridCell,B](grid: Grid[A,B]): Grid[A,B] = {
     def run() = {
       grid.eachCell(cell => {
-        // TODO: case cell to a GridCell??
         val neighbors = List[GridCell](cell.north, cell.east).filter(_ != null)
 
         if (!neighbors.isEmpty) {

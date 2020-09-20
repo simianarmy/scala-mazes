@@ -3,7 +3,7 @@ import lib.MaskedGrid
 import lib.Mask
 import scala.util.{Success,Failure}
 
-object AsciiMask extends App {
+object AsciiMask extends MazeApp {
   if (args.length < 1) {
     println("\n*** Please specify a text file to use as a template")
     System.exit(0)
@@ -18,13 +18,7 @@ object AsciiMask extends App {
   }
 
   var g = new MaskedGrid(mask)
-  g = RecursiveBacktracker.on(g, null)
+  val gg = generateMaze(g)
 
-  val filename = "generated/maze-rb-" + g.rows + "x" + g.columns + ".png"
-  javax.imageio.ImageIO.write(
-    g.toPng(),
-    "png",
-    new java.io.File(filename)
-  )
-  println("image saved to " + filename)
+  printMaze(gg)
 }

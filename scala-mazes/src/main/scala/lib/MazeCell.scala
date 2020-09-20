@@ -2,12 +2,14 @@ package lib
 
 import scala.collection.mutable.{ArrayBuffer, Map}
 
+abstract class Cell(val row: Int, val column: Int)
+
 abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) {
   var links = Map[MazeCell, Boolean]()
 
   def getLinks(): Iterable[MazeCell] = links.keys
   def isLinked(cell: MazeCell): Boolean = links.contains(cell)
-  def neighbors[T]: ArrayBuffer[T]
+  def neighbors: List[MazeCell]
 
   // howowowowowowowowowow????????
   //def link(cell: MazeCell, bidi: Boolean = true): MazeCell

@@ -5,16 +5,16 @@ import lib.RandomUtil
 import lib.MazeCell
 
 object RecursiveBacktracker {
-  def on[A,B](grid: Grid[A,B], startAt: MazeCell): Grid[A,B] = {
+  def on[A <: MazeCell,B](grid: Grid[A,B], startAt: A = null): Grid[A,B] = {
     def checkNeighbor(current: MazeCell): Unit = {
       // get unvisited neighbors
-      var neighbors = current.neighbors[MazeCell].filter(n => n.getLinks().isEmpty)
+      var neighbors = current.neighbors.filter(n => n.getLinks().isEmpty)
 
       while (!neighbors.isEmpty) {
         val neighbor = RandomUtil.sample(neighbors)
         current.link(neighbor)
         checkNeighbor(neighbor)
-        neighbors = current.neighbors[MazeCell].filter(n => n.getLinks().isEmpty)
+        neighbors = current.neighbors.filter(n => n.getLinks().isEmpty)
       }
     }
 

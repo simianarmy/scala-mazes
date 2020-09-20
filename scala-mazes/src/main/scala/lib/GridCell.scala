@@ -12,15 +12,8 @@ class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
   var east: GridCell = null;
   var west: GridCell = null;
 
-  def neighbors(): ArrayBuffer[GridCell] = {
-    var list = new ArrayBuffer[GridCell]();
-
-    if (this.north != null) list += this.north;
-    if (this.south != null) list += this.south;
-    if (this.east != null) list += this.east;
-    if (this.west != null) list += this.west;
-
-    list;
+  def neighbors: List[MazeCell] = {
+    for (dir <- List(north, south, east, west) if dir != null) yield dir
   }
 
   override def toString: String =

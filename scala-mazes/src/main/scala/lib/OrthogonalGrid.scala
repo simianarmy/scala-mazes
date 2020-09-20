@@ -46,11 +46,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[
     else grid(row)(column)
   }
 
-  def getRows(): Array[Array[GridCell]] = {
-    grid
-  }
-
-  def randomCell(): GridCell = {
+  def randomCell(): MazeCell = {
     val row = r.nextInt(rows);
     val column = r.nextInt(grid(row).length);
 
@@ -62,7 +58,7 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[
     var res =
       rows + " x " + columns + "\n+" + ("---+" * columns) + "\n";
 
-    for (row <- getRows()) {
+    for (row <- grid) {
       var top = "|";
       var bottom = "+";
 

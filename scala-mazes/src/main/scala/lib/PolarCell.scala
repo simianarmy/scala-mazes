@@ -10,21 +10,8 @@ class PolarCell(row: Int, column: Int) extends MazeCell(row, column) {
 
   def outward = _outward
 
-  def neighbors(): ArrayBuffer[PolarCell] = {
-    var list = new ArrayBuffer[PolarCell]()
-
-    def addIfNotNull(cell: PolarCell): Unit = {
-      if (cell != null) {
-        list += cell
-      }
-    }
-
-    addIfNotNull(cw)
-    addIfNotNull(ccw)
-    addIfNotNull(inward)
-
-    list ++= outward
-    list
+  def neighbors: List[MazeCell] = {
+    (for (cell <- List(cw, ccw, inward) if cell != null) yield cell) ++ outward
   }
 
   override def toString: String =
