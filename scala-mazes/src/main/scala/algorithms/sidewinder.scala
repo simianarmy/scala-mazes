@@ -2,18 +2,19 @@ package algorithms
 
 import scala.collection.mutable.ArrayBuffer
 
-import lib.{Grid, OrthogonalGrid, GridCell, MazeCell}
+import lib.{Grid, OrthogonalGrid, MazeCell, GridCell}
 
-class Sidewinder extends GridGenerator {
-  def on[A <: GridCell, B](grid: Grid[A,B]): Grid[A,B] = {
+class Sidewinder extends GeneralGenerator {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     val r = scala.util.Random
-    var run = new ArrayBuffer[GridCell]()
+    var run = new ArrayBuffer[MazeCell]()
 
-    for (row <- grid) {
+    grid.eachRow(itr => {
       run.clear();
 
-      row.foreach(cell => {
-        run += cell;
+      while (itr.hasNext) {
+        val cell = itr.next()
+        run += cell
 
         grid match {
           case OrthogonalGrid(_,_) => {
@@ -37,8 +38,8 @@ class Sidewinder extends GridGenerator {
 
           case _ => ()
         }
-      });
-    }
+      }
+    });
 
     grid
   }

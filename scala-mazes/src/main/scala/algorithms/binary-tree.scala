@@ -4,11 +4,12 @@ import lib.{Grid, OrthogonalGrid}
 import lib.RandomUtil
 import lib.{MazeCell, GridCell}
 
-class BinaryTree extends GridGenerator {
-  def on[A <: GridCell,B](grid: Grid[A,B]): Grid[A,B] = {
+class BinaryTree extends GeneralGenerator {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     def run() = {
       grid.eachCell(cell => {
-        val neighbors = List[GridCell](cell.north, cell.east).filter(_ != null)
+        val gc = cell.asInstanceOf[GridCell]
+        val neighbors = List[GridCell](gc.north, gc.east).filter(_ != null)
 
         if (!neighbors.isEmpty) {
           cell.link(RandomUtil.sample(neighbors))

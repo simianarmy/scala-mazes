@@ -20,7 +20,7 @@ class MazeApp extends App {
     dg
   }
 
-  def generateMaze[A <: MazeCell,B](grid: Grid[A,B], algorithm: String = alg): Grid[A,B] = {
+  def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = alg): Grid[A] = {
     val gen = alg match {
       case "sw" => new Sidewinder()
       case "ab" => new AldousBroder()
@@ -30,10 +30,10 @@ class MazeApp extends App {
       case "bt" => new BinaryTree()
       case _ => new Wilsons()
     }
-    gen.on(grid)
+    gen.on(grid, None)
   }
 
-  def printMaze[A,B,T](g: T)(implicit ev: T => Grid[A,B]): Unit = {
+  def printMaze[A <: MazeCell](g: Grid[A]): Unit = {
     if (ascii) {
       println(g);
     } else {

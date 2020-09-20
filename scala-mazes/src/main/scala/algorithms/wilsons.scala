@@ -5,7 +5,7 @@ import lib.{Grid, MazeCell}
 import lib.RandomUtil
 
 class Wilsons extends GeneralGenerator {
-  def on[A <: MazeCell,B](grid: Grid[A,B]): Grid[A,B] = {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     var unvisited = ArrayBuffer[MazeCell]()
 
     grid.eachCell((c: A) => {

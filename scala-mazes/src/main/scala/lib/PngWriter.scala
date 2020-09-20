@@ -4,7 +4,7 @@
 package lib
 
 object PngWriter {
-  def saveGrid(grid: Grid[_,_], filename: String): Unit = {
+  def saveGrid[A <: MazeCell](grid: Grid[A], filename: String): Unit = {
     javax.imageio.ImageIO.write(
       grid.toPng(),
       "png",

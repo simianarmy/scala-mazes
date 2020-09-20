@@ -13,7 +13,7 @@ class MaskedGrid(val mask: Mask) extends OrthogonalGrid(mask.rows, mask.columns)
     }
   }
 
-  override def randomCell(): MazeCell = {
+  override def randomCell(): GridCell = {
     val (row, col) = mask.randomLocation()
     getCell(row, col)
   }

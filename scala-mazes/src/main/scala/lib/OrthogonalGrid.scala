@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[Array[GridCell]]](rows, columns) {
-  val grid = prepareGrid()
+case class OrthogonalGrid(override val rows: Int, override val columns: Int) extends Grid[GridCell](rows, columns) {
+  protected val grid = prepareGrid()
 
   configureCells()
 
@@ -46,7 +46,14 @@ case class OrthogonalGrid(rows: Int, columns: Int) extends Grid[GridCell, Array[
     else grid(row)(column)
   }
 
-  def randomCell(): MazeCell = {
+  def cellAt(index: Int): GridCell = {
+    val x = index / columns
+    val y = index % columns
+
+    getCell(x, y)
+  }
+
+  def randomCell(): GridCell = {
     val row = r.nextInt(rows);
     val column = r.nextInt(grid(row).length);
 

@@ -5,7 +5,7 @@ import lib.RandomUtil
 import lib.MazeCell
 
 class AldousBroder extends GeneralGenerator {
-  def on[A <: MazeCell,B](grid: Grid[A,B]): Grid[A,B] = {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     val r = scala.util.Random;
     var cell: A = grid.randomCell()
     var unvisited = grid.numCells - 1
