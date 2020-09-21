@@ -53,6 +53,8 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
     })
   }
 
+  override def id: String = "po"
+
   override def size(): Int = {
     grid.iterator.map(_.size).sum
   }

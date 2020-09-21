@@ -42,6 +42,8 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
   // Direct (unsafe) element accessor
   def apply(row: Int): Array[GridCell] = grid(row)
 
+  def id: String = "ot"
+
   // Safe element accessor
   def getCell(row: Int, column: Int): GridCell = {
     if (row < 0 || row >= rows || column < 0 || column >= columns) null
@@ -104,11 +106,6 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
     g.setColor(background)
     g.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
 
-    // enable anti-aliased rendering prettier lines and circles)(
-    g.setRenderingHint(
-      java.awt.RenderingHints.KEY_ANTIALIASING,
-      java.awt.RenderingHints.VALUE_ANTIALIAS_ON
-    )
     g.setStroke(new BasicStroke()) // reset to default
 
     for (mode <- List("backgrounds", "walls")) {

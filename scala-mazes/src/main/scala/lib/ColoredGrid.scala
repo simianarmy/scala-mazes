@@ -18,6 +18,8 @@ class ColoredGrid(rows: Int, columns: Int, startColor: Color = Color.WHITE)
 
   def cellIndex(cell: MazeCell): Int = cell.row * columns + cell.column
 
+  override def id: String = "co"
+
   override def distances_=(d: Distances[MazeCell]): Unit = {
     _distances = d
     maximum = distances.max._2

@@ -5,6 +5,8 @@ import lib.Mask
 
 class MaskedGrid(val mask: Mask) extends OrthogonalGrid(mask.rows, mask.columns) {
 
+  override def id: String = "ma"
+
   override def prepareGrid(): Array[Array[GridCell]] = {
     var cells = Array.ofDim[GridCell](rows, columns);
 

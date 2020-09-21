@@ -33,6 +33,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
   def randomCell(): A
+  def id: String
 
   def iterator(): GridIterator[A] = {
     new GridIterator(this)

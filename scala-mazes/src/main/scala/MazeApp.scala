@@ -40,7 +40,7 @@ class MazeApp extends App {
       println(g);
     } else {
       // draw image to a file
-      val filename = "generated/maze-" + alg + "-" + g.rows + "x" + g.columns + ".png"
+      val filename = "generated/maze-" + g.id + "-" + alg + "-" + g.rows + "x" + g.columns + ".png"
       MazeApp.gridToPng(g, filename)
     }
   }

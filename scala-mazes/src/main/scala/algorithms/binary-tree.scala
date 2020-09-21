@@ -1,6 +1,6 @@
 package algorithms
 
-import lib.{Grid, OrthogonalGrid}
+import lib.{Grid, OrthogonalGrid, HexGrid}
 import lib.RandomUtil
 import lib.{MazeCell, GridCell}
 
@@ -9,7 +9,8 @@ class BinaryTree extends GeneralGenerator {
     def run() = {
       grid.eachCell(cell => {
         val gc = cell.asInstanceOf[GridCell]
-        val neighbors = List[GridCell](gc.north, gc.east).filter(_ != null)
+        val east = grid.getCell(cell.row, cell.column + 1).asInstanceOf[GridCell]
+        val neighbors = List[GridCell](gc.north, east).filter(_ != null)
 
         if (!neighbors.isEmpty) {
           cell.link(RandomUtil.sample(neighbors))
@@ -20,6 +21,7 @@ class BinaryTree extends GeneralGenerator {
 
     grid match {
       case OrthogonalGrid(_,_) => run()
+      case HexGrid(_,_) => run()
       case _ => grid
     }
   }
