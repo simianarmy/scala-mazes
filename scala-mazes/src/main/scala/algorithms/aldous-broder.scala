@@ -4,7 +4,7 @@ import lib.Grid
 import lib.RandomUtil
 import lib.MazeCell
 
-class AldousBroder extends GeneralGenerator with Randomizer {
+class AldousBroder extends GeneralGenerator {
   def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     var cell: A = grid.randomCell()
     var unvisited = grid.size() - 1
@@ -22,4 +22,6 @@ class AldousBroder extends GeneralGenerator with Randomizer {
 
     grid
   }
+
+  override def toString: String = "Aldous-Broder"
 }

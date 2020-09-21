@@ -1,7 +1,9 @@
 import algorithms.RecursiveBacktracker
 import lib.OrthogonalGrid
+import lib.{Mask, MaskedGrid}
 
 object KillingCells extends MazeApp {
+  /*
   var g = new OrthogonalGrid(5, 5);
 
   g.getCell(0, 0).east.west = null
@@ -12,4 +14,13 @@ object KillingCells extends MazeApp {
   println(generateMaze(g, algorithm = "rb", startCell = g.getCell(1, 1)))
 
   println(g)
+  */
+ val mask = new Mask(5, 5)
+
+ mask(0)(0) = false
+ mask(2)(2) = false
+ mask(4)(4) = false
+
+ val g = new MaskedGrid(mask)
+ printMaze(generateMaze(g, "rb"))
 }

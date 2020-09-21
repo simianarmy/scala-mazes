@@ -11,7 +11,7 @@ object Distances {
   val NotFound = -1
 }
 
-class Distances[C](root: C) {
+class Distances[C <: MazeCell](root: C) {
   var _cells = scala.collection.mutable.Map[C, Int](root -> 0)
 
   def get(cell: C): Int = {
@@ -34,7 +34,7 @@ class Distances[C](root: C) {
     breadcrumbs.set(current, this.get(current))
 
     while (current != root) {
-      var links = current.asInstanceOf[MazeCell].getLinks()
+      var links = current.getLinks()
 
       breakable {
         for (neighbor <- links) {

@@ -1,17 +1,17 @@
-import lib.ColoredGrid
+import lib.{DistanceGrid, Distances, MazeCell, GridCell}
 
 object Dijkstra extends MazeApp {
-  var g = new ColoredGrid(rows, cols);
-
-  val gg = generateMaze(g, alg)
+  var g = new DistanceGrid(rows, cols);
+  val gg = generateMaze(g)
 
   val start = gg.getCell(0, 0)
-  var distances = start.distances
+  val distances = start.distances
+
   gg.distances = distances
 
   println("Path from nw corner to sw corner")
-  println(gg)
+  printMaze(gg, toAscii = true)
 
   gg.distances = distances.pathTo(gg.getCell(gg.rows - 1, 0))
-  printMaze(gg)
+  printMaze(gg, toAscii = true)
 }

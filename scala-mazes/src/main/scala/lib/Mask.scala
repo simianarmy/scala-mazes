@@ -9,8 +9,14 @@ import scala.util.{Try,Success,Failure}
 object Mask {
   def fromTxt(file: String): Try[Mask] = Try {
     val bufferedSource = Source.fromFile(file)
+    var lines = Array[String]()
 
-    val lines = bufferedSource.getLines.filter(_.length() > 0).toArray
+    try {
+      lines = bufferedSource.getLines.filter(_.length() > 0).toArray
+    } finally {
+      bufferedSource.close
+    }
+
     val rows = lines.length
     val columns = lines(0).length
     var mask = new Mask(rows, columns)
@@ -19,12 +25,10 @@ object Mask {
       mask(i)(j) = lines(i)(j) != 'X'
     }
 
-    bufferedSource.close
-
     mask
   }
 
-  def fromPng(file: String) = {
+  def fromPng(file: String): Try[Mask] = Try {
     val image = ImageIO.read(new File(file))
     val w = image.getWidth
     val h = image.getHeight
@@ -39,9 +43,8 @@ object Mask {
   }
 }
 
-class Mask(val rows: Int, val columns: Int) {
+class Mask(val rows: Int, val columns: Int) extends Randomizer {
   var bits = Array.ofDim[Boolean](rows, columns)
-  val rand = new scala.util.Random(System.currentTimeMillis)
 
   for (i <- 0 until rows; j <- 0 until columns) {
     bits(i)(j) = true
@@ -52,27 +55,19 @@ class Mask(val rows: Int, val columns: Int) {
   }
 
   def count(): Int = {
-    var count = 0
-    for (i <- 0 until rows; j <- 0 until columns) {
-      if (bits(i)(j)) count += 1
-    }
-    count
+    (for {
+      i <- 0 until rows; j <- 0 until columns
+      bit = if (bits(i)(j)) 1 else 0
+    } yield bit).sum
   }
 
   def randomLocation(): (Int, Int) = {
-    var loop = true
-    var res = (-1, -1)
-
-    while (loop) {
+    def lookup(): (Int, Int) = {
       val row = rand.nextInt(rows)
       val col = rand.nextInt(columns)
-
-      if (bits(row)(col)) {
-        res = (row, col)
-        loop = false
-      }
+      if (bits(row)(col)) (row, col) else lookup()
     }
-    res
+    if (count() > 0) lookup() else (-1, -1)
   }
 }
 

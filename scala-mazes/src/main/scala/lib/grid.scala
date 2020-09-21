@@ -26,10 +26,10 @@ class GridIterator[A <: MazeCell](grid: Grid[A]) extends Iterator[A] {
 /**
   * Defines grid contract
   */
-abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer {
+abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer with CellDistance {
   val dimensions = (rows, columns)
   def size(): Int = rows * columns
-  val r = scala.util.Random
+  def numCells: Int = size()
   def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
   def randomCell(): A
@@ -47,9 +47,26 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
 
   def eachCell(fn: (A => Unit)): Unit = {
     val itr = iterator()
+
     while (itr.hasNext()) {
-      fn(itr.next())
+      // skip null cells
+      val c = itr.next()
+      if (c != null) {
+        fn(c)
+      }
     }
+  }
+
+  def deadends(): List[A] = {
+    var list = List[A]()
+
+    eachCell(cell => {
+      if (cell.getLinks().size == 1) {
+        list = cell :: list
+      }
+    })
+
+    list
   }
 }
 

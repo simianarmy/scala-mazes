@@ -54,10 +54,12 @@ class MaskTest extends FunSuite {
   }
 
   test("fromTxt") {
-    val mask = Mask.fromTxt("src/main/scala/masks/simple.txt") match {
+    val mask = Mask.fromTxt("masks/simple.txt") match {
       case Success(i) => i
       case Failure(s) => null
     }
+    assert(mask.rows == 10)
+    assert(mask.columns == 10)
     assert(mask.count() > 10)
     assert(!mask(0)(0))
     assert(mask(0)(1))

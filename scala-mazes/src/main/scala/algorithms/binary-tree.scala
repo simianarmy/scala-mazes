@@ -23,4 +23,6 @@ class BinaryTree extends GeneralGenerator {
       case _ => grid
     }
   }
+
+  override def toString: String = "Binary Tree"
 }

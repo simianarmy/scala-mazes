@@ -30,6 +30,7 @@ object DeadendCounts extends MazeApp {
       var grid = new OrthogonalGrid(size, size)
       val gg = generateMaze(grid, alg._2)
 
+      //TODO: Fix compile errors caused by this
       deadendCounts += gg.deadends().length
     }
 

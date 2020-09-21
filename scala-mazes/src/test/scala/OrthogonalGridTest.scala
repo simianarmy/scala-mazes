@@ -10,6 +10,12 @@ class OrthogonalGridTest extends FunSuite {
     assert(grid.columns === 3);
   }
 
+  test("[]") {
+    var grid = new OrthogonalGrid(3, 3);
+    val cell11 = grid.getCell(1, 1)
+    assert(cell11 == grid(1)(1))
+  }
+
   test("Grid row iterator") {
     var grid = new OrthogonalGrid(2, 3);
 
@@ -23,7 +29,7 @@ class OrthogonalGridTest extends FunSuite {
     var grid = new OrthogonalGrid(2, 3);
 
     grid.eachCell(cell => {
-      assert(grid.getCell(cell.row, cell.column) == cell);
+      assert(grid(cell.row)(cell.column) == cell);
     })
   }
 }

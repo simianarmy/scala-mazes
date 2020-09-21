@@ -39,5 +39,6 @@ class Wilsons extends GeneralGenerator {
 
     grid
   }
+  override def toString: String = "Wilsons"
 }
 

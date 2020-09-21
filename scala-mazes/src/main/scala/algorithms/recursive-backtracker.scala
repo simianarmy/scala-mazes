@@ -23,5 +23,7 @@ class RecursiveBacktracker extends GeneralGenerator {
 
     grid
   }
+
+  override def toString: String = "Recursive Backtracker"
 }
 

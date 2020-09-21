@@ -15,5 +15,5 @@ object LongestPath extends MazeApp {
 
   gg.distances = newDistances.pathTo(goal)
 
-  printMaze(gg)
+  printMaze(gg, toAscii = true)
 }

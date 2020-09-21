@@ -5,12 +5,16 @@ import lib.Mask
 
 class MaskedGrid(val mask: Mask) extends OrthogonalGrid(mask.rows, mask.columns) {
 
-  def prepareGrid(): Unit = {
+  override def prepareGrid(): Array[Array[GridCell]] = {
+    var cells = Array.ofDim[GridCell](rows, columns);
+
     for (i <- 0 until rows; j <- 0 until columns) {
       if (mask(i)(j)) {
-        grid(i)(j) = new GridCell(i, j);
+        cells(i)(j) = new GridCell(i, j);
       }
     }
+
+    cells
   }
 
   override def randomCell(): GridCell = {
@@ -18,5 +22,5 @@ class MaskedGrid(val mask: Mask) extends OrthogonalGrid(mask.rows, mask.columns)
     getCell(row, col)
   }
 
-  override def size(): Int = mask.count()
+  override def numCells: Int = mask.count()
 }

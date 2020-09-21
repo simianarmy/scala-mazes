@@ -8,12 +8,12 @@ import java.awt.geom.Arc2D
 /**
   * TODO: Support drawing arcs
   */
-case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
+case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) with Randomizer {
   protected val grid = prepareGrid()
 
   configureCells()
 
-  private def prepareGrid(): Array[ArrayBuffer[PolarCell]] = {
+  protected def prepareGrid(): Array[ArrayBuffer[PolarCell]] = {
     var cells = new Array[ArrayBuffer[PolarCell]](rows)
     val rowHeight = 1.0 / rows
 
@@ -33,20 +33,21 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
         cells(i) += new PolarCell(i, j)
       }
     }
-
     cells
   }
 
   private def configureCells(): Unit = {
-    eachCell((cell: PolarCell) => {
+    eachCell(cell => {
       if (cell.row > 0) {
         cell.cw = getCell(cell.row, cell.column + 1)
         cell.ccw = getCell(cell.row, cell.column - 1)
 
         val ratio = grid(cell.row).length / grid(cell.row - 1).length
-        val parent = grid(cell.row - 1)(cell.column / ratio)
+        val parent = getCell(cell.row - 1, cell.column / ratio)
 
-        parent.outward += cell
+        if (parent != null) {
+          parent.outward += cell
+        }
         cell.inward = parent
       }
     })
@@ -56,8 +57,18 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
     grid.iterator.map(_.size).sum
   }
 
+  override def eachRow(fn: (Iterator[PolarCell] => Unit)): Unit ={
+    // collect cells into rows
+    for (row <- 0 until rows) {
+      fn(grid(row).iterator);
+    }
+  }
+
+  def apply(row: Int): ArrayBuffer[PolarCell] = grid(row)
+
   def getCell(row: Int, column: Int): PolarCell = {
-    grid(row)(column)
+    if (row < 0 || row >= rows || column < 0) null
+    else grid(row)(column % grid(row).size)
   }
 
   def cellAt(index: Int): PolarCell = {
@@ -65,23 +76,25 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
     var found = false
     var cell: PolarCell = grid(0)(0)
 
-    for (i <- 0 until rows) {
-      for (j <- 0 until grid(i).size) {
-        if (!found && index >= counter) {
-          cell = grid(i)(j)
-          found = true
-        }
-        counter += 1
+    for (i <- 0 until rows; j <- 0 until grid(i).size) {
+      if (!found && counter >= index) {
+        cell = grid(i)(j)
+        found = true
       }
+      counter += 1
     }
     cell
   }
 
   def randomCell(): PolarCell = {
-    val row = r.nextInt(rows);
-    val column = r.nextInt(grid(row).length);
+    val row = rand.nextInt(rows);
+    val column = rand.nextInt(grid(row).length);
 
     getCell(row, column)
+  }
+
+  override def toString(): String = {
+    s"PolarGrid $rows x $columns"
   }
 
   def toPng(cellSize: Int = 10): BufferedImage = {
@@ -142,7 +155,6 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
         //println("angleC: " + ac)
         //println("angleDiff " + angleDiff(aa, ac))
 
-        println("cell " + cell)
         if (!cell.isLinked(cell.inward)) {
           g.drawLine(ax, ay, cx, cy)
           //g.draw(new Arc2D.Float(ax, ay, innerRadius, innerRadius, aa, angleDiff(aa, ac), Arc2D.OPEN))

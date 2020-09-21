@@ -35,4 +35,6 @@ class HuntKill extends GeneralGenerator {
     }
     grid
   }
+
+  override def toString: String = "Hunt & Kill"
 }

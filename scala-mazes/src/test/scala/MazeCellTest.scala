@@ -40,4 +40,19 @@ class MazeCellTest extends FunSuite {
     cella.east = cellb;
     assert(cella.neighbors.length === 1);
   }
+
+  test("distances") {
+    var cella = new GridCell(0, 0);
+    var cellb = new GridCell(0, 1);
+    var cellc = new GridCell(0, 2);
+
+    cella.link(cellb, bidi = true);
+    cellb.link(cellc, bidi = true);
+
+    val distances = cella.distances()
+    assert(distances.get(cella) == 0)
+    assert(distances.get(cellb) == 1)
+    assert(distances.get(cellc) == 2)
+    assert(cellc.distances().get(cella) == 2)
+  }
 }

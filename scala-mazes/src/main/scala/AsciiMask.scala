@@ -5,20 +5,20 @@ import scala.util.{Success,Failure}
 
 object AsciiMask extends MazeApp {
   if (args.length < 1) {
-    println("\n*** Please specify a text file to use as a template")
+    println("\n*** Please specify a text file to use as a template (from " + System.getProperty("user.dir"))
     System.exit(0)
   }
   val mask = Mask.fromTxt(args(0)) match {
     case Success(i) => i
-    case Failure(s) => null
-  }
-  if (mask == null) {
-    println("Could not create a mask from file: " + args(0))
-    System.exit(0)
+    case Failure(s) => {
+      println("Could not create a mask from file: " + args(0) + " " + s)
+      System.exit(0)
+      null
+    }
   }
 
-  var g = new MaskedGrid(mask)
-  val gg = generateMaze(g)
+  val g = new MaskedGrid(mask)
+  val gg = generateMaze(g, "rb")
 
   printMaze(gg)
 }

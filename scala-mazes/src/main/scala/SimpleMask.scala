@@ -12,5 +12,5 @@ object SimpleMask extends MazeApp {
   var g = new MaskedGrid(m)
   val gg = generateMaze(g, "rb")
 
-  println(gg)
+  printMaze(gg, toAscii = true)
 }

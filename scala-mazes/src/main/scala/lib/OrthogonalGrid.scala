@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-case class OrthogonalGrid(override val rows: Int, override val columns: Int) extends Grid[GridCell](rows, columns) {
+case class OrthogonalGrid(override val rows: Int, override val columns: Int) extends Grid[GridCell](rows, columns) with Randomizer {
   protected val grid = prepareGrid()
 
   configureCells()
 
-  private def prepareGrid(): Array[Array[GridCell]] = {
+  protected def prepareGrid(): Array[Array[GridCell]] = {
     var cells = Array.ofDim[GridCell](rows, columns);
 
     for (i <- 0 until rows; j <- 0 until columns) {
@@ -39,6 +39,10 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
     }
   }
 
+  // Direct (unsafe) element accessor
+  def apply(row: Int): Array[GridCell] = grid(row)
+
+  // Safe element accessor
   def getCell(row: Int, column: Int): GridCell = {
     if (row < 0 || row >= rows || column < 0 || column >= columns) null
     else grid(row)(column)
@@ -52,8 +56,8 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
   }
 
   def randomCell(): GridCell = {
-    val row = r.nextInt(rows);
-    val column = r.nextInt(grid(row).length);
+    val row = rand.nextInt(rows);
+    val column = rand.nextInt(grid(row).length);
 
     getCell(row, column)
   }
@@ -85,14 +89,14 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
   }
 
   def toPng(cellSize: Int = 10): BufferedImage = {
-    val size = (cellSize * columns, cellSize * rows);
+    val dimensions = (cellSize * columns, cellSize * rows);
 
     val background = Color.WHITE;
     val wall = Color.BLACK;
     val breadcrumbColor = Color.MAGENTA;
 
     val canvas =
-      new BufferedImage(size._1 + 1, size._2 + 1, BufferedImage.TYPE_INT_RGB);
+      new BufferedImage(dimensions._1 + 1, dimensions._2 + 1, BufferedImage.TYPE_INT_RGB);
     // get Graphics2D for the image
     val g = canvas.createGraphics();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -153,17 +157,5 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
 
     g.dispose()
     canvas
-  }
-
-  def deadends(): ArrayBuffer[MazeCell] = {
-    var list = new ArrayBuffer[MazeCell]()
-
-    eachCell((cell: MazeCell) => {
-      if (cell.getLinks().size == 1) {
-        list += cell
-      }
-    })
-
-    list
   }
 }
