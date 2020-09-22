@@ -1,8 +1,6 @@
 package algorithms
 
-import lib.{Grid, OrthogonalGrid, HexGrid}
-import lib.RandomUtil
-import lib.{MazeCell, GridCell}
+import lib._
 
 class BinaryTree extends GeneralGenerator {
   def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
@@ -22,6 +20,7 @@ class BinaryTree extends GeneralGenerator {
     grid match {
       case OrthogonalGrid(_,_) => run()
       case HexGrid(_,_) => run()
+      case TriangleGrid(_,_) => run()
       case _ => grid
     }
   }

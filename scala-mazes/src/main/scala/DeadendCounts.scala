@@ -31,7 +31,7 @@ object DeadendCounts extends MazeApp {
       val gg = generateMaze(grid, alg._2)
 
       //TODO: Fix compile errors caused by this
-      deadendCounts += gg.deadends().length
+      deadendCounts += gg.deadends.length
     }
 
     val totalDeadends = deadendCounts.sum

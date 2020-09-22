@@ -1,32 +1,26 @@
 package lib
-import java.awt.image.BufferedImage
-import java.awt.Color
-
-trait TextRenderer {
-  def contentsOf(cell: MazeCell): String = " "
-}
-
-trait ImageRenderer {
-  def toPng(cellSize: Int = 10): BufferedImage
-  def backgroundColorFor(cell: MazeCell): Color = null
-}
-
-class GridIterator[A <: MazeCell](grid: Grid[A]) extends Iterator[A] {
-  var position: Int = 0;
-  def hasNext(): Boolean = {
-    position < grid.size()
-  }
-  def next(): A = {
-    val el = grid.cellAt(position)
-    position += 1
-    el
-  }
-}
 
 /**
   * Defines grid contract
   */
 abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer with CellDistance {
+  /**
+    * Easier than extending Iterator[A] in the grid class itself
+    *
+    * @param grid
+    */
+  class GridIterator[A <: MazeCell](grid: Grid[A]) extends Iterator[A] {
+    var position: Int = 0;
+    def hasNext(): Boolean = {
+      position < grid.size()
+    }
+    def next(): A = {
+      val el = grid.cellAt(position)
+      position += 1
+      el
+    }
+  }
+
   val dimensions = (rows, columns)
   def size(): Int = rows * columns
   def numCells: Int = size()
@@ -39,7 +33,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
     new GridIterator(this)
   }
 
-  def eachRow(fn: (Iterator[A] => Unit)): Unit ={
+  def eachRow(fn: (Iterator[A] => Unit)): Unit = {
     // collect cells into rows
     for (row <- iterator().grouped(columns)) {
       fn(row.iterator);
@@ -47,27 +41,38 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   }
 
   def eachCell(fn: (A => Unit)): Unit = {
-    val itr = iterator()
-
-    while (itr.hasNext()) {
-      // skip null cells
-      val c = itr.next()
-      if (c != null) {
-        fn(c)
-      }
-    }
+    iterator().filterNot(c => c == null).foreach(fn)
   }
 
-  def deadends(): List[A] = {
-    var list = List[A]()
+  def deadends: List[A] = {
+    iterator().filter(c =>  c.getLinks().size == 1).toList
+  }
 
-    eachCell(cell => {
-      if (cell.getLinks().size == 1) {
-        list = cell :: list
-      }
-    })
+  def braid(p: Double = 1.0) = {
+    val rand = new scala.util.Random(System.currentTimeMillis)
 
-    list
+    scala.util.Random.shuffle(deadends)
+      .filterNot(cell => {
+        cell.getLinks().size != 1 || rand.nextDouble() > p
+      })
+        .foreach(cell => {
+          val neighbors = cell.neighbors.filter(n => {
+            !cell.isLinked(n)
+          })
+
+          var best = neighbors.filter(n => {
+            n.getLinks().size == 1
+          })
+
+          if (best.isEmpty) {
+            best = neighbors
+          }
+
+          if (!best.isEmpty) {
+            val neighbor = RandomUtil.sample(best)
+            cell.link(neighbor)
+          }
+        })
   }
 }
 

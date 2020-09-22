@@ -2,7 +2,7 @@ package algorithms
 
 import scala.collection.mutable.ArrayBuffer
 
-import lib.{Grid, OrthogonalGrid, MazeCell, GridCell, Randomizer, HexGrid}
+import lib.{Grid, OrthogonalGrid, MazeCell, GridCell, Randomizer, HexGrid, TriangleGrid}
 
 class Sidewinder extends GeneralGenerator with Randomizer {
   def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
@@ -41,6 +41,7 @@ class Sidewinder extends GeneralGenerator with Randomizer {
     grid match {
       case OrthogonalGrid(_,_) => run()
       case HexGrid(_,_) => run()
+      case TriangleGrid(_,_) => run()
       case _ => grid
     }
   }

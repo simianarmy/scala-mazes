@@ -4,28 +4,6 @@ import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, Polygon, RenderingHints}
 import java.awt.geom._
 
-object HexGrid {
-  def createPng(width: Int, height: Int, op: => (Graphics2D => Unit)): BufferedImage = {
-    val background = Color.WHITE;
-    val wall = Color.BLACK;
-
-    val canvas =
-      new BufferedImage(width + 1, height + 1, BufferedImage.TYPE_INT_RGB);
-    val g = canvas.createGraphics();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g.setColor(background)
-    g.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
-    g.setColor(wall)
-
-    try {
-      op(g)
-      } finally {
-        g.dispose()
-      }
-      canvas
-  }
-}
-
 case class HexGrid(override val rows: Int, override val columns: Int) extends Grid[HexCell](rows,columns) with Randomizer {
   protected val grid = prepareGrid()
 
@@ -89,9 +67,10 @@ case class HexGrid(override val rows: Int, override val columns: Int) extends Gr
 
     val imgWidth: Int = (3 * aSize * columns + aSize + 0.5).toInt
     val imgHeight: Int = (height * rows + bSize + 0.5).toInt
+    val wall = Color.BLACK;
 
-    HexGrid.createPng(imgWidth, imgHeight, (g) => {
-        List("bg", "wall").foreach(mode => {
+    createPng(imgWidth, imgHeight, (g) => {
+        List('bg, 'wall).foreach(mode => {
           eachCell(cell => {
             val cx = size + 3 * cell.column * aSize
             var cy = bSize + cell.row * height
@@ -111,21 +90,16 @@ case class HexGrid(override val rows: Int, override val columns: Int) extends Gr
             val yM = cy.toInt
             val yS = (cy + bSize).toInt
 
-            if (mode == "bg") {
+            if (mode == 'bg) {
               val color = backgroundColorFor(cell)
 
               if (color != null) {
-                val p = new Polygon()
-                p.addPoint(xFw, yM)
-                p.addPoint(xNw, yN)
-                p.addPoint(xNe, yN)
-                p.addPoint(xFe, yM)
-                p.addPoint(xNe, yS)
-                p.addPoint(xNw, yS)
-
-                g.fillPolygon(p)
+                g.setColor(color)
+                g.fillPolygon(Array(xFw, xNw, xNe, xFe, xNe, xNw), Array(yM, yN, yN, yM, yS, yS), 6)
               }
             } else {
+              g.setColor(wall)
+
               if (cell.southwest == null) {
                 g.draw(new Line2D.Double(xFw, yM, xNw, yS))
               }
@@ -147,7 +121,6 @@ case class HexGrid(override val rows: Int, override val columns: Int) extends Gr
             }
           })
         })
-      g
     })
   }
 }
