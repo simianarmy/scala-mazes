@@ -90,69 +90,94 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
     res
   }
 
-  def toPng(cellSize: Int = 10): BufferedImage = {
-    val dimensions = (cellSize * columns, cellSize * rows);
+  def toPng(cellSize: Int = 10, inset: Double = 0): BufferedImage = {
+    val dimensions = (cellSize * columns, cellSize * rows)
+    val cellInset = (cellSize * inset).toInt
+    val wall = Color.BLACK
 
-    val background = Color.WHITE;
-    val wall = Color.BLACK;
-    val breadcrumbColor = Color.MAGENTA;
+    createPng(dimensions._1, dimensions._2, (g => {
+      for (mode <- List('bgs, 'walls)) {
+        eachCell(cell => {
+          val x = cell.column * cellSize
+          val y = cell.row * cellSize
 
-    val canvas =
-      new BufferedImage(dimensions._1 + 1, dimensions._2 + 1, BufferedImage.TYPE_INT_RGB);
-    // get Graphics2D for the image
-    val g = canvas.createGraphics();
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    // clear background
-    g.setColor(background)
-    g.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
-
-    g.setStroke(new BasicStroke()) // reset to default
-
-    for (mode <- List("backgrounds", "walls")) {
-      eachCell(cell => {
-        val x1 = cell.column * cellSize;
-        val y1 = cell.row * cellSize;
-        val x2 = (cell.column + 1) * cellSize;
-        val y2 = (cell.row + 1) * cellSize;
-
-        if (mode == "backgrounds") {
-          val color = backgroundColorFor(cell)
-          if (color != null) {
-            g.setColor(color)
+          if (cellInset > 0) {
+            toPngWithInset(g, cell, mode, cellSize, wall, x, y, cellInset)
           } else {
-            g.setColor(background)
+            toPngWithoutInset(g, cell, mode, cellSize, wall, x, y)
           }
-          g.fillRect(x1, y1, (x2 - x1), (y2 - y1))
+        });
+      }
+    }))
+  }
 
-          // optional decoration for a cell
-          val cellText = contentsOf(cell)
-          if (cellText != null) {
-            //println("cell text " + cellText)
-            //g.drawString(cellText, x1 + (x2 - x1) / 3, y1 + (y2 - y1))
-            //g.setColor(breadcrumbColor)
-            //g.fillOval(x1 + 1, y1 + 1, 8, 8)
-          }
-        } else {
-          g.setColor(wall)
+  def toPngWithoutInset(g: Graphics2D, cell: GridCell, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int) = {
+    val x1 = x
+    val y1 = y
+    val x2 = x1 + cellSize
+    val y2 = y1 + cellSize
+    val breadcrumbColor = Color.MAGENTA
 
-          if (cell.north == null) {
-            g.draw(new Line2D.Double(x1, y1, x2, y1))
-          }
-          if (cell.west == null) {
-            g.draw(new Line2D.Double(x1, y1, x1, y2))
-          }
+    if (mode == 'bgs) {
+      val color = backgroundColorFor(cell)
 
-          if (!cell.isLinked(cell.east)) {
-            g.draw(new Line2D.Double(x2, y1, x2, y2))
-          }
-          if (!cell.isLinked(cell.south)) {
-            g.draw(new Line2D.Double(x1, y2, x2, y2))
-          }
-        }
-      });
+      if (color != null) {
+        g.setColor(color)
+        g.fillRect(x, y, x2, y2)
+      }
+    } else {
+      g.setColor(wallColor)
+
+      if (cell.north == null) {
+        g.draw(new Line2D.Double(x1, y1, x2, y1))
+      }
+      if (cell.west == null) {
+        g.draw(new Line2D.Double(x1, y1, x1, y2))
+      }
+      if (!cell.isLinked(cell.east)) {
+        g.draw(new Line2D.Double(x2, y1, x2, y2))
+      }
+      if (!cell.isLinked(cell.south)) {
+        g.draw(new Line2D.Double(x1, y2, x2, y2))
+      }
     }
+  }
 
-    g.dispose()
-    canvas
+  def toPngWithInset(g: Graphics2D, cell: GridCell, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int, inset: Int) = {
+    val Array(x1, x2, x3, x4, y1, y2, y3, y4) = cellCoordinatesWithInset(x, y, cellSize, inset)
+
+    if (mode == 'bgs) {
+      // TODO: Implement me (page 270)
+    } else {
+      g.setColor(wallColor)
+
+      if (cell.isLinked(cell.north)) {
+        g.drawLine(x2, y1, x2, y2)
+        g.drawLine(x3, y1, x3, y2)
+      } else {
+        g.drawLine(x2, y2, x3, y2)
+      }
+
+      if (cell.isLinked(cell.south)) {
+        g.drawLine(x2, y3, x2, y4)
+        g.drawLine(x3, y3, x3, y4)
+      } else {
+        g.drawLine(x2, y3, x3, y3)
+      }
+
+      if (cell.isLinked(cell.west)) {
+        g.drawLine(x1, y2, x2, y2)
+        g.drawLine(x1, y3, x2, y3)
+      } else {
+        g.drawLine(x2, y2, x2, y3)
+      }
+
+      if (cell.isLinked(cell.east)) {
+        g.drawLine(x3, y2, x4, y2)
+        g.drawLine(x3, y3, x4, y3)
+      } else {
+        g.drawLine(x3, y2, x3, y3)
+      }
+    }
   }
 }

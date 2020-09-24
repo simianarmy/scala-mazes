@@ -3,7 +3,6 @@ import lib.{DistanceGrid, Distances, MazeCell, GridCell}
 object Dijkstra extends MazeApp {
   var g = new DistanceGrid(rows, cols);
   val gg = generateMaze(g)
-  gg.braid(0.5)
 
   val start = gg.getCell(0, 0)
   val distances = start.distances

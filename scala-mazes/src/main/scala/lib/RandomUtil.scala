@@ -9,6 +9,10 @@ object RandomUtil {
     seq(r.nextInt(seq.length))
   }
 
+  def sample[T](seq: Array[T]): T = {
+    seq(r.nextInt(seq.length))
+  }
+
   def sample[T](seq: List[T]): T = {
     seq(r.nextInt(seq.length))
   }

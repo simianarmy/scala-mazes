@@ -8,7 +8,7 @@ class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
   var east: GridCell = null
   var west: GridCell = null
 
-  def neighbors: List[MazeCell] = {
+  def neighbors: List[GridCell] = {
     for (dir <- List(north, south, east, west) if dir != null) yield dir
   }
 

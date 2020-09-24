@@ -60,7 +60,7 @@ case class TriangleGrid(override val rows: Int, override val columns: Int) exten
     getCell(row, column)
   }
 
-  def toPng(size: Int = 16): BufferedImage = {
+  def toPng(size: Int = 16, inset: Double = 0): BufferedImage = {
     val halfWidth = size / 2.0
     val height = size * Math.sqrt(3) / 2.0
     val halfHeight = height / 2.0

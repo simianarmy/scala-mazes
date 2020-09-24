@@ -99,7 +99,7 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
     s"PolarGrid $rows x $columns"
   }
 
-  def toPng(cellSize: Int = 10): BufferedImage = {
+  def toPng(cellSize: Int = 10, inset: Double = 0): BufferedImage = {
     val size = 2 * rows * cellSize
     val background = Color.WHITE
     val wall = Color.BLACK

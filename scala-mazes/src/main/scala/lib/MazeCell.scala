@@ -4,7 +4,8 @@ import scala.collection.mutable.{ArrayBuffer, Map}
 
 abstract class Cell(val row: Int, val column: Int)
 
-abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) {
+abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Ordered[MazeCell] {
+  var weight: Int = 0
   var links = Map[MazeCell, Boolean]()
 
   def getLinks(): Iterable[MazeCell] = links.keys
@@ -13,12 +14,10 @@ abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) {
   def distances(): Distances[MazeCell] = {
     new CellDistanceFinder().distances(this)
   }
+  def compare(that: MazeCell) = weight compare that.weight
 
-  // howowowowowowowowowow????????
-  //def link(cell: MazeCell, bidi: Boolean = true): MazeCell
-  //def unlink(cell: MazeCell, bidi: Boolean = true): MazeCell
-  // TODO: link and unlink should be in the MazeCell trait
-  def link(cell: MazeCell, bidi: Boolean = true): MazeCell = {
+
+  def link[A <: MazeCell](cell: A, bidi: Boolean = true): A = {
     links += (cell -> true);
 
     if (bidi) {

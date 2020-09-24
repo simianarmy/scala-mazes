@@ -67,4 +67,6 @@ class Distances[C <: MazeCell](root: C) {
     }
     max
   }
+
+  override def toString: String = _cells.toString
 }

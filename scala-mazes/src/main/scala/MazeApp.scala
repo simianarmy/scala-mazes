@@ -4,7 +4,7 @@ import algorithms._
 object MazeApp {
   def gridToPng[A <: MazeCell](grid: Grid[A], filename: String) = {
     javax.imageio.ImageIO.write(
-      grid.toPng(),
+      grid.toPng(inset = 0.1),
       "png",
       new java.io.File(filename)
     )
@@ -19,7 +19,7 @@ class MazeApp extends App {
   val rows = if (args.length > 1) args(0).toInt else 4;
   val cols = if (args.length > 1) args(1).toInt else 4;
   val alg = if (args.length > 2) args(2) else "bt";
-  var ascii = args.length > 3 && args(3) == "txt"
+  val braidValue: Double = if (args.length > 3) args(3).toDouble else 1.0
 
   def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = alg): Grid[A] = {
     val gen = algorithm match {
@@ -35,7 +35,7 @@ class MazeApp extends App {
     gen.on(grid, None)
   }
 
-  def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = ascii): Unit = {
+  def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = false): Unit = {
     if (toAscii) {
       println(g);
     } else {

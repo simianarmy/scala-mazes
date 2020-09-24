@@ -59,7 +59,7 @@ case class HexGrid(override val rows: Int, override val columns: Int) extends Gr
     getCell(row, column)
   }
 
-  def toPng(size: Int = 10) = {
+  def toPng(size: Int = 10, inset: Double = 0) = {
     val aSize = size / 2.0
     val bSize = size * Math.sqrt(3) / 2.0
     val width = size * 2
