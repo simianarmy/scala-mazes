@@ -15,7 +15,7 @@ class MazeCellTest extends FunSuite {
     var cella = new GridCell(0, 0);
     var cellb = new GridCell(1, 1);
 
-    cella.link(cellb);
+    cella.linkBidirectional(cellb);
     assert(cella.isLinked(cellb));
     assert(cellb.isLinked(cella));
     assert(!cella.getLinks().isEmpty);
@@ -26,7 +26,7 @@ class MazeCellTest extends FunSuite {
     var cella = new GridCell(0, 0);
     var cellb = new GridCell(1, 1);
 
-    cella.link(cellb, bidi = false);
+    cella.link(cellb);
     assert(cella.isLinked(cellb));
     assert(!cellb.isLinked(cella));
     assert(!cella.getLinks().isEmpty);
@@ -46,8 +46,8 @@ class MazeCellTest extends FunSuite {
     var cellb = new GridCell(0, 1);
     var cellc = new GridCell(0, 2);
 
-    cella.link(cellb, bidi = true);
-    cellb.link(cellc, bidi = true);
+    cella.linkBidirectional(cellb);
+    cellb.linkBidirectional(cellc);
 
     val distances = cella.distances()
     assert(distances.get(cella) == 0)

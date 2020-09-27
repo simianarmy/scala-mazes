@@ -16,23 +16,22 @@ abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Or
   }
   def compare(that: MazeCell) = weight compare that.weight
 
-
-  def link[A <: MazeCell](cell: A, bidi: Boolean = true): A = {
+  def link[A <: MazeCell](cell: A): Unit = {
     links += (cell -> true);
-
-    if (bidi) {
-      cell.link(this, false);
-    }
-    cell
   }
 
-  def unlink(cell: MazeCell, bidi: Boolean = true): MazeCell = {
-    links -= (cell);
+  def linkBidirectional[A <: MazeCell](cell: A): Unit = {
+    link(cell)
+    cell.link(this)
+  }
 
-    if (bidi) {
-      cell.unlink(this, false);
-    }
-    cell
+  def unlink(cell: MazeCell): Unit = {
+    links -= (cell);
+  }
+
+  def unlinkBidirectional(cell: MazeCell): Unit = {
+    unlink(cell)
+    cell.unlink(this)
   }
 }
 

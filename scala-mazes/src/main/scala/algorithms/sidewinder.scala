@@ -27,11 +27,11 @@ class Sidewinder extends GeneralGenerator with Randomizer {
             var member = buffer(rand.nextInt(buffer.length)).asInstanceOf[GridCell];
 
             if (member.north != null) {
-              member.link(member.north);
+              member.linkBidirectional(member.north);
             }
             buffer.clear();
           } else {
-            cell.link(east);
+            cell.linkBidirectional(east);
           }
         }
       })

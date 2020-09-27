@@ -12,7 +12,7 @@ class RecursiveBacktracker extends GeneralGenerator {
 
       while (!neighbors.isEmpty) {
         val neighbor = RandomUtil.sample(neighbors)
-        current.link(neighbor)
+        current.linkBidirectional(neighbor)
         checkNeighbor(neighbor)
         neighbors = current.neighbors.filter(n => n.getLinks().isEmpty)
       }

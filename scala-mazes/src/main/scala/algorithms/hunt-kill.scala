@@ -14,7 +14,7 @@ class HuntKill extends GeneralGenerator {
 
       if (unvisitedNeighbors.length > 0) {
         val neighbor = RandomUtil.sample(unvisitedNeighbors)
-        current.link(neighbor)
+        current.linkBidirectional(neighbor)
         current = neighbor.asInstanceOf[A]
       } else {
         looping = false
@@ -26,7 +26,7 @@ class HuntKill extends GeneralGenerator {
             if (cell.getLinks().isEmpty && !visitedNeighbors.isEmpty) {
               current = cell
               val neighbor = RandomUtil.sample(visitedNeighbors)
-              current.link(neighbor)
+              current.linkBidirectional(neighbor)
               looping = true // break out of this iterator
             }
           }

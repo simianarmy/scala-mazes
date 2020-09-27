@@ -11,7 +11,7 @@ class BinaryTree extends GeneralGenerator {
         val neighbors = List[GridCell](gc.north, east).filter(_ != null)
 
         if (!neighbors.isEmpty) {
-          cell.link(RandomUtil.sample(neighbors))
+          cell.linkBidirectional(RandomUtil.sample(neighbors))
         }
       })
       grid

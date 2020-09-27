@@ -37,7 +37,7 @@ class OrthogonalGridTest extends FunSuite {
   test("deadends") {
     var grid = new OrthogonalGrid(2, 3);
     assert(grid.deadends.size == 0)
-    grid(0)(0).link(grid(0)(1))
+    grid(0)(0).linkBidirectional(grid(0)(1))
     assert(grid.deadends.size == 2)
   }
 

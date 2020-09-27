@@ -32,7 +32,7 @@ class Wilsons extends GeneralGenerator {
       }
 
       for (i <- 0 to path.length - 2) {
-        path(i).link(path(i + 1))
+        path(i).linkBidirectional(path(i + 1))
         unvisited -= path(i)
       }
     }
