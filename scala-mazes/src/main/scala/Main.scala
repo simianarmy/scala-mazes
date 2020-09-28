@@ -9,10 +9,10 @@
   * ex: run 10 10 sw
   * ex: run 10 10 bt txt
   */
- import lib.OrthogonalGrid
+ import lib._
 
 object Main extends MazeApp {
-  var g = new OrthogonalGrid(rows, cols);
+  var g = new OrthogonalGrid[GridCell](rows, cols);
   val gg = generateMaze(g)
 
   printMaze(gg)

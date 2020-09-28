@@ -1,8 +1,7 @@
 /**
   * Calculates avg # deadeads per algorithm
   */
-import lib.OrthogonalGrid
-import lib.Grid
+import lib._
 import algorithms._
 
 import scala.collection.mutable.ArrayBuffer
@@ -27,7 +26,7 @@ object DeadendCounts extends MazeApp {
     deadendCounts.clear()
 
     for (i <- 0 until tries) {
-      var grid = new OrthogonalGrid(size, size)
+      var grid = new OrthogonalGrid[GridCell](size, size)
       val gg = generateMaze(grid, alg._2)
 
       //TODO: Fix compile errors caused by this

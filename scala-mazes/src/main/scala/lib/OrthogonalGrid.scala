@@ -3,65 +3,103 @@
   */
 package lib
 
-import scala.collection.mutable.ArrayBuffer
+import scala.reflect.runtime._
+//import scala.reflect.runtime.universe._
+import scala.reflect.{ClassTag, classTag}
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
 
-case class OrthogonalGrid(override val rows: Int, override val columns: Int) extends Grid[GridCell](rows, columns) with Randomizer {
+case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, override val columns: Int) extends Grid[A](rows, columns) with Randomizer {
   protected val grid = prepareGrid()
 
   configureCells()
 
-  protected def prepareGrid(): Array[Array[GridCell]] = {
-    var cells = Array.ofDim[GridCell](rows, columns);
+  def prepareGrid[A <: GridCell : ClassTag](): Array[Array[A]] = {
+    /*
+    val tt = typeTag[A]
+
+    Array.tabulate[A](rows, columns)((i: Int, j: Int) => {
+      currentMirror.reflectClass(tt.tpe.typeSymbol.asClass).reflectConstructor(
+        tt.tpe.members.filter(m =>
+          m.isMethod && m.asMethod.isConstructor
+        ).iterator.toSeq(0).asMethod
+      )(i, j).asInstanceOf[A]
+    })
+    */
+
+    //classTag[A].wrap().runtimeClass.
+    //Array.tabulate[A](rows, columns)((i: Int, j: Int) => {
+      //classTag[A].runtimeClass.getConstructors.head.newInstance(i.asInstanceOf[Object], j.asInstanceOf[Object]).asInstanceOf[A] //new GridCell(i, j)
+      //GridCell.createCell[A](i, j)
+      //new GridCell(i, j).asInstanceOf[A]
+    //})
+    //var cells = Array.ofDim[ct.runtimeClass](rows, columns)
+    //val shit = ct.wrap.runtimeClass
+    //var cells = shit.getConstructors
+    var cells = Array.ofDim[A](rows, columns)
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      cells(i)(j) = new GridCell(i, j);
+      //cells(i)(j) = classTag[A].runtimeClass.getConstructors.head.newInstance(i.asInstanceOf[Object], j.asInstanceOf[Object]).asInstanceOf[A] //new GridCell(i, j)
+      cells(i)(j) = GridCell.createCell[A](i, j)
     }
 
     cells
   }
 
   private def configureCells(): Unit = {
-    for (i <- 0 until rows; j <- 0 until columns) {
-      var cell = getCell(i, j)
+    val cells = for (i <- 0 until rows; j <- 0 until columns)
+      yield getCell(i,j)
 
-      if (cell != null) {
-        val row = cell.row;
-        val column = cell.column;
+    cells.flatten.foreach(cell => {
+      val row = cell.row
+      val column = cell.column
 
-        cell.north = getCell(row - 1, column);
-        cell.south = getCell(row + 1, column);
-        cell.west = getCell(row, column - 1);
-        cell.east = getCell(row, column + 1);
+      cell.north = getCell(row - 1, column) match {
+        case Some(cell) => cell
+        case _ => null
       }
-    }
+      cell.south = getCell(row + 1, column) match {
+        case Some(cell) => cell
+        case _ => null
+      }
+      cell.west = getCell(row, column - 1) match {
+        case Some(cell) => cell
+        case _ => null
+      }
+      cell.east = getCell(row, column + 1) match {
+        case Some(cell) => cell
+        case _ => null
+      }
+    })
   }
 
   // Direct (unsafe) element accessor
-  def apply(row: Int): Array[GridCell] = grid(row)
+  //def apply(row: Int): Array[A] = grid(row)
 
   def id: String = "ot"
 
   // Safe element accessor
-  def getCell(row: Int, column: Int): GridCell = {
-    if (row < 0 || row >= rows || column < 0 || column >= columns) null
-    else grid(row)(column)
+  def getCell(row: Int, column: Int): Option[A] = {
+    try {
+      Some(grid(row)(column))
+    } catch {
+      case e: Exception => None
+    }
   }
 
-  def cellAt(index: Int): GridCell = {
+  def cellAt(index: Int): A = {
     val x = index / columns
     val y = index % columns
 
-    getCell(x, y)
+    GridCell.cellOrNil(getCell(x, y))
   }
 
-  def randomCell(): GridCell = {
+  def randomCell(): A = {
     val row = rand.nextInt(rows);
     val column = rand.nextInt(grid(row).length);
 
-    getCell(row, column)
+    GridCell.cellOrNil(getCell(row, column))
   }
 
   override def toString(): String = {
@@ -111,7 +149,7 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
     }))
   }
 
-  def toPngWithoutInset(g: Graphics2D, cell: GridCell, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int) = {
+  def toPngWithoutInset(g: Graphics2D, cell: A, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int) = {
     val x1 = x
     val y1 = y
     val x2 = x1 + cellSize
@@ -143,7 +181,7 @@ case class OrthogonalGrid(override val rows: Int, override val columns: Int) ext
     }
   }
 
-  def toPngWithInset(g: Graphics2D, cell: GridCell, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int, inset: Int) = {
+  def toPngWithInset(g: Graphics2D, cell: A, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int, inset: Int) = {
     val Array(x1, x2, x3, x4, y1, y2, y3, y4) = cellCoordinatesWithInset(x, y, cellSize, inset)
 
     if (mode == 'bgs) {

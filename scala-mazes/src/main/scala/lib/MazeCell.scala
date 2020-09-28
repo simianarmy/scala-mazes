@@ -3,6 +3,7 @@ package lib
 import scala.collection.mutable.{ArrayBuffer, Map}
 
 abstract class Cell(val row: Int, val column: Int)
+case class NilCell() extends Cell(-1, -1)
 
 abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Ordered[MazeCell] {
   var weight: Int = 0

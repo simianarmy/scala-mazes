@@ -1,6 +1,23 @@
 package lib
 
-import scala.collection.mutable.ArrayBuffer
+import scala.reflect.{ClassTag, classTag}
+
+object GridCell {
+  def createCell[A <: AnyRef : ClassTag](row: Int, column: Int): A = {
+    val constructor = classTag[A].runtimeClass.getConstructors.head
+    //println("constructing " + constructor + s" with $row, $column")
+    constructor.newInstance(row, column).asInstanceOf[A]
+  }
+
+  def nilCell[A <: AnyRef : ClassTag]: A = {
+    createCell[A](-1, -1)
+  }
+
+  def cellOrNil[A](cell: Option[A]): A = cell match {
+    case Some(cell) => cell
+    case _ => nilCell
+  }
+}
 
 class GridCell(row: Int, column: Int) extends MazeCell(row, column) {
   var north: GridCell = null
