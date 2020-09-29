@@ -1,5 +1,7 @@
 package lib
 
+import scala.reflect.{ClassTag, classTag}
+
 /**
   * Defines grid contract
   */

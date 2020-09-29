@@ -16,10 +16,13 @@ class Sidewinder extends GeneralGenerator with Randomizer {
           val cell = itr.next()
           buffer += cell
 
-          val east = grid.getCell(cell.row, cell.column + 1)
+          val east = grid.getCell(cell.row, cell.column + 1) match {
+            case Some(cell) => cell
+            case _ => MazeCell.nilCell[GridCell]
+          }
           val gc = cell.asInstanceOf[GridCell]
-          val atEasternBoundary = (east == null);
-          val atNorthernBoundary = (gc.north == null);
+          val atEasternBoundary = east.isNil
+          val atNorthernBoundary = gc.north == null
           val shouldCloseOut =
             atEasternBoundary || (!atNorthernBoundary && rand.nextInt(2) == 0);
 
@@ -40,8 +43,6 @@ class Sidewinder extends GeneralGenerator with Randomizer {
 
     grid match {
       case OrthogonalGrid(_,_) => run()
-      case HexGrid(_,_) => run()
-      case TriangleGrid(_,_) => run()
       case _ => grid
     }
   }

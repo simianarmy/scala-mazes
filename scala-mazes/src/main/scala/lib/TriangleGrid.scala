@@ -3,64 +3,29 @@ package lib
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, Polygon, RenderingHints}
 import java.awt.geom._
+import lib.MazeCell._
 
-case class TriangleGrid(override val rows: Int, override val columns: Int) extends Grid[TriangleCell](rows,columns) with Randomizer {
-  protected val grid = prepareGrid()
-
-  configureCells()
-
-  protected def prepareGrid(): Array[Array[TriangleCell]] = {
-    var cells = Array.ofDim[TriangleCell](rows, columns);
-
-    for (i <- 0 until rows; j <- 0 until columns) {
-      cells(i)(j) = new TriangleCell(i, j);
-    }
-
-    cells
-  }
+class TriangleGrid(override val rows: Int, override val columns: Int) extends OrthogonalGrid[TriangleCell](rows,columns) with Randomizer {
 
   private def configureCells(): Unit = {
     eachCell(cell => {
       val row = cell.row
       val col = cell.column
 
-      cell.west = getCell(row, col - 1)
-      cell.east = getCell(row, col + 1)
+      cell.west = cellOrNil(getCell(row, col - 1))
+      cell.east = cellOrNil(getCell(row, col + 1))
 
       if (cell.isUpright) {
-        cell.south = getCell(row + 1, col)
+        cell.south = cellOrNil(getCell(row + 1, col))
       } else {
-        cell.north = getCell(row - 1, col)
+        cell.north = cellOrNil(getCell(row - 1, col))
       }
     })
   }
 
   override def id: String = "tr"
 
-  // Direct (unsafe) element accessor
-  def apply(row: Int): Array[TriangleCell] = grid(row)
-
-  // Safe element accessor
-  def getCell(row: Int, column: Int): TriangleCell = {
-    if (row < 0 || row >= rows || column < 0 || column >= columns) null
-    else grid(row)(column)
-  }
-
-  def cellAt(index: Int): TriangleCell = {
-    val x = index / columns
-    val y = index % columns
-
-    getCell(x, y)
-  }
-
-  def randomCell(): TriangleCell = {
-    val row = rand.nextInt(rows);
-    val column = rand.nextInt(grid(row).length);
-
-    getCell(row, column)
-  }
-
-  def toPng(size: Int = 16, inset: Double = 0): BufferedImage = {
+  override def toPng(size: Int = 16, inset: Double = 0): BufferedImage = {
     val halfWidth = size / 2.0
     val height = size * Math.sqrt(3) / 2.0
     val halfHeight = height / 2.0

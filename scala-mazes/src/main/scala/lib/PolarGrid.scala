@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, RenderingHints}
 import java.awt.geom.Arc2D
+import lib.MazeCell._
 
 /**
   * TODO: Support drawing arcs
@@ -39,16 +40,18 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
   private def configureCells(): Unit = {
     eachCell(cell => {
       if (cell.row > 0) {
-        cell.cw = getCell(cell.row, cell.column + 1)
-        cell.ccw = getCell(cell.row, cell.column - 1)
+        cell.cw = cellOrNil[PolarCell](getCell(cell.row, cell.column + 1))
+        cell.ccw = cellOrNil[PolarCell](getCell(cell.row, cell.column - 1))
 
         val ratio = grid(cell.row).length / grid(cell.row - 1).length
-        val parent = getCell(cell.row - 1, cell.column / ratio)
 
-        if (parent != null) {
-          parent.outward += cell
+        getCell(cell.row - 1, cell.column / ratio) match {
+          case Some(parent) => {
+            parent.outward += cell
+            cell.inward = parent
+          }
+          case _ => ()
         }
-        cell.inward = parent
       }
     })
   }
@@ -68,9 +71,12 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
 
   def apply(row: Int): ArrayBuffer[PolarCell] = grid(row)
 
-  def getCell(row: Int, column: Int): PolarCell = {
-    if (row < 0 || row >= rows || column < 0) null
-    else grid(row)(column % grid(row).size)
+  def getCell(row: Int, column: Int): Option[PolarCell] = {
+    try {
+      Some(grid(row)(column % grid(row).size))
+    } catch {
+      case e: Exception => None
+    }
   }
 
   def cellAt(index: Int): PolarCell = {
@@ -92,7 +98,10 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
     val row = rand.nextInt(rows);
     val column = rand.nextInt(grid(row).length);
 
-    getCell(row, column)
+    getCell(row, column) match {
+      case Some(cell) => cell
+      case _ => null
+    }
   }
 
   override def toString(): String = {

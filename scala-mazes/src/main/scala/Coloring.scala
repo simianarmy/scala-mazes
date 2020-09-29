@@ -7,8 +7,10 @@ object Coloring extends MazeApp {
 
   val gg = generateMaze(g, alg)
 
-  val start = gg.getCell(g.rows / 2, g.columns / 2)
-  gg.distances = start.distances
+  gg.distances = gg.getCell(g.rows / 2, g.columns / 2) match {
+    case Some(cell) => cell.distances
+    case _ => null
+  }
 
   printMaze(gg)
 }

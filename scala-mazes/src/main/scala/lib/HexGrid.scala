@@ -3,21 +3,9 @@ package lib
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, Polygon, RenderingHints}
 import java.awt.geom._
+import lib.MazeCell._
 
-case class HexGrid(override val rows: Int, override val columns: Int) extends Grid[HexCell](rows,columns) with Randomizer {
-  protected val grid = prepareGrid()
-
-  configureCells()
-
-  protected def prepareGrid(): Array[Array[HexCell]] = {
-    var cells = Array.ofDim[HexCell](rows, columns);
-
-    for (i <- 0 until rows; j <- 0 until columns) {
-      cells(i)(j) = new HexCell(i, j);
-    }
-
-    cells
-  }
+class HexGrid(override val rows: Int, override val columns: Int) extends OrthogonalGrid[HexCell](rows,columns) with Randomizer {
 
   private def configureCells(): Unit = {
     eachCell(cell => {
@@ -25,41 +13,18 @@ case class HexGrid(override val rows: Int, override val columns: Int) extends Gr
       val col = cell.column
       val diags = if (col % 2 == 0) (row - 1, row) else (row, row + 1)
 
-      cell.northwest = getCell(diags._1, col - 1)
-      cell.north = getCell(row -1, col)
-      cell.northeast = getCell(diags._1, col + 1)
-      cell.southwest = getCell(diags._2, col - 1)
-      cell.south = getCell(row + 1, col)
-      cell.southeast = getCell(diags._2, col + 1)
+      cell.northwest = cellOrNil(getCell(diags._1, col - 1))
+      cell.north = cellOrNil(getCell(row -1, col))
+      cell.northeast = cellOrNil(getCell(diags._1, col + 1))
+      cell.southwest = cellOrNil(getCell(diags._2, col - 1))
+      cell.south = cellOrNil(getCell(row + 1, col))
+      cell.southeast = cellOrNil(getCell(diags._2, col + 1))
     })
   }
 
   override def id: String = "hx"
 
-  // Direct (unsafe) element accessor
-  def apply(row: Int): Array[HexCell] = grid(row)
-
-  // Safe element accessor
-  def getCell(row: Int, column: Int): HexCell = {
-    if (row < 0 || row >= rows || column < 0 || column >= columns) null
-    else grid(row)(column)
-  }
-
-  def cellAt(index: Int): HexCell = {
-    val x = index / columns
-    val y = index % columns
-
-    getCell(x, y)
-  }
-
-  def randomCell(): HexCell = {
-    val row = rand.nextInt(rows);
-    val column = rand.nextInt(grid(row).length);
-
-    getCell(row, column)
-  }
-
-  def toPng(size: Int = 10, inset: Double = 0) = {
+  override def toPng(size: Int = 10, inset: Double = 0) = {
     val aSize = size / 2.0
     val bSize = size * Math.sqrt(3) / 2.0
     val width = size * 2
@@ -100,13 +65,13 @@ case class HexGrid(override val rows: Int, override val columns: Int) extends Gr
             } else {
               g.setColor(wall)
 
-              if (cell.southwest == null) {
+              if (cell.southwest.isNil) {
                 g.draw(new Line2D.Double(xFw, yM, xNw, yS))
               }
-              if (cell.northwest == null) {
+              if (cell.northwest.isNil) {
                 g.draw(new Line2D.Double(xFw, yM, xNw, yN))
               }
-              if (cell.north == null) {
+              if (cell.north.isNil) {
                 g.draw(new Line2D.Double(xNw, yN, xNe, yN))
               }
               if (!cell.isLinked(cell.northeast)) {

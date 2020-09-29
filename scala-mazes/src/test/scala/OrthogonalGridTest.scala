@@ -1,6 +1,7 @@
 import org.scalatest.FunSuite
 
 import lib.{OrthogonalGrid, GridCell}
+import lib.MazeCell._
 import algorithms.RecursiveBacktracker
 
 class OrthogonalGridTest extends FunSuite {
@@ -30,14 +31,14 @@ class OrthogonalGridTest extends FunSuite {
     var grid = new OrthogonalGrid[GridCell](2, 3);
 
     grid.eachCell(cell => {
-      assert(grid.getCell(cell.row, cell.column) == cell);
+      assert(cellOrNil(grid.getCell(cell.row, cell.column)) == cell);
     })
   }
 
   test("deadends") {
     var grid = new OrthogonalGrid[GridCell](2, 3);
     assert(grid.deadends.size == 0)
-    grid.getCell(0, 0).linkBidirectional(grid.getCell(0, 1))
+    cellOrNil(grid.getCell(0, 0)).linkBidirectional(cellOrNil(grid.getCell(0, 1)))
     assert(grid.deadends.size == 2)
   }
 

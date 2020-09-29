@@ -1,6 +1,7 @@
 import org.scalatest.FunSuite
 
 import lib.PolarGrid
+import lib.MazeCell._
 
 class PolarGridTest extends FunSuite {
   test("Grid constructor") {
@@ -18,10 +19,11 @@ class PolarGridTest extends FunSuite {
     assert(cell10.column == 0)
   }
 
-  test("[]") {
+  test("getCell") {
     var grid = new PolarGrid(3);
-    val cell11 = grid.getCell(1, 1)
+    val cell11 = cellOrNil(grid.getCell(1, 1))
     assert(cell11 == grid(1)(1))
+    assert(cellOrNil(grid.getCell(10, 10)).isNil)
   }
 
   test("row iterator") {
@@ -39,7 +41,7 @@ class PolarGridTest extends FunSuite {
     var grid = new PolarGrid(3);
 
     grid.eachCell(cell => {
-      assert(grid.getCell(cell.row, cell.column) == cell);
+      assert(cellOrNil(grid.getCell(cell.row, cell.column)) == cell);
     })
   }
 }

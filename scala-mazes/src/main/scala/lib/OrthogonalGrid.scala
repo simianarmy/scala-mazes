@@ -9,39 +9,18 @@ import scala.reflect.{ClassTag, classTag}
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
 import java.awt.geom._
+import lib.MazeCell._
 
 case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, override val columns: Int) extends Grid[A](rows, columns) with Randomizer {
-  protected val grid = prepareGrid()
+  val grid = prepareGrid()
 
   configureCells()
 
   def prepareGrid[A <: GridCell : ClassTag](): Array[Array[A]] = {
-    /*
-    val tt = typeTag[A]
-
-    Array.tabulate[A](rows, columns)((i: Int, j: Int) => {
-      currentMirror.reflectClass(tt.tpe.typeSymbol.asClass).reflectConstructor(
-        tt.tpe.members.filter(m =>
-          m.isMethod && m.asMethod.isConstructor
-        ).iterator.toSeq(0).asMethod
-      )(i, j).asInstanceOf[A]
-    })
-    */
-
-    //classTag[A].wrap().runtimeClass.
-    //Array.tabulate[A](rows, columns)((i: Int, j: Int) => {
-      //classTag[A].runtimeClass.getConstructors.head.newInstance(i.asInstanceOf[Object], j.asInstanceOf[Object]).asInstanceOf[A] //new GridCell(i, j)
-      //GridCell.createCell[A](i, j)
-      //new GridCell(i, j).asInstanceOf[A]
-    //})
-    //var cells = Array.ofDim[ct.runtimeClass](rows, columns)
-    //val shit = ct.wrap.runtimeClass
-    //var cells = shit.getConstructors
     var cells = Array.ofDim[A](rows, columns)
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      //cells(i)(j) = classTag[A].runtimeClass.getConstructors.head.newInstance(i.asInstanceOf[Object], j.asInstanceOf[Object]).asInstanceOf[A] //new GridCell(i, j)
-      cells(i)(j) = GridCell.createCell[A](i, j)
+      cells(i)(j) = MazeCell.createCell[A](i, j)
     }
 
     cells
@@ -80,6 +59,7 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
   def id: String = "ot"
 
   // Safe element accessor
+  // TODO: Use MazeCell.cellOrNil
   def getCell(row: Int, column: Int): Option[A] = {
     try {
       Some(grid(row)(column))
@@ -92,14 +72,14 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     val x = index / columns
     val y = index % columns
 
-    GridCell.cellOrNil(getCell(x, y))
+    cellOrNil(getCell(x, y))
   }
 
   def randomCell(): A = {
     val row = rand.nextInt(rows);
     val column = rand.nextInt(grid(row).length);
 
-    GridCell.cellOrNil(getCell(row, column))
+    cellOrNil(getCell(row, column))
   }
 
   override def toString(): String = {

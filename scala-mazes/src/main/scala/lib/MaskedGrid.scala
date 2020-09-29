@@ -1,18 +1,19 @@
 package lib
 
-import lib.OrthogonalGrid
-import lib.Mask
+import scala.reflect.{ClassTag, classTag}
 
 class MaskedGrid(val mask: Mask) extends OrthogonalGrid[GridCell](mask.rows, mask.columns) {
 
   override def id: String = "ma"
 
-  def prepareGrid(): Array[Array[GridCell]] = {
-    var cells = Array.ofDim[GridCell](rows, columns);
+  override def prepareGrid[A <: GridCell : ClassTag](): Array[Array[A]] = {
+    var cells = Array.ofDim[A](rows, columns);
 
     for (i <- 0 until rows; j <- 0 until columns) {
       if (mask(i)(j)) {
-        cells(i)(j) = new GridCell(i, j);
+        cells(i)(j) = MazeCell.createCell[A](i, j)
+      } else {
+        cells(i)(j) = MazeCell.nilCell[A]
       }
     }
 
@@ -21,7 +22,7 @@ class MaskedGrid(val mask: Mask) extends OrthogonalGrid[GridCell](mask.rows, mas
 
   override def randomCell(): GridCell = {
     val (row, col) = mask.randomLocation()
-    getCell(row, col)
+    MazeCell.cellOrNil(getCell(row, col))
   }
 
   override def numCells: Int = mask.count()
