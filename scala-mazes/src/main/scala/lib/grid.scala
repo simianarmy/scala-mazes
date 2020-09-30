@@ -26,7 +26,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   val dimensions = (rows, columns)
   def size(): Int = rows * columns
   def numCells: Int = size()
-  def getCell(row: Int, column: Int): Option[A]
+  def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
   def randomCell(): A
   def id: String
@@ -43,7 +43,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   }
 
   def eachCell(fn: (A => Unit)): Unit = {
-    iterator().filterNot(c => c == null).foreach(fn)
+    iterator().filterNot(c => c.isNil).foreach(fn)
   }
 
   def deadends: List[A] = {

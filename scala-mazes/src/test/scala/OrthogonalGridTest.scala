@@ -31,23 +31,22 @@ class OrthogonalGridTest extends FunSuite {
     var grid = new OrthogonalGrid[GridCell](2, 3);
 
     grid.eachCell(cell => {
-      assert(cellOrNil(grid.getCell(cell.row, cell.column)) == cell);
+      assert(grid.getCell(cell.row, cell.column) == cell)
     })
   }
 
   test("deadends") {
     var grid = new OrthogonalGrid[GridCell](2, 3);
     assert(grid.deadends.size == 0)
-    cellOrNil(grid.getCell(0, 0)).linkBidirectional(cellOrNil(grid.getCell(0, 1)))
+    grid.getCell(0, 0).linkBidirectional(grid.getCell(0, 1))
     assert(grid.deadends.size == 2)
   }
 
   test("braid") {
     val grid = new OrthogonalGrid[GridCell](3, 3);
     val gg = new RecursiveBacktracker().on(grid, None)
-    grid.braid(0)
     assert(grid.deadends.size > 0)
-    grid.braid(1)
+    grid.braid(1.0)
     assert(grid.deadends.size == 0)
   }
 }

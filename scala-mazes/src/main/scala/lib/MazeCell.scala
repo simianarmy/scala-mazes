@@ -16,10 +16,7 @@ object MazeCell {
     createCell[A](-1, -1)
   }
 
-  def cellOrNil[A <: AnyRef : ClassTag](cell: Option[A]): A = cell match {
-    case Some(cell) => cell
-    case _ => nilCell[A]
-  }
+  def cellOrNil[A <: AnyRef : ClassTag](cell: Option[A]): A = cell.getOrElse(nilCell[A])
 }
 
 abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Ordered[MazeCell] {

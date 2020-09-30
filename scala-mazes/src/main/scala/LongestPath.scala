@@ -5,10 +5,7 @@ object LongestPath extends MazeApp {
   var g = new DistanceGrid(rows, cols);
 
   val gg = generateMaze(g, alg)
-  val distances = gg.getCell(0, 0) match {
-    case Some(cell) => cell.distances
-    case _ => null
-  }
+  val distances = gg.getCell(0, 0).distances
 
   val (newStart, _) = distances.max()
   val newDistances = newStart.distances

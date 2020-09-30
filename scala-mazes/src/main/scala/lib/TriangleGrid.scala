@@ -12,13 +12,13 @@ class TriangleGrid(override val rows: Int, override val columns: Int) extends Or
       val row = cell.row
       val col = cell.column
 
-      cell.west = cellOrNil(getCell(row, col - 1))
-      cell.east = cellOrNil(getCell(row, col + 1))
+      cell.west = getCell(row, col - 1)
+      cell.east = getCell(row, col + 1)
 
       if (cell.isUpright) {
-        cell.south = cellOrNil(getCell(row + 1, col))
+        cell.south = getCell(row + 1, col)
       } else {
-        cell.north = cellOrNil(getCell(row - 1, col))
+        cell.north = getCell(row - 1, col)
       }
     })
   }
@@ -34,7 +34,7 @@ class TriangleGrid(override val rows: Int, override val columns: Int) extends Or
     val wall = Color.BLACK
 
     createPng(imgWidth, imgHeight, (g) => {
-      List('bg, 'walls).foreach(mode => {
+      List('bgs, 'walls).foreach(mode => {
         eachCell(cell => {
           val cx = halfWidth + cell.column * halfWidth
           val cy = halfHeight + cell.row * height
@@ -53,7 +53,7 @@ class TriangleGrid(override val rows: Int, override val columns: Int) extends Or
             baseY = (cy - halfHeight).toInt
           }
 
-          if (mode == 'bg) {
+          if (mode == 'bgs) {
             val color = backgroundColorFor(cell)
 
             if (color != null) {
@@ -63,7 +63,7 @@ class TriangleGrid(override val rows: Int, override val columns: Int) extends Or
           } else {
             g.setColor(wall)
 
-            if (cell.west == null) {
+            if (cell.west.isNil) {
               g.drawLine(westX, baseY, midX, apexY)
             }
 
@@ -71,7 +71,7 @@ class TriangleGrid(override val rows: Int, override val columns: Int) extends Or
               g.drawLine(eastX, baseY, midX, apexY)
             }
 
-            val noSouth = cell.isUpright && (cell.south == null)
+            val noSouth = cell.isUpright && cell.south.isNil
             val notLinked = !cell.isUpright && !cell.isLinked(cell.north)
 
             if (noSouth || notLinked) {

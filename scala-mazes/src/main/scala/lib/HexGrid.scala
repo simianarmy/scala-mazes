@@ -13,12 +13,12 @@ class HexGrid(override val rows: Int, override val columns: Int) extends Orthogo
       val col = cell.column
       val diags = if (col % 2 == 0) (row - 1, row) else (row, row + 1)
 
-      cell.northwest = cellOrNil(getCell(diags._1, col - 1))
-      cell.north = cellOrNil(getCell(row -1, col))
-      cell.northeast = cellOrNil(getCell(diags._1, col + 1))
-      cell.southwest = cellOrNil(getCell(diags._2, col - 1))
-      cell.south = cellOrNil(getCell(row + 1, col))
-      cell.southeast = cellOrNil(getCell(diags._2, col + 1))
+      cell.northwest = getCell(diags._1, col - 1)
+      cell.north = getCell(row -1, col)
+      cell.northeast = getCell(diags._1, col + 1)
+      cell.southwest = getCell(diags._2, col - 1)
+      cell.south = getCell(row + 1, col)
+      cell.southeast = getCell(diags._2, col + 1)
     })
   }
 

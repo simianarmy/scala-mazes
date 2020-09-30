@@ -30,26 +30,14 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     val cells = for (i <- 0 until rows; j <- 0 until columns)
       yield getCell(i,j)
 
-    cells.flatten.foreach(cell => {
+    cells.foreach(cell => {
       val row = cell.row
       val column = cell.column
 
-      cell.north = getCell(row - 1, column) match {
-        case Some(cell) => cell
-        case _ => null
-      }
-      cell.south = getCell(row + 1, column) match {
-        case Some(cell) => cell
-        case _ => null
-      }
-      cell.west = getCell(row, column - 1) match {
-        case Some(cell) => cell
-        case _ => null
-      }
-      cell.east = getCell(row, column + 1) match {
-        case Some(cell) => cell
-        case _ => null
-      }
+      cell.north = getCell(row - 1, column)
+      cell.south = getCell(row + 1, column)
+      cell.west = getCell(row, column - 1)
+      cell.east = getCell(row, column + 1)
     })
   }
 
@@ -59,12 +47,11 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
   def id: String = "ot"
 
   // Safe element accessor
-  // TODO: Use MazeCell.cellOrNil
-  def getCell(row: Int, column: Int): Option[A] = {
+  def getCell(row: Int, column: Int): A = {
     try {
-      Some(grid(row)(column))
+      grid(row)(column)
     } catch {
-      case e: Exception => None
+      case e: ArrayIndexOutOfBoundsException => MazeCell.nilCell[A]
     }
   }
 
@@ -72,14 +59,14 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     val x = index / columns
     val y = index % columns
 
-    cellOrNil(getCell(x, y))
+    getCell(x, y)
   }
 
   def randomCell(): A = {
     val row = rand.nextInt(rows);
     val column = rand.nextInt(grid(row).length);
 
-    cellOrNil(getCell(row, column))
+    getCell(row, column)
   }
 
   override def toString(): String = {
@@ -137,6 +124,7 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     val breadcrumbColor = Color.MAGENTA
 
     if (mode == 'bgs) {
+      println("mode = bgs")
       val color = backgroundColorFor(cell)
 
       if (color != null) {
@@ -165,7 +153,25 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     val Array(x1, x2, x3, x4, y1, y2, y3, y4) = cellCoordinatesWithInset(x, y, cellSize, inset)
 
     if (mode == 'bgs) {
-      // TODO: Implement me (page 270)
+      val color = backgroundColorFor(cell)
+
+      if (color != null) {
+        g.setColor(color)
+
+        if (cell.isLinked(cell.north)) {
+          g.fillRect(x2, y1, x3 - x2, y2 - y1)
+        }
+        if (cell.isLinked(cell.south)) {
+          g.fillRect(x2, y3, x3 - x2, y4 - y3)
+        }
+        if (cell.isLinked(cell.west)) {
+          g.fillRect(x1, y2, x2 - x1, y3 - y2)
+        }
+        if (cell.isLinked(cell.east)) {
+          g.fillRect(x3, y2, x4 - x3, y3 - y2)
+        }
+        g.fillRect(x2, y2, x3 - x2, y3 - y2) // C
+      }
     } else {
       g.setColor(wallColor)
 

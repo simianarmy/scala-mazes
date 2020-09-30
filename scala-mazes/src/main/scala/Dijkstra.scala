@@ -5,16 +5,13 @@ import lib.MazeCell._
 object Dijkstra extends MazeApp {
   var g = new DistanceGrid(rows, cols);
   val gg = generateMaze(g)
-  val distances = gg.getCell(0, 0) match {
-    case Some(cell) => cell.distances
-    case _ => null
-  }
+  val distances = gg.getCell(0, 0).distances
 
   gg.distances = distances
-
-  println("Path from nw corner to sw corner")
+  println("distances")
   printMaze(gg, toAscii = true)
 
-  gg.distances = distances.pathTo(cellOrNil(gg.getCell(gg.rows - 1, 0)))
+  gg.distances = distances.pathTo(gg.getCell(gg.rows - 1, 0))
+  println("Path from nw corner to sw corner")
   printMaze(gg, toAscii = true)
 }

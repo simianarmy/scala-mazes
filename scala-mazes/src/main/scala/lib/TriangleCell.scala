@@ -6,14 +6,12 @@ class TriangleCell(row: Int, column: Int) extends GridCell(row, column) {
   override def neighbors: List[GridCell] = {
     def cellIf(cell: GridCell, test: => Boolean): List[GridCell] = if (test) List(cell) else Nil
 
-    val list = for {
-      cell <- List(west, east) if cell != null
-    } yield cell
+    val list = List(west, east).filterNot(p => p.isNil)
 
     list ::: cellIf(north, {
-      !isUpright && north != null
+      !isUpright && !north.isNil
     }) ::: cellIf(south, {
-      isUpright && south != null
+      isUpright && !south.isNil
     })
   }
 }

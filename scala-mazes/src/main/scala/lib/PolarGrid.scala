@@ -40,13 +40,13 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
   private def configureCells(): Unit = {
     eachCell(cell => {
       if (cell.row > 0) {
-        cell.cw = cellOrNil[PolarCell](getCell(cell.row, cell.column + 1))
-        cell.ccw = cellOrNil[PolarCell](getCell(cell.row, cell.column - 1))
+        cell.cw = getCell(cell.row, cell.column + 1)
+        cell.ccw = getCell(cell.row, cell.column - 1)
 
         val ratio = grid(cell.row).length / grid(cell.row - 1).length
 
         getCell(cell.row - 1, cell.column / ratio) match {
-          case Some(parent) => {
+          case parent: PolarCell if !parent.isNil  => {
             parent.outward += cell
             cell.inward = parent
           }
@@ -71,11 +71,11 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
 
   def apply(row: Int): ArrayBuffer[PolarCell] = grid(row)
 
-  def getCell(row: Int, column: Int): Option[PolarCell] = {
+  def getCell(row: Int, column: Int): PolarCell = {
     try {
-      Some(grid(row)(column % grid(row).size))
+      grid(row)(column % grid(row).size)
     } catch {
-      case e: Exception => None
+      case e: Exception => MazeCell.nilCell[PolarCell]
     }
   }
 
@@ -98,10 +98,7 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
     val row = rand.nextInt(rows);
     val column = rand.nextInt(grid(row).length);
 
-    getCell(row, column) match {
-      case Some(cell) => cell
-      case _ => null
-    }
+    getCell(row, column)
   }
 
   override def toString(): String = {

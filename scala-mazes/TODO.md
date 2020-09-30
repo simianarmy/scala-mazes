@@ -1,7 +1,5 @@
 # TODO
 
-- Latest refactor broke coloring
-- PolarGrid crashes on AB (probably others too)
+- WeightedGrid app never ends
 - Complete WeaveGrid
-- Standardize Null cell type
 

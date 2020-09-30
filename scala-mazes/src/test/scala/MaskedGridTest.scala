@@ -31,12 +31,7 @@ class MaskedGridTest extends FunSuite {
     mask(2)(2) = false
     val grid = new MaskedGrid(mask);
 
-    val cell22 = grid.getCell(2, 2) match {
-      case Some(cell) => cell
-      case _ => None
-    }
-
-    assert(cellOrNil(grid.getCell(2, 2)).isNil)
+    assert(grid.getCell(2, 2).isNil)
   }
 
   test("from text mask") {
