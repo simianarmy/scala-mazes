@@ -7,7 +7,7 @@ class MazeCellTest extends FunSuite {
     var cell = new GridCell(2, 3);
     assert(cell.row === 2);
     assert(cell.column === 3);
-    assert(cell.getLinks().isEmpty)
+    assert(cell.links.isEmpty)
     assert(cell.neighbors.length === 0)
   }
 
@@ -18,8 +18,8 @@ class MazeCellTest extends FunSuite {
     cella.linkBidirectional(cellb);
     assert(cella.isLinked(cellb));
     assert(cellb.isLinked(cella));
-    assert(!cella.getLinks().isEmpty);
-    assert(!cellb.getLinks().isEmpty);
+    assert(!cella.links.isEmpty);
+    assert(!cellb.links.isEmpty);
   }
 
   test("Cell linking (unidirectional)") {
@@ -29,8 +29,8 @@ class MazeCellTest extends FunSuite {
     cella.link(cellb);
     assert(cella.isLinked(cellb));
     assert(!cellb.isLinked(cella));
-    assert(!cella.getLinks().isEmpty);
-    assert(cellb.getLinks().isEmpty);
+    assert(!cella.links.isEmpty);
+    assert(cellb.links.isEmpty);
   }
 
   test("MazeCell neighbors") {
@@ -49,10 +49,10 @@ class MazeCellTest extends FunSuite {
     cella.linkBidirectional(cellb);
     cellb.linkBidirectional(cellc);
 
-    val distances = cella.distances()
+    val distances = cella.distances
     assert(distances.get(cella) == 0)
     assert(distances.get(cellb) == 1)
     assert(distances.get(cellc) == 2)
-    assert(cellc.distances().get(cella) == 2)
+    assert(cellc.distances.get(cella) == 2)
   }
 }

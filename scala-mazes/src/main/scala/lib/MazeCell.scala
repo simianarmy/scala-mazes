@@ -19,22 +19,21 @@ object MazeCell {
   def cellOrNil[A <: AnyRef : ClassTag](cell: Option[A]): A = cell.getOrElse(nilCell[A])
 }
 
-abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Ordered[MazeCell] {
+abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Ordered[MazeCell] with CellDistancesGenerator {
   var weight: Int = 0
   // TODO: Why not use a Set ?
-  var links = Map[MazeCell, Boolean]()
+  var _links = Map[MazeCell, Boolean]()
 
-  def getLinks(): Iterable[MazeCell] = links.keys
-  def isLinked(cell: MazeCell): Boolean = links.contains(cell)
+  def links: Iterable[MazeCell] = _links.keys
+  def isLinked(cell: MazeCell): Boolean = _links.contains(cell)
   def isNil = row == -1 && column == -1
   def neighbors: List[MazeCell]
-  def distances(): Distances[MazeCell] = {
-    new CellDistanceFinder().distances(this)
-  }
+  def distances: Distances[MazeCell] = generateDistances(this)
+
   def compare(that: MazeCell) = weight compare that.weight
 
   def link[A <: MazeCell](cell: A): Unit = {
-    links += (cell -> true);
+    _links += (cell -> true);
   }
 
   def linkBidirectional[A <: MazeCell](cell: A): Unit = {
@@ -43,7 +42,7 @@ abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Or
   }
 
   def unlink(cell: MazeCell): Unit = {
-    links -= (cell);
+    _links -= (cell);
   }
 
   def unlinkBidirectional(cell: MazeCell): Unit = {

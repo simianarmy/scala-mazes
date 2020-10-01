@@ -1,8 +1,6 @@
 package lib
 
-import java.awt.image.BufferedImage
-import java.awt.{Graphics2D, Color, Font, BasicStroke, Polygon, RenderingHints}
-import java.awt.geom._
+import java.awt.{Color}
 
 class WeightedGrid(override val rows: Int, override val columns: Int) extends OrthogonalGrid[WeightedCell](rows, columns) {
   var maximum: Int = 0
@@ -18,8 +16,7 @@ class WeightedGrid(override val rows: Int, override val columns: Int) extends Or
   override def backgroundColorFor(cell: MazeCell): Color = {
     if (cell.weight > 1) {
       return new Color(255, 0, 0)
-    }
-    if (distances != null) {
+    } else if (distances != null) {
       val distance = distances.get(cell)
 
       if (distance == Distances.NotFound) {

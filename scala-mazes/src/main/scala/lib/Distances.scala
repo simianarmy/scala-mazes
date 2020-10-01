@@ -34,7 +34,7 @@ class Distances[C <: MazeCell](root: C) {
     breadcrumbs.set(current, this.get(current))
 
     while (current != root) {
-      var links = current.getLinks()
+      val links = current.links
 
       breakable {
         for (neighbor <- links) {

@@ -5,7 +5,7 @@ import scala.reflect.{ClassTag, classTag}
 /**
   * Defines grid contract
   */
-abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer with CellDistance {
+abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer with CellDistances {
   /**
     * Easier than extending Iterator[A] in the grid class itself
     *
@@ -47,7 +47,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   }
 
   def deadends: List[A] = {
-    iterator().filter(c =>  c.getLinks().size == 1).toList
+    iterator().filter(c =>  c.links.size == 1).toList
   }
 
   def braid(p: Double = 1.0) = {
@@ -55,7 +55,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
 
     scala.util.Random.shuffle(deadends)
       .filterNot(cell => {
-        cell.getLinks().size != 1 || rand.nextDouble() > p
+        cell.links.size != 1 || rand.nextDouble() > p
       })
         .foreach(cell => {
           val neighbors = cell.neighbors.filter(n => {
@@ -63,7 +63,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
           })
 
           var best = neighbors.filter(n => {
-            n.getLinks().size == 1
+            n.links.size == 1
           })
 
           if (best.isEmpty) {
@@ -72,7 +72,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
 
           if (!best.isEmpty) {
             val neighbor = RandomUtil.sample(best)
-            cell.link(neighbor)
+            cell.linkBidirectional(neighbor)
           }
         })
   }

@@ -1,19 +1,18 @@
 package lib
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.PriorityQueue
 
 class WeightedCell(row: Int, column: Int) extends GridCell(row, column) {
   weight = 1
 
-  override def distances(): Distances[MazeCell] = {
+  override def distances: Distances[MazeCell] = {
     val weights = new Distances[MazeCell](this)
-    var pending = ListBuffer[MazeCell](this)
+    var pending = PriorityQueue[MazeCell](this)
 
     while (pending.size > 0) {
-      val cell = pending.sorted.head
-      pending -= cell
+      val cell = pending.dequeue()
 
-      for (neighbor <- cell.getLinks()) {
+      for (neighbor <- cell.links) {
         val totalWeight = weights.get(cell) + neighbor.weight
 
         if (weights.get(neighbor) == Distances.NotFound || totalWeight < weights.get(neighbor)) {

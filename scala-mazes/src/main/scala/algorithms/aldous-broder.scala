@@ -12,7 +12,7 @@ class AldousBroder extends GeneralGenerator {
     while (unvisited > 0) {
       val neighbor = RandomUtil.sample(cell.neighbors)
 
-      if (neighbor.getLinks().isEmpty) {
+      if (neighbor.links.isEmpty) {
         cell.linkBidirectional(neighbor)
         unvisited -= 1
       }

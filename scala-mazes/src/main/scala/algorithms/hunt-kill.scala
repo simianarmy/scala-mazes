@@ -10,7 +10,7 @@ class HuntKill extends GeneralGenerator {
     var looping = true
 
     while (looping) {
-      val unvisitedNeighbors = current.neighbors.filter(n => n.getLinks().isEmpty)
+      val unvisitedNeighbors = current.neighbors.filter(n => n.links.isEmpty)
 
       if (unvisitedNeighbors.length > 0) {
         val neighbor = RandomUtil.sample(unvisitedNeighbors)
@@ -21,9 +21,9 @@ class HuntKill extends GeneralGenerator {
 
         grid.eachCell(cell => {
           if (!looping) {
-            val visitedNeighbors = cell.neighbors.filter(n => !n.getLinks().isEmpty)
+            val visitedNeighbors = cell.neighbors.filter(n => !n.links.isEmpty)
 
-            if (cell.getLinks().isEmpty && !visitedNeighbors.isEmpty) {
+            if (cell.links.isEmpty && !visitedNeighbors.isEmpty) {
               current = cell
               val neighbor = RandomUtil.sample(visitedNeighbors)
               current.linkBidirectional(neighbor)
