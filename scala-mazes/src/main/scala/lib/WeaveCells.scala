@@ -29,6 +29,7 @@ class OverCell(row: Int, column: Int, grid: WeaveGrid) extends GridCell(row, col
   }
 
   def link(cell: GridCell): Unit = {
+    println("overcell link")
     getSharedNeighbor(cell) match {
       case c: OverCell if !c.isNil => grid.tunnelUnder(c)
       case _ => super.link(cell)
@@ -36,6 +37,7 @@ class OverCell(row: Int, column: Int, grid: WeaveGrid) extends GridCell(row, col
   }
 
   def linkBidirectional(cell: GridCell): Unit = {
+    println("overcell link bi")
     getSharedNeighbor(cell) match {
       case c: OverCell if !c.isNil => grid.tunnelUnder(c)
       case _ => super.linkBidirectional(cell)

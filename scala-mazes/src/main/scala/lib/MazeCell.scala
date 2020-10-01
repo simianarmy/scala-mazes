@@ -12,6 +12,12 @@ object MazeCell {
     constructor.newInstance(row, column).asInstanceOf[A]
   }
 
+  def createCell[A <: AnyRef : ClassTag](row: Int, column: Int, grid: WeaveGrid): A = {
+    val constructor = classTag[A].runtimeClass.getConstructors.head
+    //println("createCell2 constructing " + constructor + s" with $row, $column")
+    constructor.newInstance(row, column, grid).asInstanceOf[A]
+  }
+
   def nilCell[A <: AnyRef : ClassTag]: A = {
     createCell[A](-1, -1)
   }

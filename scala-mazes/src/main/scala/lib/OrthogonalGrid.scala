@@ -12,15 +12,18 @@ import java.awt.geom._
 import lib.MazeCell._
 
 case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, override val columns: Int) extends Grid[A](rows, columns) with Randomizer {
-  val grid = prepareGrid()
+  protected val grid = prepareGrid
 
   configureCells()
 
-  def prepareGrid[A <: GridCell : ClassTag](): Array[Array[A]] = {
+  protected def createCell[A <: GridCell : ClassTag](i: Int, j: Int): A = MazeCell.createCell[A](i, j)
+  protected def nilCell[A <: GridCell : ClassTag]: A = MazeCell.nilCell[A]
+
+  protected def prepareGrid[A <: GridCell : ClassTag]: Array[Array[A]] = {
     var cells = Array.ofDim[A](rows, columns)
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      cells(i)(j) = MazeCell.createCell[A](i, j)
+      cells(i)(j) = createCell[A](i, j)
     }
 
     cells
@@ -51,7 +54,7 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     try {
       grid(row)(column)
     } catch {
-      case e: ArrayIndexOutOfBoundsException => MazeCell.nilCell[A]
+      case e: ArrayIndexOutOfBoundsException => nilCell
     }
   }
 

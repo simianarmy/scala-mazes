@@ -6,15 +6,11 @@ class MaskedGrid(val mask: Mask) extends OrthogonalGrid[GridCell](mask.rows, mas
 
   override def id: String = "ma"
 
-  override def prepareGrid[A <: GridCell : ClassTag](): Array[Array[A]] = {
-    var cells = Array.ofDim[A](rows, columns);
+  override protected def prepareGrid[A <: GridCell : ClassTag]: Array[Array[A]] = {
+    var cells = Array.ofDim[A](rows, columns)
 
     for (i <- 0 until rows; j <- 0 until columns) {
-      if (mask(i)(j)) {
-        cells(i)(j) = MazeCell.createCell[A](i, j)
-      } else {
-        cells(i)(j) = MazeCell.nilCell[A]
-      }
+      cells(i)(j) = if (mask(i)(j)) createCell[A](i, j) else MazeCell.nilCell[A]
     }
 
     cells
