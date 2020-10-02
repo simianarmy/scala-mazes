@@ -1,6 +1,6 @@
 package lib
 
-class OverCell(row: Int, column: Int, grid: WeaveGrid) extends GridCell(row, column) {
+class OverCell(row: Int, column: Int, var grid: WeaveGrid) extends GridCell(row, column) {
   override def neighbors: List[GridCell] = {
     var list = super.neighbors
 
@@ -20,27 +20,33 @@ class OverCell(row: Int, column: Int, grid: WeaveGrid) extends GridCell(row, col
     list
   }
 
-  private def getSharedNeighbor(cell: GridCell): GridCell = {
-    if (!north.isNil && north == cell.south) north
-    else if (!south.isNil && south == cell.north) south
-    else if (!east.isNil && east == cell.west) east
-    else if (!west.isNil && west == cell.east) west
-    else null
+  private def getSharedNeighbor(cell: GridCell): Option[GridCell] = {
+    if (!north.isNil && north == cell.south) Some(north)
+    else if (!south.isNil && south == cell.north) Some(south)
+    else if (!east.isNil && east == cell.west) Some(east)
+    else if (!west.isNil && west == cell.east) Some(west)
+    else None
   }
 
-  def link(cell: GridCell): Unit = {
-    println("overcell link")
-    getSharedNeighbor(cell) match {
-      case c: OverCell if !c.isNil => grid.tunnelUnder(c)
-      case _ => super.link(cell)
+  override def link[A <: MazeCell](cell: A): Unit = {
+    cell match {
+      case c: GridCell =>
+        getSharedNeighbor(c).orNull match {
+          case c: OverCell if !c.isNil => grid.tunnelUnder(c)
+          case _ => super.link(cell)
+        }
+      case _ => ()
     }
   }
 
-  def linkBidirectional(cell: GridCell): Unit = {
-    println("overcell link bi")
-    getSharedNeighbor(cell) match {
-      case c: OverCell if !c.isNil => grid.tunnelUnder(c)
-      case _ => super.linkBidirectional(cell)
+  override def linkBidirectional[A <: MazeCell](cell: A): Unit = {
+    cell match {
+      case c: GridCell =>
+        getSharedNeighbor(c).orNull match {
+          case c: OverCell if !c.isNil => grid.tunnelUnder(c)
+          case _ => super.linkBidirectional(cell)
+        }
+      case _ => ()
     }
   }
 
@@ -69,7 +75,7 @@ class OverCell(row: Int, column: Int, grid: WeaveGrid) extends GridCell(row, col
   }
 }
 
-class UnderCell(overCell: OverCell, grid: WeaveGrid) extends OverCell(overCell.row, overCell.column, grid) {
+class UnderCell(overCell: OverCell) extends OverCell(overCell.row, overCell.column, overCell.grid) {
   if (overCell.isHorizontalPassage) {
     north = overCell.north
     overCell.north.south = this
