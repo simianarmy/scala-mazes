@@ -2,9 +2,9 @@ import lib._
 import algorithms._
 
 object MazeApp {
-  def gridToPng[A <: MazeCell](grid: Grid[A], filename: String) = {
+  def gridToPng[A <: MazeCell](grid: Grid[A], filename: String, inset: Double = 0) = {
     javax.imageio.ImageIO.write(
-      grid.toPng(inset = 0.1),
+      grid.toPng(inset = inset),
       "png",
       new java.io.File(filename)
     )
@@ -35,13 +35,13 @@ class MazeApp extends App {
     gen.on(grid, None)
   }
 
-  def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = false): Unit = {
+  def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = false, inset: Double = 0): Unit = {
     if (toAscii) {
       println(g);
     } else {
       // draw image to a file
       val filename = "generated/maze-" + g.id + "-" + alg + "-" + g.rows + "x" + g.columns + ".png"
-      MazeApp.gridToPng(g, filename)
+      MazeApp.gridToPng(g, filename, inset)
     }
   }
 }

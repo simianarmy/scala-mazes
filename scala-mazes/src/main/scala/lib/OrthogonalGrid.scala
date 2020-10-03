@@ -127,7 +127,6 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
     val breadcrumbColor = Color.MAGENTA
 
     if (mode == 'bgs) {
-      println("mode = bgs")
       val color = backgroundColorFor(cell)
 
       if (color != null) {
