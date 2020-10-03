@@ -14,7 +14,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   class GridIterator[A <: MazeCell](grid: Grid[A]) extends Iterator[A] {
     var position: Int = 0;
     def hasNext(): Boolean = {
-      position < grid.size()
+      position < grid.size
     }
     def next(): A = {
       val el = grid.cellAt(position)
@@ -24,8 +24,8 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   }
 
   val dimensions = (rows, columns)
-  def size(): Int = rows * columns
-  def numCells: Int = size()
+  def size: Int = rows * columns
+  def numCells: Int = size
   def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
   def randomCell(): A

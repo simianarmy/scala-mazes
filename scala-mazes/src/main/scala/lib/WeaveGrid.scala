@@ -22,7 +22,7 @@ class WeaveGrid(override val rows: Int, override val columns: Int) extends Ortho
   }
 
   override def toPng(size: Int = 10, inset: Double = 0.1): BufferedImage = {
-    super.toPng(size, Math.max(inset, 0.1))
+    super.toPng(size, inset) //Math.max(inset, 0.1))
   }
 
   override def toPngWithInset(g: Graphics2D, cell: OverCell, mode: Symbol, cellSize: Int, wallColor: Color, x: Int, y: Int, inset: Int): Unit = {

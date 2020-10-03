@@ -7,7 +7,7 @@ import lib.MazeCell
 class AldousBroder extends GeneralGenerator {
   def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     var cell: A = grid.randomCell()
-    var unvisited = grid.size() - 1
+    var unvisited = grid.size - 1
 
     while (unvisited > 0) {
       val neighbor = RandomUtil.sample(cell.neighbors)

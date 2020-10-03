@@ -1,8 +1,9 @@
-import lib.{Kruskals, OrthogonalGrid, GridCell}
+import lib.{Kruskals, WeaveGrid, GridCell}
 
 object KruskalsApp extends MazeApp {
-  val g = new OrthogonalGrid[GridCell](rows, cols);
-  val gg = new Kruskals().on(g)
+  val g = new WeaveGrid(rows, cols);
+  val k = new Kruskals()
+  val gg = k.on(g, k.newState(g))
 
-  printMaze(gg)
+  MazeApp.gridToPng(gg, "generated/maze-kruskals.png")
 }

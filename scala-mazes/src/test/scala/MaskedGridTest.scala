@@ -23,7 +23,7 @@ class MaskedGridTest extends FunSuite {
 
     val mg2 = new MaskedGrid(mask)
     assert(mg2.numCells == 15)
-    assert(mg2.numCells < mg2.size())
+    assert(mg2.numCells < mg2.size)
   }
 
   test("off Cells") {
