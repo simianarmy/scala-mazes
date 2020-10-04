@@ -61,7 +61,7 @@ object MazeApp {
       )
   }
 
-  def config(args: Array[String]): Option[Config] = OParser.parse(parser1, args, Config())
+  def config(args: Array[String]): Config = OParser.parse(parser1, args, Config()).getOrElse(Config())
 
   def gridToPng[A <: MazeCell](grid: Grid[A], filename: String, inset: Double = 0) = {
     javax.imageio.ImageIO.write(
@@ -74,10 +74,7 @@ object MazeApp {
 }
 
 class MazeApp extends App {
-  val conf = MazeApp.config(args) match {
-    case Some(config) => config
-    case _ => MazeApp.Config()
-  }
+  val conf = MazeApp.config(args)
 
   val rows: Int = conf.rows
   val cols: Int = conf.cols

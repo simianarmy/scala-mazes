@@ -16,6 +16,7 @@ object Main extends MazeApp {
     case "square" => new OrthogonalGrid[GridCell](rows, cols)
     case "triangle" => new TriangleGrid(rows, cols)
     case "hex" => new HexGrid(rows, cols)
+    // TODO: Fix this
     //case "polar" => new PolarGrid(rows)
     case "weave" => new WeaveGrid(rows, cols)
   }

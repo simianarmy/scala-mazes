@@ -1,4 +1,5 @@
 # TODO
 
-- Complete WeaveGrid
+- PolarGrid in Main.scala
+- Color grids if cli flag passed
 
