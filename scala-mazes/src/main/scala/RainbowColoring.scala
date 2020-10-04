@@ -1,9 +1,9 @@
 import java.awt.Color
 
-import lib.ColoredGrid
+import lib.RainbowColoredGrid
 
-object Coloring extends MazeApp {
-  var g = new ColoredGrid(rows, cols, Color.BLUE);
+object RainbowColoring extends MazeApp {
+  var g = new RainbowColoredGrid(rows, cols, Color.BLUE);
 
   val gg = generateMaze(g)
 

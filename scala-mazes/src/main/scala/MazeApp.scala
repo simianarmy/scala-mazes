@@ -1,7 +1,68 @@
+import scopt.OParser
+import java.io.File
+
 import lib._
 import algorithms._
 
 object MazeApp {
+  val AlgorithmIds = List("ab", "bt", "hk", "rb", "sw", "pr1", "pr", "wi")
+  val ShapeIds = List("square", "polar", "hex", "triangle", "weave")
+
+  case class Config(
+    rows: Int = 4,
+    cols: Int = 4,
+    alg: String = "wi",
+    shape: String = "square",
+    ascii: Boolean = false,
+    rainbow: Boolean = false,
+    braid: Double = 0,
+    debug: Boolean = false,
+    mask: String = ""
+  )
+
+  val builder = OParser.builder[Config]
+  val parser1 = {
+    import builder._
+    OParser.sequence(
+      programName("scala-mazes"),
+      head("scala-mazes", "0.1"),
+      // option -f, --foo
+      opt[Int]('r', "rows")
+        .action((x, c) => c.copy(rows = x))
+        .text("rows is an integer property"),
+      opt[Int]('c', "cols")
+        .action((x, c) => c.copy(cols = x))
+        .text("cols is an integer property"),
+      opt[String]('a', "alg")
+        .valueName("<alg>")
+        .validate(x => if (AlgorithmIds contains x) success else failure("alg must be one of " + AlgorithmIds mkString ", "))
+        .action((x, c) => c.copy(alg = x))
+        .text("alg is one of (" + AlgorithmIds.mkString(", ") + ")"),
+      opt[String]('s', "shape")
+        .valueName("<shape>")
+        .validate(x => if (ShapeIds contains x) success else failure("shape must be one of " + ShapeIds mkString ", "))
+        .action((x, c) => c.copy(shape = x))
+        .text("shape is one of (" + ShapeIds.mkString(", ") + ")"),
+      opt[Unit]("ascii")
+        .action((_, c) => c.copy(ascii = true)),
+      opt[Unit]("rainbow")
+        .action((_, c) => c.copy(rainbow = true)),
+      opt[Double]('b', "braid")
+        .action((x, c) => c.copy(braid = x))
+        .text("braid is a double property"),
+      opt[String]('m', "mask")
+        .action((x, c) => c.copy(mask = x))
+        .text("mask is a file"),
+      opt[Unit]("debug")
+        .hidden()
+        .action((_, c) => c.copy(debug = true))
+        .text("this option is hidden in the usage text"),
+      help("help").text("prints this usage text"),
+      )
+  }
+
+  def config(args: Array[String]): Option[Config] = OParser.parse(parser1, args, Config())
+
   def gridToPng[A <: MazeCell](grid: Grid[A], filename: String, inset: Double = 0) = {
     javax.imageio.ImageIO.write(
       grid.toPng(inset = inset),
@@ -13,36 +74,44 @@ object MazeApp {
 }
 
 class MazeApp extends App {
-  /**
-    * parse commom args
-    */
-  val rows = if (args.length > 1) args(0).toInt else 4;
-  val cols = if (args.length > 1) args(1).toInt else 4;
-  val alg = if (args.length > 2) args(2) else "bt";
-  val braidValue: Double = if (args.length > 3) args(3).toDouble else 1.0
+  val conf = MazeApp.config(args) match {
+    case Some(config) => config
+    case _ => MazeApp.Config()
+  }
 
-  def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = alg): Grid[A] = {
+  val rows: Int = conf.rows
+  val cols: Int = conf.cols
+
+  def debugMaze[A <: MazeCell](grid: Grid[A]) = {
+    println("braid: " + conf.braid)
+    println(grid)
+  }
+
+  def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg): Grid[A] = {
     val gen = algorithm match {
       case "sw" => new Sidewinder()
       case "ab" => new AldousBroder()
-      case "wi" => new Wilsons()
       case "hk" => new HuntKill()
       case "rb" => new RecursiveBacktracker()
       case "bt" => new BinaryTree()
+      case "pr1" => new Prims()
       case "pr" => new TruePrims()
       case _ => new Wilsons()
     }
-    //println("Generating maze with "+ gen)
+    grid.braid(conf.braid)
     gen.on(grid, None)
   }
 
-  def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = false, inset: Double = 0): Unit = {
+  def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = conf.ascii, inset: Double = 0): Unit = {
     if (toAscii) {
       println(g);
     } else {
       // draw image to a file
-      val filename = "generated/maze-" + g.id + "-" + alg + "-" + g.rows + "x" + g.columns + ".png"
-      MazeApp.gridToPng(g, filename, inset)
+      val filename = "generated/maze-" + g.id + "-" + conf.alg + "-" + g.rows + "x" + g.columns + ".png"
+      g match {
+        case wg: WeaveGrid => MazeApp.gridToPng(g, filename, 0.2)
+        case _ => MazeApp.gridToPng(g, filename, inset)
+      }
     }
   }
 }

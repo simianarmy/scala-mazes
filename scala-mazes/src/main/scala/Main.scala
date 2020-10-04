@@ -12,7 +12,14 @@
  import lib._
 
 object Main extends MazeApp {
-  var g = new OrthogonalGrid[GridCell](rows, cols);
+  val g = conf.shape match {
+    case "square" => new OrthogonalGrid[GridCell](rows, cols)
+    case "triangle" => new TriangleGrid(rows, cols)
+    case "hex" => new HexGrid(rows, cols)
+    //case "polar" => new PolarGrid(rows)
+    case "weave" => new WeaveGrid(rows, cols)
+  }
+
   val gg = generateMaze(g)
 
   printMaze(gg)

@@ -17,6 +17,7 @@ object DeadendCounts extends MazeApp {
     "Wilsons" -> "wi",
     "Hunt-and-kill" -> "hk",
     "Binary Tree" -> "bt",
+    "Prims" -> "pr"
     )
   var deadendCounts = new ArrayBuffer[Int]()
 

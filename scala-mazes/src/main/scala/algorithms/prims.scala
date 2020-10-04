@@ -42,7 +42,6 @@ class TruePrims extends GeneralGenerator with Randomizer {
         return
       }
       val cell = active.dequeue()
-      println("cell weight " + costs(cell))
       val availableNeighbors = cell.neighbors.filter(_.links.isEmpty)
 
       if (availableNeighbors.nonEmpty) {
