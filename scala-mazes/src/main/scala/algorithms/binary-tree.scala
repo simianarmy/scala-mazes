@@ -4,7 +4,7 @@ import lib.{MazeCell, Grid, GridCell, OrthogonalGrid, RandomUtil}
 import lib.MazeCell._
 
 class BinaryTree extends GeneralGenerator {
-  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     def run() = {
       grid.eachCell(cell => {
         val gc = cell.asInstanceOf[GridCell]

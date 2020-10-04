@@ -5,7 +5,7 @@ import lib.RandomUtil
 import lib.MazeCell
 
 class AldousBroder extends GeneralGenerator {
-  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     var cell: A = grid.randomCell()
     var unvisited = grid.size - 1
 

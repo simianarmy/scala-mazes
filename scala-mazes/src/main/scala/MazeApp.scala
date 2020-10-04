@@ -63,6 +63,19 @@ object MazeApp {
 
   def config(args: Array[String]): Config = OParser.parse(parser1, args, Config()).getOrElse(Config())
 
+  def generatorById(id: String): GeneralGenerator = id match {
+      case "sw" => new Sidewinder()
+      case "ab" => new AldousBroder()
+      case "hk" => new HuntKill()
+      case "rb" => new RecursiveBacktracker()
+      case "bt" => new BinaryTree()
+      case "pr1" => new Prims()
+      case "pr" => new TruePrims()
+      case _ => new Wilsons()
+    }
+
+  def generatorNameById(id: String): String = generatorById(id).toString
+
   def gridToPng[A <: MazeCell](grid: Grid[A], filename: String, inset: Double = 0) = {
     javax.imageio.ImageIO.write(
       grid.toPng(inset = inset),
@@ -79,24 +92,17 @@ class MazeApp extends App {
   val rows: Int = conf.rows
   val cols: Int = conf.cols
 
-  def debugMaze[A <: MazeCell](grid: Grid[A]) = {
-    println("braid: " + conf.braid)
-    println(grid)
+  def debug(line: String): Unit = if (conf.debug) println(line) else ()
+
+  def debugMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg) = {
+    debug("braid: " + conf.braid)
+    debug("algorithm: " + MazeApp.generatorNameById(algorithm))
+    debug(grid.toString)
   }
 
   def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg): Grid[A] = {
-    val gen = algorithm match {
-      case "sw" => new Sidewinder()
-      case "ab" => new AldousBroder()
-      case "hk" => new HuntKill()
-      case "rb" => new RecursiveBacktracker()
-      case "bt" => new BinaryTree()
-      case "pr1" => new Prims()
-      case "pr" => new TruePrims()
-      case _ => new Wilsons()
-    }
     grid.braid(conf.braid)
-    gen.on(grid, None)
+    MazeApp.generatorById(algorithm).on(grid, None)
   }
 
   def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = conf.ascii, inset: Double = 0): Unit = {

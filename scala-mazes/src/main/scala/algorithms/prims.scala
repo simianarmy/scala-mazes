@@ -5,34 +5,17 @@ import lib.{RandomUtil, Randomizer}
 import lib.MazeCell
 
 class Prims extends GeneralGenerator {
-  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
-
-    def process(active: List[A]): Unit = {
-      if (active.isEmpty) {
-        return
-      }
-      val cell = RandomUtil.sample(active)
-      val availableNeighbors = cell.neighbors.filter(_.links.isEmpty)
-
-      if (availableNeighbors.nonEmpty) {
-        val neighbor = RandomUtil.sample(availableNeighbors)
-
-        cell.linkBidirectional(neighbor)
-        process(neighbor.asInstanceOf[A] :: active)
-      } else {
-        process(active diff List(cell)) // remove cell from active
-      }
-    }
-
-    process(List[A](startCell.getOrElse(grid.randomCell())))
-    grid
+  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+    new GrowingTree().on(grid, startCell) { list => RandomUtil.sample(list) }
   }
+
+  override def toString: String = "Prims (Naive)"
 }
 
 class TruePrims extends GeneralGenerator with Randomizer {
   import scala.collection.mutable.PriorityQueue
 
-  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     var costs = Map[A, Int]()
     def cellOrder(cell: A): Int = -costs(cell) // lower weight has higher priority
     var active = PriorityQueue[A](startCell.getOrElse(grid.randomCell()))(Ordering.by(cellOrder))
@@ -61,4 +44,6 @@ class TruePrims extends GeneralGenerator with Randomizer {
     process(active)
     grid
   }
+
+  override def toString: String = "Prims"
 }

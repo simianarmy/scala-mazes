@@ -11,40 +11,32 @@ object DeadendCounts extends MazeApp {
   val size = 20
 
   var averages = collection.mutable.Map[String, Float]()
-  val algorithms = Map[String, String](
-    "Sidewinder" -> "sw",
-    "Aldous-Broder" -> "ab",
-    "Wilsons" -> "wi",
-    "Hunt-and-kill" -> "hk",
-    "Binary Tree" -> "bt",
-    "Prims" -> "pr"
-    )
   var deadendCounts = new ArrayBuffer[Int]()
 
-  algorithms.foreach(alg => {
-    println("running " + alg._1)
+  MazeApp.AlgorithmIds.foreach(alg => {
+    println("running " + MazeApp.generatorNameById(alg))
 
     deadendCounts.clear()
 
     for (i <- 0 until tries) {
       var grid = new OrthogonalGrid[GridCell](size, size)
-      val gg = generateMaze(grid, alg._2)
+      val gg = generateMaze(grid, alg)
 
       //TODO: Fix compile errors caused by this
       deadendCounts += gg.deadends.length
     }
 
     val totalDeadends = deadendCounts.sum
-    averages(alg._1) = totalDeadends / deadendCounts.length
+    averages(alg) = totalDeadends / deadendCounts.length
   })
 
   val totalCells = size * size
   println("Average dead-ends per " + size + "x" + size + " maze (" + totalCells + " cells): ")
 
   averages.toSeq.sortWith(_._2 > _._2).foreach(item => {
-    val name = item._1
+    val name = MazeApp.generatorNameById(item._1)
     val avg = item._2
     val percentage = avg * 100.0 / (size * size)
-    println(f"$name%14s" + " : " + f"$avg%1.0f" + "/" + totalCells + " (" + percentage + "%)")
+    println(f"$name%23s" + " : " + f"$avg%1.0f" + "/" + totalCells + " (" + percentage + "%)")
   })
 }

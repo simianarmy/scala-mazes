@@ -5,7 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 import lib.{Grid, OrthogonalGrid, MazeCell, GridCell, Randomizer, HexGrid, TriangleGrid}
 
 class Sidewinder extends GeneralGenerator with Randomizer {
-  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
     def run() = {
       var buffer = new ArrayBuffer[MazeCell]()
 
