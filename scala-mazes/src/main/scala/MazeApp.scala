@@ -29,6 +29,7 @@ class MazeApp extends App {
       case "hk" => new HuntKill()
       case "rb" => new RecursiveBacktracker()
       case "bt" => new BinaryTree()
+      case "pr" => new TruePrims()
       case _ => new Wilsons()
     }
     //println("Generating maze with "+ gen)

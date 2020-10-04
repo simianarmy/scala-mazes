@@ -19,15 +19,8 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
   protected def createCell[A <: GridCell : ClassTag](i: Int, j: Int): A = MazeCell.createCell[A](i, j)
   protected def nilCell[A <: GridCell : ClassTag]: A = MazeCell.nilCell[A]
 
-  protected def prepareGrid[A <: GridCell : ClassTag]: Array[Array[A]] = {
-    var cells = Array.ofDim[A](rows, columns)
-
-    for (i <- 0 until rows; j <- 0 until columns) {
-      cells(i)(j) = createCell[A](i, j)
-    }
-
-    cells
-  }
+  protected def prepareGrid[A <: GridCell : ClassTag]: Array[Array[A]] =
+    Array.tabulate(rows, columns)(createCell[A])
 
   private def configureCells(): Unit = {
     val cells = for (i <- 0 until rows; j <- 0 until columns)
