@@ -12,6 +12,7 @@
  import lib._
 
 object Main extends MazeApp {
+  // somehow this work but making this a function doesnt ??
   val g = conf.shape match {
     case "square" => new OrthogonalGrid[GridCell](rows, cols)
     case "triangle" => new TriangleGrid(rows, cols)

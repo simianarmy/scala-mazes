@@ -77,6 +77,9 @@ object MazeApp {
   def generatorNameById(id: String): String = generatorById(id).toString
 
   def gridToPng[A <: MazeCell](grid: Grid[A], filename: String, inset: Double = 0) = {
+    // generate distances for the coloring
+    grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
+
     javax.imageio.ImageIO.write(
       grid.toPng(inset = inset),
       "png",

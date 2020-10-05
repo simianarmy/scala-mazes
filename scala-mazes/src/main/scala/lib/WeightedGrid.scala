@@ -2,16 +2,8 @@ package lib
 
 import java.awt.{Color}
 
-class WeightedGrid(override val rows: Int, override val columns: Int) extends OrthogonalGrid[WeightedCell](rows, columns) {
-  var maximum: Int = 0
-
+class WeightedGrid(override val rows: Int, override val columns: Int) extends OrthogonalGrid[WeightedCell](rows, columns) with Colored[WeightedCell] {
   override def id: String = "we"
-
-  override def distances_=(d: Distances[MazeCell]) = {
-    _distances = d
-    val maxes = d.max()
-    maximum = maxes._2
-  }
 
   override def backgroundColorFor(cell: MazeCell): Color = {
     if (cell.weight > 1) {
