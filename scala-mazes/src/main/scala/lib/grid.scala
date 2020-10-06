@@ -5,7 +5,7 @@ import scala.reflect.{ClassTag, classTag}
 /**
   * Defines grid contract
   */
-abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer with CellDistances {
+abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends TextRenderer with ImageRenderer with GridDistances {
   /**
     * Easier than extending Iterator[A] in the grid class itself
     *

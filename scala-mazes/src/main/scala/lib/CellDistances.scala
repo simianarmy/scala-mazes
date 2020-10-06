@@ -2,21 +2,14 @@ package lib
 
 import scala.collection.mutable.{ArrayBuffer, Map}
 
-/**
-  * Common properties to measure distances between cells in a grid
-  */
 trait CellDistances {
-  var _distances: Distances[MazeCell] = null
+  this: MazeCell =>
 
-  def distances: Distances[MazeCell] = _distances
+  var weight: Int = 0
 
-  def distances_=(d: Distances[MazeCell]) = {
-    _distances = d
-  }
-}
+  def distances: Distances[MazeCell] = generateDistances(this)
 
-trait CellDistancesGenerator {
-  def generateDistances(source: MazeCell): Distances[MazeCell] = {
+  private def generateDistances(source: MazeCell): Distances[MazeCell] = {
     var distances = new Distances[MazeCell](source)
     var frontier = new ArrayBuffer[MazeCell](10)
     var newFrontier = new ArrayBuffer[MazeCell](10)

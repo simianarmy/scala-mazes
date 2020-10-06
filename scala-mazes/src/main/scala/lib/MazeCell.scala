@@ -25,8 +25,7 @@ object MazeCell {
   def cellOrNil[A <: AnyRef : ClassTag](cell: Option[A]): A = cell.getOrElse(nilCell[A])
 }
 
-abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Ordered[MazeCell] with CellDistancesGenerator {
-  var weight: Int = 0
+abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with CellDistances {
   // TODO: Why not use a Set ?
   var _links = Map[MazeCell, Boolean]()
 
@@ -34,9 +33,6 @@ abstract class MazeCell(row: Int, column: Int) extends Cell(row, column) with Or
   def isLinked(cell: MazeCell): Boolean = _links.contains(cell)
   def isNil = row == -1 && column == -1
   def neighbors: List[MazeCell]
-  def distances: Distances[MazeCell] = generateDistances(this)
-
-  def compare(that: MazeCell) = weight compare that.weight
 
   def link[A <: MazeCell](cell: A): Unit = {
     _links += (cell -> true);
