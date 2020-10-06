@@ -15,7 +15,9 @@ class PreconfiguredGrid(rows: Int, columns: Int) extends WeaveGrid(rows, columns
 }
 
 object KruskalsWeave extends MazeApp {
-  val g = new PreconfiguredGrid(rows, cols);
+  val g = if (conf.rainbow) new PreconfiguredGrid(rows, cols) with RainbowColored[OverCell];
+  else new PreconfiguredGrid(rows, cols) with Colored[OverCell];
+
   val kruskals = new Kruskals()
   val state = kruskals.newState(g)
   val rand = new scala.util.Random(System.currentTimeMillis)
@@ -28,5 +30,5 @@ object KruskalsWeave extends MazeApp {
 
   val gg = kruskals.on(g, state)
 
-  MazeApp.gridToPng(gg, "generated/maze-kruskals-weave.png", inset = 0.2)
+  MazeApp.gridToPng(gg, "generated/maze-kruskals-weave.png")
 }

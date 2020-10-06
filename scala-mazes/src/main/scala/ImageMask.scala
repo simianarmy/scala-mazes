@@ -1,7 +1,7 @@
-import algorithms.RecursiveBacktracker
-import lib.MaskedGrid
-import lib.Mask
 import scala.util.{Success,Failure}
+
+import algorithms.RecursiveBacktracker
+import lib.{Mask, MaskedGrid, Colored, GridCell}
 
 object ImageMask extends MazeApp {
   if (conf.mask.isEmpty) {

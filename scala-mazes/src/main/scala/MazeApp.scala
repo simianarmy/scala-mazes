@@ -77,11 +77,17 @@ object MazeApp {
   def generatorNameById(id: String): String = generatorById(id).toString
 
   def gridToPng[A <: MazeCell](grid: Grid[A], filename: String, inset: Double = 0) = {
+    val realInset = grid match {
+        case wg: WeaveGrid => 0.2
+        case _ => inset
+      }
     // generate distances for the coloring
-    grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
+    if (grid.distances == null) {
+      grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
+    }
 
     javax.imageio.ImageIO.write(
-      grid.toPng(inset = inset),
+      grid.toPng(inset = realInset),
       "png",
       new java.io.File(filename)
     )
@@ -103,6 +109,16 @@ class MazeApp extends App {
     debug(grid.toString)
   }
 
+  def makeGrid = {
+    if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
+    else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
+  }
+
+  def makeWeaveGrid = {
+    if (conf.rainbow) new WeaveGrid(rows, cols) with RainbowColored[OverCell]
+    else new WeaveGrid(rows, cols) with Colored[OverCell]
+  }
+
   def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg): Grid[A] = {
     grid.braid(conf.braid)
     MazeApp.generatorById(algorithm).on(grid, None)
@@ -114,10 +130,7 @@ class MazeApp extends App {
     } else {
       // draw image to a file
       val filename = "generated/maze-" + g.id + "-" + conf.alg + "-" + g.rows + "x" + g.columns + ".png"
-      g match {
-        case wg: WeaveGrid => MazeApp.gridToPng(g, filename, 0.2)
-        case _ => MazeApp.gridToPng(g, filename, inset)
-      }
+      MazeApp.gridToPng(g, filename, inset)
     }
   }
 }

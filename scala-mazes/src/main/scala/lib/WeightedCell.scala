@@ -7,9 +7,11 @@ class WeightedCell(row: Int, column: Int) extends GridCell(row, column) {
 
   override def distances: Distances[MazeCell] = {
     val weights = new Distances[MazeCell](this)
-    var pending = PriorityQueue[MazeCell](this)
+    def cellOrder(cell: MazeCell): Int = -weights.get(cell) // lower weight has higher priority
+    var pending = PriorityQueue[MazeCell](this)(Ordering.by(cellOrder))
 
-    while (pending.size > 0) {
+    while (pending.nonEmpty) {
+      println("pending " + pending)
       val cell = pending.dequeue()
 
       for (neighbor <- cell.links) {
