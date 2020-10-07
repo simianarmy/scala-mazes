@@ -9,11 +9,10 @@ class WeightedGrid(override val rows: Int, override val columns: Int) extends Or
 
   override def distances_=(d: Distances[MazeCell]): Unit = {
     _distances = d
-    maximum = distances.max._2
+    maximum = if (distances != null) distances.max._2 else 0
   }
 
   override def backgroundColorFor(cell: MazeCell): Color = {
-    println("bg color for " + cell)
     if (cell.weight > 1) {
       return new Color(255, 0, 0)
     } else if (distances != null) {

@@ -83,7 +83,7 @@ object MazeApp {
       }
     // generate distances for the coloring
     if (grid.distances == null) {
-      grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
+      //grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
     }
 
     javax.imageio.ImageIO.write(
@@ -103,9 +103,7 @@ class MazeApp extends App {
 
   def debug(line: String): Unit = if (conf.debug) println(line) else ()
 
-  def debugMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg) = {
-    debug("braid: " + conf.braid)
-    debug("algorithm: " + MazeApp.generatorNameById(algorithm))
+  def debugMaze[A <: MazeCell](grid: Grid[A]) = {
     debug(grid.toString)
   }
 
@@ -120,7 +118,7 @@ class MazeApp extends App {
   }
 
   def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg): Grid[A] = {
-    grid.braid(conf.braid)
+    debug("generating " + MazeApp.generatorNameById(algorithm))
     MazeApp.generatorById(algorithm).on(grid, None)
   }
 

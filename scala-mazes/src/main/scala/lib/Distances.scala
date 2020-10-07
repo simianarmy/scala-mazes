@@ -24,6 +24,8 @@ class Distances[C <: MazeCell](root: C) {
 
   def cells: Iterable[C] = _cells.keys
 
+  def size: Int = cells.size
+
   /**
     * Calculate shortest path from _root to goal
     */
@@ -68,5 +70,5 @@ class Distances[C <: MazeCell](root: C) {
     max
   }
 
-  override def toString: String = _cells.toString
+  override def toString: String = _cells.toSeq.sortBy(_._2) mkString("\n")
 }

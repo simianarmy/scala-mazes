@@ -25,6 +25,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
 
   val dimensions = (rows, columns)
   def size: Int = rows * columns
+  var _braid: Double = 0
   def numCells: Int = size
   def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
@@ -51,6 +52,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   }
 
   def braid(p: Double = 1.0) = {
+    _braid = p
     val rand = new scala.util.Random(System.currentTimeMillis)
 
     scala.util.Random.shuffle(deadends)

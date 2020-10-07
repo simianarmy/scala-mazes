@@ -11,7 +11,6 @@ class WeightedCell(row: Int, column: Int) extends GridCell(row, column) {
     var pending = PriorityQueue[MazeCell](this)(Ordering.by(cellOrder))
 
     while (pending.nonEmpty) {
-      println("pending " + pending)
       val cell = pending.dequeue()
 
       for (neighbor <- cell.links) {

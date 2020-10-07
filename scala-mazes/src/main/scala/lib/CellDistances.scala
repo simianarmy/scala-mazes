@@ -7,28 +7,25 @@ trait CellDistances {
 
   var weight: Int = 0
 
-  def distances: Distances[MazeCell] = generateDistances(this)
-
-  private def generateDistances(source: MazeCell): Distances[MazeCell] = {
-    var distances = new Distances[MazeCell](source)
+  /**
+    * Generate all distances from this cell to every other in the grid
+    *
+    * @return {Distances}
+    */
+  def distances: Distances[MazeCell] = {
+    var distances = new Distances[MazeCell](this)
     var frontier = new ArrayBuffer[MazeCell](10)
     var newFrontier = new ArrayBuffer[MazeCell](10)
 
-    frontier += source
+    frontier += this
 
-    while (!frontier.isEmpty) {
+    while (frontier.nonEmpty) {
       newFrontier.clear()
 
-      for (i <- 0 until frontier.length) {
-        val cell = frontier(i)
-
-        for (linked <- cell.links) {
-          val gcLinked = linked
-
-          if (distances.get(gcLinked) == Distances.NotFound) {
-            distances.set(gcLinked, distances.get(cell) + 1)
-            newFrontier += gcLinked
-          }
+      for (cell <- frontier; linked <- cell.links) {
+        if (distances.get(linked) == Distances.NotFound) {
+          distances.set(linked, distances.get(cell) + 1)
+          newFrontier += linked
         }
       }
 

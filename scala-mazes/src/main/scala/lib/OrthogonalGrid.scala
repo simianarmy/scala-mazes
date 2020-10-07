@@ -124,7 +124,7 @@ case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, over
 
       if (color != null) {
         g.setColor(color)
-        g.fillRect(x, y, x2, y2)
+        g.fillRect(x1, y1, cellSize, cellSize)
       }
     } else {
       g.setColor(wallColor)
