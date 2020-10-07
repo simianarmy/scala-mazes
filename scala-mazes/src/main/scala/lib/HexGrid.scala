@@ -1,7 +1,6 @@
 package lib
 
-import java.awt.image.BufferedImage
-import java.awt.{Graphics2D, Color, Font, BasicStroke, Polygon, RenderingHints}
+import java.awt.Color
 import java.awt.geom._
 import lib.MazeCell._
 

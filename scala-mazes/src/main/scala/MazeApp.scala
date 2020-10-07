@@ -83,7 +83,7 @@ object MazeApp {
       }
     // generate distances for the coloring
     if (grid.distances == null) {
-      //grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
+      grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
     }
 
     javax.imageio.ImageIO.write(
@@ -110,6 +110,16 @@ class MazeApp extends App {
   def makeGrid = {
     if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
     else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
+  }
+
+  def makeTriangleGrid = {
+    if (conf.rainbow) new TriangleGrid(rows, cols) with RainbowColored[TriangleCell]
+    else new TriangleGrid(rows, cols) with Colored[TriangleCell]
+  }
+
+  def makeHexGrid = {
+    if (conf.rainbow) new HexGrid(rows, cols) with RainbowColored[HexCell]
+    else new HexGrid(rows, cols) with Colored[HexCell]
   }
 
   def makeWeaveGrid = {

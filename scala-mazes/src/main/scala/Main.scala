@@ -14,12 +14,12 @@
 object Main extends MazeApp {
   // somehow this work but making this a function doesnt ??
   val g = conf.shape match {
-    case "square" => new OrthogonalGrid[GridCell](rows, cols)
-    case "triangle" => new TriangleGrid(rows, cols)
-    case "hex" => new HexGrid(rows, cols)
+    case "triangle" => makeTriangleGrid
+    case "hex" => makeHexGrid
     // TODO: Fix this
     //case "polar" => new PolarGrid(rows)
-    case "weave" => new WeaveGrid(rows, cols)
+    case "weave" => makeWeaveGrid
+    case _ => makeGrid
   }
 
   val gg = generateMaze(g)

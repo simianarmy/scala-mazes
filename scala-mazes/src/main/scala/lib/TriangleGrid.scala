@@ -58,7 +58,7 @@ class TriangleGrid(override val rows: Int, override val columns: Int) extends Or
 
             if (color != null) {
               g.setColor(color)
-              g.drawPolygon(Array(westX, midX, eastX), Array(baseY, apexY, baseY), 3)
+              g.fillPolygon(Array(westX, midX, eastX), Array(baseY, apexY, baseY), 3)
             }
           } else {
             g.setColor(wall)

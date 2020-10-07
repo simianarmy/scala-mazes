@@ -29,18 +29,35 @@ class WeaveGrid(override val rows: Int, override val columns: Int) extends Ortho
     cell match {
       case uc: UnderCell => {
         val Array(x1, x2, x3, x4, y1, y2, y3, y4) = cellCoordinatesWithInset(x, y, cellSize, inset)
-        g.setColor(wallColor)
 
-        if (uc.isVerticalPassage) {
-          g.drawLine(x2, y1, x2, y2)
-          g.drawLine(x3, y1, x3, y2)
-          g.drawLine(x2, y3, x2, y4)
-          g.drawLine(x3, y3, x3, y4)
+        if (mode == 'bgs) {
+          val color = backgroundColorFor(cell)
+
+          if (color != null) {
+            g.setColor(color)
+
+            if (uc.isVerticalPassage) {
+              g.fillRect(x2, y1, x3 - x2, y2 - y1)
+              g.fillRect(x2, y3, x3 - x2, y4 - y3)
+            } else {
+              g.fillRect(x1, y2, x2 - x1, y3 - y2)
+              g.fillRect(x3, y2, x4 - x3, y3 - y2)
+            }
+          }
         } else {
-          g.drawLine(x1, y2, x2, y2)
-          g.drawLine(x1, y3, x2, y3)
-          g.drawLine(x3, y2, x4, y2)
-          g.drawLine(x3, y3, x4, y3)
+          g.setColor(wallColor)
+
+          if (uc.isVerticalPassage) {
+            g.drawLine(x2, y1, x2, y2)
+            g.drawLine(x3, y1, x3, y2)
+            g.drawLine(x2, y3, x2, y4)
+            g.drawLine(x3, y3, x3, y4)
+          } else {
+            g.drawLine(x1, y2, x2, y2)
+            g.drawLine(x1, y3, x2, y3)
+            g.drawLine(x3, y2, x4, y2)
+            g.drawLine(x3, y3, x4, y3)
+          }
         }
       }
       case c: OverCell => {
