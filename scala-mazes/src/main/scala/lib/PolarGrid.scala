@@ -7,9 +7,9 @@ import java.awt.geom.Arc2D
 import lib.MazeCell._
 
 /**
-  * TODO: Support drawing arcs
-  */
-case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) with Randomizer {
+ * TODO: Support drawing arcs
+ */
+case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) {
   protected val grid = prepareGrid()
 
   configureCells()
@@ -110,74 +110,78 @@ case class PolarGrid(override val rows: Int) extends Grid[PolarCell](rows, 1) wi
     val background = Color.WHITE
     val wall = Color.BLACK
 
-    val canvas =
-      new BufferedImage(size + 1, size + 1, BufferedImage.TYPE_INT_RGB)
-    // get Graphics2D for the image
-    val g = canvas.createGraphics()
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g.setColor(background)
-    g.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
-    g.setColor(wall)
+    createPng(size + 1, size + 1, g => {
+      val center = size / 2
 
-    val center = size / 2
-
-    /**
-      * Helpers or drawing arcs
-      */
-     // Return polar angle of any point relative to arc center.
-    def angle0(x: Float, y: Float): Float = {
+      /**
+       * Helpers or drawing arcs
+       */
+      // Return polar angle of any point relative to arc center.
+      def angle0(x: Float, y: Float): Float = {
         return Math.toDegrees(Math.atan2(center - y, x - center)).toFloat
-    }
+      }
 
-    // Find the angular difference between a and b, -180 <= diff < 180.
-    def angleDiff(a: Float, b: Float): Float = {
+      // Find the angular difference between a and b, -180 <= diff < 180.
+      def angleDiff(a: Float, b: Float): Float = {
         var d = b - a
         while (d >= 180f) { d = d - 360; }
         while (d < -180f) { d = d + 360f }
         d
-    }
-
-    eachCell((cell: PolarCell) => {
-      if (cell.row != 0) {
-        val theta = 2 * Math.PI / grid(cell.row).length
-        val innerRadius = cell.row * cellSize
-        val outerRadius = (cell.row + 1) * cellSize
-        val thetaCcw = cell.column * theta
-        val thetaCw = (cell.column + 1) * theta
-        val ax = center + (innerRadius * Math.cos(thetaCcw)).toInt
-        val ay = center + (innerRadius * Math.sin(thetaCcw)).toInt
-        //val bx = center + (outerRadius * Math.cos(thetaCcw)).toInt
-        //val by = center + (outerRadius * Math.sin(thetaCcw)).toInt
-        val cx = center + (innerRadius * Math.cos(thetaCw)).toInt
-        val cy = center + (innerRadius * Math.sin(thetaCw)).toInt
-        val dx = center + (outerRadius * Math.cos(thetaCw)).toInt
-        val dy = center + (outerRadius * Math.sin(thetaCw)).toInt
-        //val aa: Float = angle0(ax, ay)
-        //val ab: Float = angle0(bx, by)
-        //val ac: Float = angle0(cx, cy)
-
-        //println(List(ax, ay, cx, cy, dx, dy))
-        //println("thetaCw: " + thetaCw)
-        //println("thetaCcw: " + thetaCcw)
-        //println("angleA: " + aa)
-        //println("angleC: " + ac)
-        //println("angleDiff " + angleDiff(aa, ac))
-
-        if (!cell.isLinked(cell.inward)) {
-          g.drawLine(ax, ay, cx, cy)
-          //g.draw(new Arc2D.Float(ax, ay, innerRadius, innerRadius, aa, angleDiff(aa, ac), Arc2D.OPEN))
-        }
-
-        if (!cell.isLinked(cell.cw)) {
-          g.drawLine(cx, cy, dx, dy)
-          //g.draw(new Arc2D.Double(bx, by, innerRadius, innerRadius, ab, angleDiff(ab, angle0(dx, dy)), Arc2D.OPEN))
-        }
       }
+
+      for (mode <- List('bgs, 'walls)) {
+        eachCell((cell: PolarCell) => {
+          if (cell.row != 0) {
+            val theta = 2 * Math.PI / grid(cell.row).length
+            val innerRadius = cell.row * cellSize
+            val outerRadius = (cell.row + 1) * cellSize
+            val thetaCcw = cell.column * theta
+            val thetaCw = (cell.column + 1) * theta
+            val ax = center + (innerRadius * Math.cos(thetaCcw)).toInt
+            val ay = center + (innerRadius * Math.sin(thetaCcw)).toInt
+            val bx = center + (outerRadius * Math.cos(thetaCcw)).toInt
+            val by = center + (outerRadius * Math.sin(thetaCcw)).toInt
+            val cx = center + (innerRadius * Math.cos(thetaCw)).toInt
+            val cy = center + (innerRadius * Math.sin(thetaCw)).toInt
+            val dx = center + (outerRadius * Math.cos(thetaCw)).toInt
+            val dy = center + (outerRadius * Math.sin(thetaCw)).toInt
+            //val aa: Float = angle0(ax, ay)
+            //val ab: Float = angle0(bx, by)
+            //val ac: Float = angle0(cx, cy)
+
+            //println(List(ax, ay, cx, cy, dx, dy))
+            //println("thetaCw: " + thetaCw)
+            //println("thetaCcw: " + thetaCcw)
+            //println("angleA: " + aa)
+            //println("angleC: " + ac)
+            //println("angleDiff " + angleDiff(aa, ac))
+
+            if (mode == 'bgs) {
+              val color = backgroundColorFor(cell)
+
+              if (color != null) {
+                g.setColor(color)
+                g.fillPolygon(Array(ax, cx, dx), Array(ay, cy, dy), 3)
+                g.fillPolygon(Array(ax, bx, dx), Array(ay, by, dy), 3)
+              }
+            } else {
+              g.setColor(wall)
+              if (!cell.isLinked(cell.inward)) {
+                g.drawLine(ax, ay, cx, cy)
+                //g.draw(new Arc2D.Float(ax, ay, innerRadius, innerRadius, aa, angleDiff(aa, ac), Arc2D.OPEN))
+              }
+
+              if (!cell.isLinked(cell.cw)) {
+                g.drawLine(cx, cy, dx, dy)
+                //g.draw(new Arc2D.Double(bx, by, innerRadius, innerRadius, ab, angleDiff(ab, angle0(dx, dy)), Arc2D.OPEN))
+              }
+            }
+          }
+        })
+      }
+
+      g.drawOval(0, 0, size, size)
     })
 
-    g.drawOval(0, 0, size, size)
-
-    g.dispose()
-    canvas
   }
 }

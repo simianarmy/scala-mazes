@@ -4,14 +4,13 @@
 package lib
 
 import scala.reflect.runtime._
-//import scala.reflect.runtime.universe._
 import scala.reflect.{ClassTag, classTag}
 import java.awt.image.BufferedImage
-import java.awt.{Graphics2D, Color, Font, BasicStroke, RenderingHints}
+import java.awt.{Graphics2D, Color }
 import java.awt.geom._
 import lib.MazeCell._
 
-case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, override val columns: Int) extends Grid[A](rows, columns) with Randomizer {
+case class OrthogonalGrid[A <: GridCell : ClassTag](override val rows: Int, override val columns: Int) extends Grid[A](rows, columns) {
   protected val grid = prepareGrid
 
   configureCells()

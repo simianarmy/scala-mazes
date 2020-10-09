@@ -11,14 +11,12 @@
   */
  import lib._
 
-object Main extends MazeApp {
-  // somehow this work but making this a function doesnt ??
+object Orthogonal extends MazeApp {
   val g = conf.shape match {
     case "triangle" => makeTriangleGrid
     case "hex" => makeHexGrid
-    // TODO: Fix this
-    //case "polar" => new PolarGrid(rows)
     case "weave" => makeWeaveGrid
+    // TODO: would be great to be able to include Polar here
     case _ => makeGrid
   }
 

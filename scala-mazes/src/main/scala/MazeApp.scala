@@ -108,23 +108,32 @@ class MazeApp extends App {
   }
 
   def makeGrid = {
-    if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
-    else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
+    //if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
+    //else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
+    new OrthogonalGrid[GridCell](rows, cols)
   }
 
   def makeTriangleGrid = {
-    if (conf.rainbow) new TriangleGrid(rows, cols) with RainbowColored[TriangleCell]
-    else new TriangleGrid(rows, cols) with Colored[TriangleCell]
+    //if (conf.rainbow) new TriangleGrid(rows, cols) with RainbowColored[TriangleCell]
+    //else new TriangleGrid(rows, cols) with Colored[TriangleCell]
+    new TriangleGrid(rows, cols)
   }
 
   def makeHexGrid = {
-    if (conf.rainbow) new HexGrid(rows, cols) with RainbowColored[HexCell]
-    else new HexGrid(rows, cols) with Colored[HexCell]
+    //if (conf.rainbow) new HexGrid(rows, cols) with RainbowColored[HexCell]
+    //else new HexGrid(rows, cols) with Colored[HexCell]
+    new HexGrid(rows, cols)
   }
 
   def makeWeaveGrid = {
-    if (conf.rainbow) new WeaveGrid(rows, cols) with RainbowColored[OverCell]
-    else new WeaveGrid(rows, cols) with Colored[OverCell]
+    //if (conf.rainbow) new WeaveGrid(rows, cols) with RainbowColored[OverCell]
+    //else new WeaveGrid(rows, cols) with Colored[OverCell]
+    new WeaveGrid(rows, cols)
+  }
+
+  def makePolarGrid = {
+    if (conf.rainbow) new PolarGrid(rows) with RainbowColored[PolarCell]
+    else new PolarGrid(rows) with Colored[PolarCell]
   }
 
   def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg): Grid[A] = {
