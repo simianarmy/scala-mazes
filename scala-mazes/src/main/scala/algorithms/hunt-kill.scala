@@ -4,8 +4,8 @@ import lib.Grid
 import lib.MazeCell
 import lib.RandomUtil
 
-class HuntKill extends GeneralGenerator {
-  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+class HuntKill extends MazeGenerator {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A])(op: List[A] => A): Grid[A] = {
     var current = grid.randomCell()
     var looping = true
 

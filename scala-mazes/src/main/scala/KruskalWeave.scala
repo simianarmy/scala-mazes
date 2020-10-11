@@ -4,7 +4,7 @@ import lib._
 
 class SimpleOverCell(row: Int, column: Int, grid: WeaveGrid) extends OverCell(row, column, grid) {
   // just the original neighbors method
-  override def neighbors: List[GridCell] = {
+  override def neighbors: List[MazeCell] = {
     List(north, south, east, west).filterNot(p => p.isNil)
   }
 }

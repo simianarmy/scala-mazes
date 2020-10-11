@@ -2,8 +2,8 @@ package algorithms
 
 import lib.{Grid, MazeCell, RandomUtil, Randomizer}
 
-class GrowingTree extends GeneralGenerator with Randomizer {
-  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A])(op: List[A] => A): Grid[A] = {
+class GrowingTree extends MazeGenerator with Randomizer {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A])(op: List[A] => A): Grid[A] = {
 
     def process(active: List[A]): Unit = {
       if (active.isEmpty) {

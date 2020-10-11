@@ -1,7 +1,7 @@
 package lib
 
 class OverCell(row: Int, column: Int, var grid: WeaveGrid) extends GridCell(row, column) {
-  override def neighbors: List[GridCell] = {
+  override def neighbors: List[MazeCell] = {
     var list = super.neighbors
 
     if (canTunnelNorth) {
@@ -20,7 +20,7 @@ class OverCell(row: Int, column: Int, var grid: WeaveGrid) extends GridCell(row,
     list
   }
 
-  private def getSharedNeighbor(cell: GridCell): Option[GridCell] = {
+  private def getSharedNeighbor(cell: MazeCell): Option[MazeCell] = {
     if (!north.isNil && north == cell.south) Some(north)
     else if (!south.isNil && south == cell.north) Some(south)
     else if (!east.isNil && east == cell.west) Some(east)

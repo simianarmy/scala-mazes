@@ -13,7 +13,7 @@ class WeightedGridTest extends FunSuite {
 
   test("distances=") {
     val wg = new WeightedGrid(4, 5)
-    val gg = new AldousBroder().on(wg, None)
+    val gg = new AldousBroder().on(wg, None)()
 
     val start = gg.getCell(0, 0)
     val finish = gg.getCell(gg.rows - 1, gg.columns - 1)

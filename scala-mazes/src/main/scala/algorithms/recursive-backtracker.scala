@@ -4,8 +4,8 @@ import lib.Grid
 import lib.RandomUtil
 import lib.MazeCell
 
-class RecursiveBacktracker extends GeneralGenerator {
-  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+class RecursiveBacktracker extends MazeGenerator {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A])(op: List[A] => A): Grid[A] = {
     new GrowingTree().on(grid, startCell) { list => list.last }
   }
 

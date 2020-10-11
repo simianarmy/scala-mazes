@@ -44,7 +44,7 @@ class OrthogonalGridTest extends FunSuite {
 
   test("braid") {
     val grid = new OrthogonalGrid[GridCell](3, 3);
-    val gg = new RecursiveBacktracker().on(grid, None)
+    val gg = new RecursiveBacktracker().on(grid, None)()
     assert(grid.deadends.size > 0)
     grid.braid(1.0)
     assert(grid.deadends.size == 0)

@@ -18,7 +18,7 @@ class HexCell(row: Int, column: Int) extends GridCell(row, column) {
   def southeast_=(that: HexCell) = _southeast = Some(that)
   def southwest_=(that: HexCell) = _southwest = Some(that)
 
-  override def neighbors: List[GridCell] = {
+  override def neighbors: List[MazeCell] = {
     List(northwest, north, northeast, southwest, south, southeast).filterNot(p => p.isNil)
   }
 }

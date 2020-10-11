@@ -5,7 +5,7 @@ import lib._
 import algorithms._
 
 object MazeApp {
-  val AlgorithmIds = List("ab", "bt", "hk", "rb", "sw", "pr1", "pr", "wi")
+  val AlgorithmIds = List("ab", "bt", "el", "gt", "hk", "rb", "sw", "pr1", "pr", "wi")
   val ShapeIds = List("square", "polar", "hex", "triangle", "weave")
 
   case class Config(
@@ -35,12 +35,12 @@ object MazeApp {
         .text("cols is an integer property"),
       opt[String]('a', "alg")
         .valueName("<alg>")
-        .validate(x => if (AlgorithmIds contains x) success else failure("alg must be one of " + AlgorithmIds mkString ", "))
+        .validate(x => if (AlgorithmIds contains x) success else failure("alg must be one of " + (AlgorithmIds mkString ", ")))
         .action((x, c) => c.copy(alg = x))
         .text("alg is one of (" + AlgorithmIds.mkString(", ") + ")"),
       opt[String]('s', "shape")
         .valueName("<shape>")
-        .validate(x => if (ShapeIds contains x) success else failure("shape must be one of " + ShapeIds mkString ", "))
+        .validate(x => if (ShapeIds contains x) success else failure("shape must be one of " + (ShapeIds mkString ", ")))
         .action((x, c) => c.copy(shape = x))
         .text("shape is one of (" + ShapeIds.mkString(", ") + ")"),
       opt[Unit]("ascii")
@@ -63,15 +63,28 @@ object MazeApp {
 
   def config(args: Array[String]): Config = OParser.parse(parser1, args, Config()).getOrElse(Config())
 
-  def generatorById(id: String): GeneralGenerator = id match {
-      case "sw" => new Sidewinder()
+  def isGridOnlyAlgorithm(alg: String): Boolean = {
+    alg == "bt" || alg == "sw"
+  }
+
+  def validatePolarArgs(alg: String): Boolean = !isGridOnlyAlgorithm(alg)
+
+  def validateArgs(shape: String, alg: String): Boolean = shape match {
+    case "polar" => validatePolarArgs(alg)
+    case _ => true
+  }
+
+  def generatorById(id: String): MazeGenerator = id match {
       case "ab" => new AldousBroder()
+      case "bt" => new BinaryTree()
+      case "el" => new Ellers()
+      case "gt" => new GrowingTree()
       case "hk" => new HuntKill()
       case "rb" => new RecursiveBacktracker()
-      case "bt" => new BinaryTree()
       case "pr1" => new Prims()
       case "pr" => new TruePrims()
-      case _ => new Wilsons()
+      case "wi" => new Wilsons()
+      case "sw" => new Sidewinder()
     }
 
   def generatorNameById(id: String): String = generatorById(id).toString
@@ -108,9 +121,9 @@ class MazeApp extends App {
   }
 
   def makeGrid = {
-    //if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
-    //else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
-    new OrthogonalGrid[GridCell](rows, cols)
+    if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
+    else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
+    //new OrthogonalGrid[GridCell](rows, cols)
   }
 
   def makeTriangleGrid = {
@@ -136,11 +149,31 @@ class MazeApp extends App {
     else new PolarGrid(rows) with Colored[PolarCell]
   }
 
+  /**
+    * The crux of this app - we have to support any combination of shape and algorithm and restrict
+    * unsupported combinations, such as non-GridCell grids with Grid-only algorithms
+    *
+    * @param grid
+    * @param algorithm
+    * @return grid : cells connected into maze
+    */
   def generateMaze[A <: MazeCell](grid: Grid[A], algorithm: String = conf.alg): Grid[A] = {
     debug("generating " + MazeApp.generatorNameById(algorithm))
-    MazeApp.generatorById(algorithm).on(grid, None)
+
+    if (!MazeApp.validateArgs(conf.shape, algorithm)) {
+      println("Unsupported maze shape / algorithm!  Please try again.")
+      return grid
+    }
+    MazeApp.generatorById(algorithm).on(grid, None)()
   }
 
+  /**
+    * Prints ASCII or PNG version of the grid
+    *
+    * @param g
+    * @param toAscii
+    * @param inset
+    */
   def printMaze[A <: MazeCell](g: Grid[A], toAscii: Boolean = conf.ascii, inset: Double = 0): Unit = {
     if (toAscii) {
       println(g);

@@ -1,13 +1,5 @@
 /**
-  * Arguments:
-  *  rows
-  *  columns
-  *  algorithm id (bt|sw|)
-  *  ascii flag (txt)
-  *
-  * ex: run 5 5
-  * ex: run 10 10 sw
-  * ex: run 10 10 bt txt
+ * Generates square-ish grids
   */
  import lib._
 
@@ -17,6 +9,7 @@ object Orthogonal extends MazeApp {
     case "hex" => makeHexGrid
     case "weave" => makeWeaveGrid
     // TODO: would be great to be able to include Polar here
+    // case "polar" => makePolarGrid
     case _ => makeGrid
   }
 

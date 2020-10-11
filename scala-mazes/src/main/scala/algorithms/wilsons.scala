@@ -4,8 +4,8 @@ import scala.collection.mutable.ArrayBuffer
 import lib.{Grid, MazeCell}
 import lib.RandomUtil
 
-class Wilsons extends GeneralGenerator {
-  override def on[A <: MazeCell](grid: Grid[A], startCell: Option[A]): Grid[A] = {
+class Wilsons extends MazeGenerator {
+  def on[A <: MazeCell](grid: Grid[A], startCell: Option[A])(op: List[A] => A): Grid[A] = {
     var unvisited = ArrayBuffer[MazeCell]()
 
     grid.eachCell((c: A) => {

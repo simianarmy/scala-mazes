@@ -4,9 +4,9 @@ package lib
 
 class Kruskals {
   class State(grid: WeaveGrid) extends Randomizer {
-    var neighbors: List[(GridCell, GridCell)] = List()
-    private var setForCell = Map[GridCell, Int]().withDefaultValue(0)
-    private var cellsInSet = Map[Int, List[GridCell]]().withDefaultValue(List())
+    var neighbors: List[(MazeCell, MazeCell)] = List()
+    private var setForCell = Map[MazeCell, Int]().withDefaultValue(0)
+    private var cellsInSet = Map[Int, List[MazeCell]]().withDefaultValue(List())
 
     grid.eachCell(cell => {
       val set = setForCell.size
@@ -22,15 +22,15 @@ class Kruskals {
       }
     })
 
-    def canMerge(left: GridCell, right: GridCell): Boolean = setForCell(left) != setForCell(right)
+    def canMerge(left: MazeCell, right: MazeCell): Boolean = setForCell(left) != setForCell(right)
 
-    def merge(left: GridCell, right: GridCell): Unit = {
+    def merge(left: MazeCell, right: MazeCell): Unit = {
       left.linkBidirectional(right)
 
       val winner = setForCell(left)
       val loser = setForCell(right)
       val losers =  cellsInSet(loser) match {
-        case l: List[GridCell] if l.size > 0 => l
+        case l: List[MazeCell] if l.size > 0 => l
         case _ => List(right)
       }
 
@@ -41,7 +41,7 @@ class Kruskals {
       }
     }
 
-    def addCrossing(cell: GridCell): Boolean = {
+    def addCrossing(cell: MazeCell): Boolean = {
       if (cell.links.nonEmpty || !canMerge(cell.east, cell.west) || !canMerge(cell.north, cell.south)) {
         return false
       }
@@ -80,7 +80,7 @@ class Kruskals {
 
   def on(grid: WeaveGrid, state: State): WeaveGrid = {
 
-    def mergeNext(neighbors: List[(GridCell, GridCell)]): Unit = {
+    def mergeNext(neighbors: List[(MazeCell, MazeCell)]): Unit = {
       neighbors match {
         case (left, right) :: rest => {
           if (state.canMerge(left, right)) {

@@ -1,3 +1,7 @@
+/**
+ * Generates circle (polar) grids
+  */
+
 object Polar extends MazeApp {
   val g = makePolarGrid
 
