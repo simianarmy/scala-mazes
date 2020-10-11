@@ -5,7 +5,7 @@ import lib._
 import algorithms._
 
 object MazeApp {
-  val AlgorithmIds = List("ab", "bt", "el", "gt", "hk", "rb", "sw", "pr1", "pr", "wi")
+  val AlgorithmIds = List("ab", "bt", "el", "gt", "hk", "rb", "rd", "sw", "pr1", "pr", "wi")
   val ShapeIds = List("square", "polar", "hex", "triangle", "weave")
 
   case class Config(
@@ -80,9 +80,10 @@ object MazeApp {
       case "el" => new Ellers()
       case "gt" => new GrowingTree()
       case "hk" => new HuntKill()
-      case "rb" => new RecursiveBacktracker()
       case "pr1" => new Prims()
       case "pr" => new TruePrims()
+      case "rb" => new RecursiveBacktracker()
+      case "rd" => new RecursiveDivision()
       case "wi" => new Wilsons()
       case "sw" => new Sidewinder()
     }
@@ -123,19 +124,16 @@ class MazeApp extends App {
   def makeGrid = {
     if (conf.rainbow) new OrthogonalGrid[GridCell](rows, cols) with RainbowColored[GridCell]
     else new OrthogonalGrid[GridCell](rows, cols) with Colored[GridCell]
-    //new OrthogonalGrid[GridCell](rows, cols)
   }
 
   def makeTriangleGrid = {
-    //if (conf.rainbow) new TriangleGrid(rows, cols) with RainbowColored[TriangleCell]
-    //else new TriangleGrid(rows, cols) with Colored[TriangleCell]
-    new TriangleGrid(rows, cols)
+    if (conf.rainbow) new TriangleGrid(rows, cols) with RainbowColored[TriangleCell]
+    else new TriangleGrid(rows, cols) with Colored[TriangleCell]
   }
 
   def makeHexGrid = {
-    //if (conf.rainbow) new HexGrid(rows, cols) with RainbowColored[HexCell]
-    //else new HexGrid(rows, cols) with Colored[HexCell]
-    new HexGrid(rows, cols)
+    if (conf.rainbow) new HexGrid(rows, cols) with RainbowColored[HexCell]
+    else new HexGrid(rows, cols) with Colored[HexCell]
   }
 
   def makeWeaveGrid = {
