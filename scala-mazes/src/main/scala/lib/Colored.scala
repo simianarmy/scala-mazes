@@ -10,6 +10,14 @@ trait Colored[A <: MazeCell] {
 
   def cellIndex(cell: MazeCell): Int = cell.row * columns + cell.column
 
+  override def setColor(col: Color) = {
+    color = col
+    // generate distances for the coloring
+    if (distances == null) {
+      distances = getCell(rows / 2, columns / 2).distances
+    }
+  }
+
   override def distances_=(d: Distances[MazeCell]): Unit = {
     _distances = d
     maximum = distances.max._2
@@ -24,7 +32,14 @@ trait Colored[A <: MazeCell] {
     val dark = (255 * intensity).toInt
     val bright = 128 + (127 * intensity).toInt
 
-    new Color(dark, bright, dark)
+    color match {
+      case Color.RED => new Color(bright, dark, dark)
+      case Color.GREEN => new Color(dark, bright, dark)
+      case Color.BLUE => new Color(dark, dark, bright)
+      case Color.YELLOW => new Color(bright, bright, dark)
+      case Color.ORANGE => new Color(255, bright, 0)
+      case _ => Color.WHITE
+    }
   }
 }
 

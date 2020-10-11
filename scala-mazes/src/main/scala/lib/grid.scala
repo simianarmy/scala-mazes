@@ -1,6 +1,7 @@
 package lib
 
 import scala.reflect.{ClassTag, classTag}
+import java.awt.Color
 
 /**
   * Defines grid contract
@@ -26,6 +27,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   val dimensions = (rows, columns)
   def size: Int = rows * columns
   var _braid: Double = 0
+  var color: Color = null
   def numCells: Int = size
   def getCell(row: Int, column: Int): A
   def cellAt(index: Int): A
@@ -45,6 +47,10 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
 
   def eachCell(fn: (A => Unit)): Unit = {
     iterator().filterNot(c => c.isNil).foreach(fn)
+  }
+
+  def setColor(col: Color) = {
+    color = col
   }
 
   def deadends: List[A] = {

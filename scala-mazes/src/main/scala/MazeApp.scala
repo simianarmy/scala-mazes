@@ -1,5 +1,6 @@
 import scopt.OParser
 import java.io.File
+import java.awt.Color
 
 import lib._
 import algorithms._
@@ -14,6 +15,7 @@ object MazeApp {
     alg: String = "wi",
     shape: String = "square",
     ascii: Boolean = false,
+    color: Color = Color.WHITE,
     rainbow: Boolean = false,
     braid: Double = 0,
     debug: Boolean = false,
@@ -45,6 +47,16 @@ object MazeApp {
         .text("shape is one of (" + ShapeIds.mkString(", ") + ")"),
       opt[Unit]("ascii")
         .action((_, c) => c.copy(ascii = true)),
+      opt[String]("color")
+        .action((x, c) => c.copy(color = x match {
+          case "red" => Color.RED
+          case "green" => Color.GREEN
+          case "blue" => Color.BLUE
+          case "yellow" => Color.YELLOW
+          case "orange" => Color.ORANGE
+          case _ => Color.WHITE
+        }))
+        .text("color is one of (red, green, blue, yellow, orange)"),
       opt[Unit]("rainbow")
         .action((_, c) => c.copy(rainbow = true)),
       opt[Double]('b', "braid")
@@ -95,10 +107,6 @@ object MazeApp {
         case wg: WeaveGrid => 0.2
         case _ => inset
       }
-    // generate distances for the coloring
-    if (grid.distances == null) {
-      grid.distances = grid.getCell(grid.rows / 2, grid.columns / 2).distances
-    }
 
     javax.imageio.ImageIO.write(
       grid.toPng(inset = realInset),
@@ -176,6 +184,8 @@ class MazeApp extends App {
     if (toAscii) {
       println(g);
     } else {
+      g.setColor(conf.color)
+
       // draw image to a file
       val filename = "generated/maze-" + g.id + "-" + conf.alg + "-" + g.rows + "x" + g.columns + ".png"
       MazeApp.gridToPng(g, filename, inset)
