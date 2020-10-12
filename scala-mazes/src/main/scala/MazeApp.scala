@@ -7,7 +7,7 @@ import algorithms._
 
 object MazeApp {
   val AlgorithmIds = List("ab", "bt", "el", "gt", "hk", "rb", "rd", "sw", "pr1", "pr", "wi")
-  val ShapeIds = List("square", "polar", "hex", "triangle", "weave")
+  val ShapeIds = List("square", "polar", "hex", "triangle", "weave", "3d")
 
   case class Config(
     rows: Int = 4,
@@ -153,6 +153,10 @@ class MazeApp extends App {
   def makePolarGrid = {
     if (conf.rainbow) new PolarGrid(rows) with RainbowColored[PolarCell]
     else new PolarGrid(rows) with Colored[PolarCell]
+  }
+
+  def make3DGrid(levels: Int) = {
+    new Grid3D(levels, rows, cols)
   }
 
   /**
