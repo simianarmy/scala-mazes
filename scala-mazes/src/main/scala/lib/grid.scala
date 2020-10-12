@@ -41,7 +41,7 @@ abstract class Grid[A <: MazeCell](val rows: Int, val columns: Int) extends Text
   def eachRow(fn: (Iterator[A] => Unit)): Unit = {
     // collect cells into rows
     for (row <- iterator().grouped(columns)) {
-      fn(row.iterator);
+      fn(row.iterator)
     }
   }
 
