@@ -5,7 +5,6 @@ import scala.reflect.{ClassTag, classTag}
 import java.awt.image.BufferedImage
 import java.awt.{Graphics2D, Color }
 import java.awt.geom._
-import lib.MazeCell._
 
 object Cell3D {
   def nilCell: Cell3D = new Cell3D(-1, -1, -1)
@@ -15,8 +14,8 @@ class Cell3D(val level: Int, row: Int, column: Int) extends GridCell(row, column
   var _up: Option[Cell3D] = None
   var _down: Option[Cell3D] = None
 
-  def up = _up.getOrElse(nilCell)
-  def down = _down.getOrElse(nilCell)
+  def up = _up.getOrElse(Cell3D.nilCell)
+  def down = _down.getOrElse(Cell3D.nilCell)
   def up_=(that: Cell3D) = _up = Some(that)
   def down_=(that: Cell3D) = _down = Some(that)
 
@@ -63,7 +62,7 @@ case class Grid3D(levels: Int, override val rows: Int, override val columns: Int
     try {
       grid(level)(row)(column)
     } catch {
-      case e: ArrayIndexOutOfBoundsException => nilCell
+      case e: ArrayIndexOutOfBoundsException => Cell3D.nilCell
     }
   }
 
