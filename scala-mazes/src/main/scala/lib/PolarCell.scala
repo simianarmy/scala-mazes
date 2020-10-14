@@ -18,6 +18,7 @@ class PolarCell(row: Int, column: Int) extends MazeCell(row, column) {
   def cw_=(that: PolarCell) = _cw = Some(that)
   def ccw_=(that: PolarCell) = _ccw = Some(that)
   def inward_=(that: PolarCell) = _inward = Some(that)
+  //def outward_=(that: Array[PolarCell]) = _outward += that
 
   def neighbors: List[MazeCell] = {
     List(cw, ccw, inward).filterNot(p => p.isNil) ++ outward
