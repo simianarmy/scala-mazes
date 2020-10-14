@@ -2,7 +2,7 @@ package algorithms
 
 import scala.collection.mutable.ArrayBuffer
 
-import lib.{Grid, OrthogonalGrid, MazeCell, Randomizer, HexGrid, TriangleGrid}
+import lib.{Grid, Cell3D, MazeCell, RandomUtil, Randomizer}
 
 class Sidewinder extends MazeGenerator with Randomizer {
   def on[A <: MazeCell](grid: Grid[A], startCell: Option[A])(op: List[A] => A): Grid[A] = {
@@ -24,8 +24,15 @@ class Sidewinder extends MazeGenerator with Randomizer {
         if (shouldCloseOut) {
           var member = buffer(rand.nextInt(buffer.length))
 
-          if (!member.north.isNil) {
-            member.linkBidirectional(member.north);
+          // pick either member's north or up
+          val other = member match {
+            case c: Cell3D => List(c.up)
+            case _ => Nil
+          }
+          val choices = (List(member.north) ::: other).filterNot(_.isNil)
+
+          if (choices.nonEmpty) {
+            member.linkBidirectional(choices(0));
           }
           buffer.clear();
         } else {
