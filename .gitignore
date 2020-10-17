@@ -3,7 +3,6 @@ source
 tags
 target
 **/target
-generated/
 .metals/
 .bloop/
 .ammonite/
