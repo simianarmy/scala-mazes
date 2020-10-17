@@ -12,17 +12,17 @@ Use the sbt scala tool:
 
 ## Sample Mazes
 
-![colorgrid](scala-mazes/scala-mazes/generated/maze-bt-25x25.png)
+[colorgrid](scala-mazes/scala-mazes/generated/maze-bt-25x25.png)
 
-![weave](scala-mazes/scala-mazes/generated/maze-kruskals-weave.png)
+[weave](scala-mazes/scala-mazes/generated/maze-kruskals-weave.png)
 
-![polar](scala-mazes/scala-mazes/generated/maze-po-rb-20x1.png)
+[polar](scala-mazes/scala-mazes/generated/maze-po-rb-20x1.png)
 
-![shape](scala-mazes/scala-mazes/generated/maze-rb-skull.png)
+[shape](scala-mazes/scala-mazes/generated/maze-rb-skull.png)
 
-![triangle](scala-mazes/scala-mazes/generated/maze-tr-rb-20x20.png)
+[triangle](scala-mazes/scala-mazes/generated/maze-tr-rb-20x20.png)
 
-![sphere](scala-mazes/scala-mazes/generated/sphere.png)
+[sphere](scala-mazes/scala-mazes/generated/sphere.png)
 
-![longestpath](scala-mazes/scala-mazes/generated/weighted-rerouted.png)
+[longestpath](scala-mazes/scala-mazes/generated/weighted-rerouted.png)
 
