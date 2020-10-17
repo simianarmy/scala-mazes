@@ -7,7 +7,7 @@ import algorithms._
 
 object MazeApp {
   val AlgorithmIds = List("ab", "bt", "el", "gt", "hk", "rb", "rd", "sw", "pr1", "pr", "wi")
-  val ShapeIds = List("square", "polar", "hex", "triangle", "weave", "3d")
+  val ShapeIds = List("square", "polar", "hex", "triangle", "weave", "3d", "sphere")
 
   case class Config(
     rows: Int = 4,
@@ -157,6 +157,10 @@ class MazeApp extends App {
 
   def make3DGrid(levels: Int) = {
     new Grid3D(levels, rows, cols)
+  }
+
+  def makeSphereGrid = {
+    new SphereGrid(20)
   }
 
   /**

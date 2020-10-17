@@ -9,6 +9,7 @@ object Orthogonal extends MazeApp {
     case "hex" => makeHexGrid
     case "weave" => makeWeaveGrid
     case "3d" => make3DGrid(3)
+    case "sphere" => makeSphereGrid
     // TODO: would be great to be able to include Polar here
     // case "polar" => makePolarGrid
     case _ => makeGrid
