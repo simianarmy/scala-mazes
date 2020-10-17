@@ -9,9 +9,15 @@ Algorithms & ideas from [Mazes for Programmers](https://pragprog.com/titles/jbma
 
 ![grid](scala-mazes/generated/maze-bt-25x25.png)
 
+![colored](scala-mazes/generated/maze-wi-20x20.png)
+
+![rb](scala-mazes/generated/maze-ot-rb-20x20.png)
+
 ![weave](scala-mazes/generated/maze-kruskals-weave.png)
 
 ![polar](scala-mazes/generated/maze-po-rb-20x1.png)
+
+![hex](scala-mazes/generated/maze-rb-10x10.png)
 
 ![shape](scala-mazes/generated/maze-rb-skull.png)
 
@@ -25,6 +31,8 @@ Algorithms & ideas from [Mazes for Programmers](https://pragprog.com/titles/jbma
 
 Using sbt:
 
-> cd scala-mazes
-> sbt
-> run --help
+  ```
+  cd scala-mazes
+  sbt
+  run --help
+  ```
