@@ -12,7 +12,7 @@ Use the sbt scala tool:
 
 ## Sample Mazes
 
-[colorgrid](scala-mazes/scala-mazes/generated/maze-bt-25x25.png)
+[[scala-mazes/generated/maze-bt-25x25.png]]
 
 [weave](scala-mazes/scala-mazes/generated/maze-kruskals-weave.png)
 
